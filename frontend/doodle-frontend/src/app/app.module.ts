@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {ScrollDispatchModule} from '@angular/cdk/scrolling';
 import {
   MatAutocompleteModule,
@@ -79,7 +80,7 @@ export class MaterialModule {}
 
 @NgModule({
   declarations: [
-
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -89,6 +90,7 @@ export class MaterialModule {}
     MaterialModule,
     MatNativeDateModule,
     ReactiveFormsModule,
+    NgbModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
