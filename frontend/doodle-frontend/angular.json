@@ -51,7 +51,7 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "port": 10002,
-            "host": "pwp.um.ifi.lmu.de",
+            "host": "https://pwp.um.ifi.lmu.de/g02/",
             "browserTarget": "doodle-frontend:build"
           },
           "configurations": {
