@@ -3,9 +3,9 @@ var MongoClient = require('mongodb').MongoClient;
 let databaseName= "mydb";
 var url = "mongodb://localhost:27017/";
 
-exports.taskDBInfo = {
-  dbName : "TaskList",
-  collectionName : "tasks"
+exports.eventDBInfo = {
+  dbName : "doodlePWP",
+  collectionName : "event"
 }
 
 exports.createDB = function(dbName){ 
@@ -20,7 +20,7 @@ exports.createDB = function(dbName){
 exports.createCollection = function(dbName, collectionName){
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
-            var dbo = db.db("mydb");
+            var dbo = db.db(dbName);
             dbo.createCollection(collectionName, function(err, res) {
               if (err) throw err;
               console.log("Collection created!");
@@ -43,7 +43,7 @@ exports.insertIntoCollection = function(dbName, collectionName, object){
 }
 
 
-exports.getAllTasks = function(dbName, collectionName, res){
+exports.getAllItems = function(dbName, collectionName, res){
   MongoClient.connect(url, function(err, db) {
       if (err) throw err;
       var dbo = db.db(dbName);
@@ -59,8 +59,7 @@ exports.getAllTasks = function(dbName, collectionName, res){
     }); 
 }
 
-exports.deleteTask = function(dbName, collectionName, id){
-  console.log("remove start");
+exports.deleteItemWithId = function(dbName, collectionName, id){
   MongoClient.connect(url, function(err, db) {
       if (err) throw err;
       var dbo = db.db(dbName);
@@ -69,7 +68,6 @@ exports.deleteTask = function(dbName, collectionName, id){
         var mongodb = require('mongodb');
         dbo.collection(collectionName).remove({_id: new mongodb.ObjectID(id)}, {w:1}, function(err, result) {
           if(err) throw err;    
-      
           console.log('Document Removed Successfully');
           db.close();
         });
@@ -79,23 +77,22 @@ exports.deleteTask = function(dbName, collectionName, id){
 }
 
 
-exports.updateTask = function(dbName, collectionName, id, task){
-  console.log(id);
-  console.log(task);
-  console.log("update start");
+exports.updateItemWithId = function(dbName, collectionName, id, updatedItem){
   MongoClient.connect(url, function(err, db) {
       if (err) throw err;
-      var dbo = db.db(dbName);
+      let dbo = db.db(dbName);
         if (err) throw err;
-        console.log("update connect");
-        var mongodb = require('mongodb');
-        dbo.collection(collectionName).update({_id: new mongodb.ObjectID(id)}, { $set: { title: task.title, deadline: task.deadline, priority: task.priority} }, {w:1},
+        let mongodb = require('mongodb');
+        // TODO think of attributes to update
+        dbo.collection(collectionName).update({_id: new mongodb.ObjectID(id)}, { $set: { eventName: updatedItem.title} }, {w:1},
         function(err, result){
                    if(err) throw err;    
                    console.log('Document Updated Successfully');
            });
     }); 
 }
+
+
 
 
 
