@@ -8,17 +8,21 @@ exports.doodleEventDBInfo = {
   collectionName : "doodleEvent"
 }
 
-exports.insertIntoCollection = function(dbName, collectionName, object){
-  MongoClient.connect(url, function(err, db) {
+// resolved boolean indicates the success for the calling function
+exports.insertIntoCollection = function(dbName, collectionName, object, responseBuilder){
+  return new Promise((resolve, reject) =>{
+    MongoClient.connect(url, function(err, db) {
       if (err) throw err;
       var dbo = db.db(dbName);
       dbo.collection(collectionName).insertOne(object, function(err, res) {
-        if (err) throw err;
-        console.log("1 document inserted");
+        if (err) resolve(false);
         db.close();
+        resolve(true);
       });
 
     }); 
+  });
+ 
 }
 
 // exports.createDB = function(dbName){ 
