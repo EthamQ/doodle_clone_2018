@@ -3,23 +3,39 @@ var mongodb = require('./../MongoDB/dbUtils');
 var dbInfo = mongodb.doodleEventDBInfo;
 var response = require('./responseBuilder');
 
-exports.createNewDoodleEvent = function(req, res, next) {
+exports.createNewDoodleEvent = function (req, res, next) {
     let responseBuilder = new response();
     let doodleEventToSave = new doodleEventModel();
     let newEvent = req.body;
     for (var key in newEvent) {
         doodleEventToSave.setDoodleEventModelProperty(key, newEvent[key]);
-     }
-     doodleEventToSave.setDoodleEventModelUUID();
-     let doodleEventReadyForDb = doodleEventToSave.getDoodleEventModel();
-     mongodb.insertIntoCollection(dbInfo.dbName, dbInfo.collectionName, doodleEventReadyForDb).then(success =>{
-        if(success){
-            responseBuilder.setMessage(responseBuilder.getNewDoodleEventSuccessMsg());
-        }
-        else{
-            responseBuilder.setMessage(responseBuilder.getNewDoodleEventFailureMsg());
-        }
-        responseBuilder.setSuccess(success);
+    }
+    doodleEventToSave.setDoodleEventModelUUID();
+    let doodleEventReadyForDb = doodleEventToSave.getDoodleEventModel();
+    mongodb.insertIntoCollection(dbInfo.dbName, dbInfo.collectionName, doodleEventReadyForDb).then(data => {
+        responseBuilder.setMessage(data.success ? responseBuilder.getNewDoodleEventSuccessMsg() : responseBuilder.getNewDoodleEventFailureMsg());
+        responseBuilder.setSuccess(data.success);
         res.send(responseBuilder.getResponse());
-     }); 
-  };
+    });
+};
+
+exports.getDoodleEventByUUID = function (req, res, next) {
+    let responseBuilder = new response();
+    let uuidUrl = req.params.uuid;
+    mongodb.getAllItems(dbInfo.dbName, dbInfo.collectionName).then(data => {
+        responseBuilder.setSuccess(data.success);
+        if (!data.success) {
+            responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
+        }
+        else {
+            responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDFailureMsg());
+        }
+        data.data.map(event => {
+            if (event.uuid == uuidUrl) {
+                responseBuilder.addData(event);
+                responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDSuccessMsg());
+                res.send(responseBuilder.getResponse());
+            }
+        });
+    });
+}

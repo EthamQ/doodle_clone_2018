@@ -4,19 +4,31 @@ module.exports = class Response{
         this.response = {
             success: false,
             message: "no message specified",
-            data: null
+            data: []
         }
         this.messages = {
             NEW_DOODLE_EVENT_SUCCESS: "New doodle Event successfully created",
             NEW_DOODLE_EVENT_FAILURE: "Something went wrong when inserting into the database",
+            GET_DOODLE_EVENT_BY_UUID_SUCCESS: "Event with the UUID found",
+            GET_DOODLE_EVENT_BY_UUID_FAILURE: "No event with the UUID was found",
+            DATABASE_FAILURE: "Something went wrong when communicating with the database",
         }
     }
 
     getNewDoodleEventSuccessMsg(){
         return this.messages.NEW_DOODLE_EVENT_SUCCESS;
     }
-    getNewDoodleEventFailureMsg(){
+    getDoodleEventByUUIDFailureMsg(){
         return this.messages.NEW_DOODLE_EVENT_FAILURE;
+    }
+    getDoodleEventByUUIDSuccessMsg(){
+        return this.messages.GET_DOODLE_EVENT_BY_UUID_SUCCESS;
+    }
+    getNewDoodleEventFailureMsg(){
+        return this.messages.GET_DOODLE_EVENT_BY_UUID_FAILURE;
+    }
+    getDatabaseFailureMsg(){
+        return this.messages.DATABASE_FAILURE;
     }
 
     setSuccess(success){
@@ -27,8 +39,8 @@ module.exports = class Response{
         this.response.message = message;
     }
 
-    setData(data){
-        this.data = data;
+    addData(data){
+        this.response.data.push(data);
     }
 
     getResponse(){

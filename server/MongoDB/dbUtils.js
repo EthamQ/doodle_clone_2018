@@ -8,21 +8,36 @@ exports.doodleEventDBInfo = {
   collectionName : "doodleEvent"
 }
 
-// resolved boolean indicates the success for the calling function
-exports.insertIntoCollection = function(dbName, collectionName, object, responseBuilder){
+// inserts 'object' into the specified collection
+exports.insertIntoCollection = function(dbName, collectionName, object){
   return new Promise((resolve, reject) =>{
     MongoClient.connect(url, function(err, db) {
-      if (err) throw err;
+      if (err) resolve({success: false});
       var dbo = db.db(dbName);
       dbo.collection(collectionName).insertOne(object, function(err, res) {
-        if (err) resolve(false);
+        if (err) resolve({success: false});
         db.close();
-        resolve(true);
+        resolve({success: true});
       });
-
     }); 
   });
- 
+}
+
+// get all item from the specified collection
+exports.getAllItems = function(dbName, collectionName){
+  return new Promise((resolve, reject) =>{
+    MongoClient.connect(url, function(err, db) {
+      if (err) resolve({data: null, success: false});
+      var dbo = db.db(dbName);
+        if (err) resolve({data: null, success: false});
+        dbo.collection(collectionName).find().toArray(function(err, items) {
+          if (err) resolve({data: null, success: false});
+          resolve({data: items, success: true});
+          db.close();
+        });
+    }); 
+  });
+
 }
 
 // exports.createDB = function(dbName){ 

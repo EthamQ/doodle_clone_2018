@@ -10,7 +10,7 @@ module.exports = class doodleEventModel{
             dateTo: null,
             eventType: null,
             uuid: null,
-            url: 'http://pwp-doodle/'
+            url: 'http://doodleEvent/'
         };
         // all keys the user is allowed to set with a request
         this.allowedKeys = [
