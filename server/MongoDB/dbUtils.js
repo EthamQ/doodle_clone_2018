@@ -11,7 +11,7 @@ exports.doodleEventDBInfo = {
 // inserts 'object' into the specified collection
 exports.insertIntoCollection = function(dbName, collectionName, object){
   return new Promise((resolve, reject) =>{
-    MongoClient.connect(url, function(err, db) {
+    MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
       if (err) resolve({success: false});
       var dbo = db.db(dbName);
       dbo.collection(collectionName).insertOne(object, function(err, res) {
@@ -23,10 +23,10 @@ exports.insertIntoCollection = function(dbName, collectionName, object){
   });
 }
 
-// get all item from the specified collection
+// get all items from the specified collection
 exports.getAllItems = function(dbName, collectionName){
   return new Promise((resolve, reject) =>{
-    MongoClient.connect(url, function(err, db) {
+    MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
       if (err) resolve({data: null, success: false});
       var dbo = db.db(dbName);
         if (err) resolve({data: null, success: false});

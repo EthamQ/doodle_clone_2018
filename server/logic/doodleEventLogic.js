@@ -10,7 +10,6 @@ exports.createNewDoodleEvent = function (req, res, next) {
         doodleEventToSave.setModelProperty(newEvent);
     doodleEventToSave.setDoodleEventModelUUID();
         let doodleEventReadyForDb = doodleEventToSave.getDoodleEventModel();
-        console.log(doodleEventReadyForDb);
         mongodb.insertIntoCollection(dbInfo.dbName, dbInfo.collectionName, doodleEventReadyForDb).then(data => {
             responseBuilder.setMessage(data.success ? responseBuilder.getNewDoodleEventSuccessMsg() : responseBuilder.getNewDoodleEventFailureMsg());
             responseBuilder.setSuccess(data.success);
