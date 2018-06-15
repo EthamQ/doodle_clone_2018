@@ -21,9 +21,9 @@ exports.createNewDoodleEvent = function (req, res, next) {
 }
 
 exports.getDoodleEventByUUID = function (req, res, next) {
-    let responseBuilder = new response();
+    let responseBuilder = new Response();
     let uuidUrl = req.params.uuid;
-    mongodb.getAllItems(dbInfo.dbName, dbInfo.collectionName).then(data => {
+    getDoodleEventByUUIDIntern(uuidUrl, data => {
         responseBuilder.setSuccess(data.success);
         if (!data.success) {
             responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
@@ -31,20 +31,35 @@ exports.getDoodleEventByUUID = function (req, res, next) {
         else {
             responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDFailureMsg());
         }
-        data.data.map(event => {
-            if (event.uuid == uuidUrl) {
-                responseBuilder.addData(event);
-                responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDSuccessMsg());
-                res.send(responseBuilder.getResponse());
-            }
-        });
+        responseBuilder.addData(data.event);
+        responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDSuccessMsg());
+        res.send(responseBuilder.getResponse());
+        resolve(responseBuilder.getResponse());
     });
 }
 
 
 exports.addNewParticipant = function (req, res, next) {
+    let uuid = req.params.uuid;
     let participant = new DoodleParticipantModel();
     let participantToAdd = req.body;
     participant.setModelProperty(participantToAdd);
-    console.log(participant.getModel());
+    getDoodleEventByUUIDIntern(uuid, data => {
+        let participantsOld = data.event.participants;
+        participantsOld.push(participant.getModel());
+        console.log(participantsOld);
+        res.send(participantsOld);
+    });
+}
+
+getDoodleEventByUUIDIntern = function (uuidFromUrl, callback) {
+    mongodb.getAllItems(dbInfo.dbName, dbInfo.collectionName).then(data => {
+        if (data.success) {
+            data.data.map(event => {
+                if (event.uuid == uuidFromUrl) {
+                    callback({ event: event, success: data.success });
+                }
+            });
+        }
+    });
 }
