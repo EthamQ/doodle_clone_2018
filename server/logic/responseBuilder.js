@@ -25,7 +25,7 @@ module.exports = class Response{
         return this.messages.GET_DOODLE_EVENT_BY_UUID_SUCCESS;
     }
     getNewDoodleEventFailureMsg(){
-        return this.messages.GET_DOODLE_EVENT_BY_UUID_FAILURE;
+        return this.messages.NEW_DOODLE_EVENT_FAILURE;
     }
     getDatabaseFailureMsg(){
         return this.messages.DATABASE_FAILURE;

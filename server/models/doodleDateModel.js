@@ -1,26 +1,10 @@
 var fillModel = require('./fillModels.js');
+const ModelClass = require('./doodleModel');
+const constructorArgs = require('./doodleDateModelValues');
 
-module.exports = class DateModel{
+module.exports = class DateModel extends ModelClass{
     constructor() {
-        this.model = {
-            date: null,
-            timeFrom: null,
-            timeTo: null,
-        }
-        this.allowedKeys = [
-            'date',
-            'timeFrom',
-            'timeTo',
-        ]
+        super(constructorArgs.model, constructorArgs.allowedKeys);
     }
 
-    getNewDateModel(){
-        return this.model;
-    }
-
-    setModelProperty(date){
-        for(let key in date){
-            fillModel.fillModelProperty(this.allowedKeys, this.model, key,  date[key]);
-        }
-    }
 }

@@ -1,20 +1,23 @@
-var doodleEventModel = require('./../models/doodleEventModel');
+var DoodleEventModel = require('./../models/doodleEventModel');
+var DoodleParticipantModel = require('./../models/doodleParticipantModel');
+var Response = require('./responseBuilder');
 var mongodb = require('./../MongoDB/dbUtils');
 var dbInfo = mongodb.doodleEventDBInfo;
-var response = require('./responseBuilder');
+
 
 exports.createNewDoodleEvent = function (req, res, next) {
-    let responseBuilder = new response();
-    let doodleEventToSave = new doodleEventModel();
+    let responseBuilder = new Response();
+    let doodleEventToSave = new DoodleEventModel();
     let newEvent = req.body;
-        doodleEventToSave.setModelProperty(newEvent);
+    doodleEventToSave.setValues(newEvent);
     doodleEventToSave.setDoodleEventModelUUID();
-        let doodleEventReadyForDb = doodleEventToSave.getDoodleEventModel();
-        mongodb.insertIntoCollection(dbInfo.dbName, dbInfo.collectionName, doodleEventReadyForDb).then(data => {
-            responseBuilder.setMessage(data.success ? responseBuilder.getNewDoodleEventSuccessMsg() : responseBuilder.getNewDoodleEventFailureMsg());
-            responseBuilder.setSuccess(data.success);
-            res.send(responseBuilder.getResponse());
-        });
+    let doodleEventReadyForDb = doodleEventToSave.getModel();
+    console.log(doodleEventReadyForDb);
+    mongodb.insertIntoCollection(dbInfo.dbName, dbInfo.collectionName, doodleEventReadyForDb).then(data => {
+        responseBuilder.setMessage(data.success ? responseBuilder.getNewDoodleEventSuccessMsg() : responseBuilder.getNewDoodleEventFailureMsg());
+        responseBuilder.setSuccess(data.success);
+        res.send(responseBuilder.getResponse());
+    });
 }
 
 exports.getDoodleEventByUUID = function (req, res, next) {
@@ -36,4 +39,12 @@ exports.getDoodleEventByUUID = function (req, res, next) {
             }
         });
     });
+}
+
+
+exports.addNewParticipant = function (req, res, next) {
+    let participant = new DoodleParticipantModel();
+    let participantToAdd = req.body;
+    participant.setModelProperty(participantToAdd);
+    console.log(participant.getModel());
 }

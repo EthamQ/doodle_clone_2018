@@ -10,6 +10,7 @@ router.get('/', function(req, res, next) {
 
 router.post('/newDoodleEvent', logic.createNewDoodleEvent);
 router.get('/doodleEvent/:uuid', logic.getDoodleEventByUUID);
+router.post('/participant/:uuid', logic.addNewParticipant);
 
 
 

@@ -1,10 +1,15 @@
 
 POST http://localhost:3000/newDoodleEvent
-{
-    "title": "PWP5",
+
+{	
+    "title": "doodle event with creator",
     "location": "München",
     "description": "from postman",
     "eventType": "Treffen",
+    "participants": [
+    	{"name": "CreatorName",
+		"email": "creator.com"}
+		],
     "date": [
     	{
     	"date": "2.10.2018",
@@ -15,5 +20,6 @@ POST http://localhost:3000/newDoodleEvent
     	"date": "5.10.2018",
         "timeFrom": "5:00",
         "timeTo": "6:00"
-    	}]	
+    	}]
 }
+

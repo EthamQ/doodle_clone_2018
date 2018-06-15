@@ -1,43 +1,25 @@
 var fillModel = require('./fillModels.js');
 var uuid = require('uuid/v4');
 var dateM = require('./doodleDateModel');
+const ModelClass = require('./doodleModel');
+const ParticipantModel = require('./doodleParticipantModel');
+const constructorArgs = require('./doodleEventModelValues');
 
-module.exports = class doodleEventModel{
+module.exports = class doodleEventModel extends ModelClass{
 
     constructor() {
-        // define model
-        this.model = {
-            title: null,
-            description: null,
-            isActive: true,
-            eventType: null,
-            location: null,
-            numberParticipants: 1,
-            creatorEvent: {},
-            participants: [],
-            date: [],
-            uuid: null,
-            url: 'http://doodleEvent/'
-        };
-        // all keys the user is allowed to set with a request
-        this.allowedKeys = [
-            'title',
-            'description',
-            'location',
-            'eventType',
-        ]
+        super(constructorArgs.model, constructorArgs.allowedKeys);
     }
     
-    getDoodleEventModel(){
-        return this.model;
-    }
-
     // look for the 'key' in this model and assign 'value' to it
-    setModelProperty(event){
+    setValues(event){
+        this.setModelProperty(event);
         for (let key in event) {
-            fillModel.fillModelProperty(this.allowedKeys, this.model, key, event[key]);
             if(key == 'date'){
                 this.addDates(event[key]);
+            }
+            if(key == 'participants'){
+                this.addCreator(event[key]);
             }
         }  
     }
@@ -53,25 +35,29 @@ module.exports = class doodleEventModel{
         dateArray.map(date =>{
             let dateModel = new dateM();
             dateModel.setModelProperty(date);
-            this.model.date.push(dateModel.getNewDateModel());
+            this.model.date.push(dateModel.getModel());
         });
     }
 
-    // addCreatorOfEvent(creator){
-    //     this.model.creatorEvent = {
-    //         name: creator.name,
-    //         email: creator.email
-    //     }
-    // }
 
-    // addParticipiant(participant){
-    //     this.model.participants.push(
-    //         {
-    //             name: participant.name,
-    //             email: participant.email
-    //         }
-    //     );
-    // }
+    addCreator(participantArray){
+        if(participantArray.length === 1){
+            participantArray.map(creator =>{
+                console.log("map 1");
+                let participant = new ParticipantModel();
+                participant.setIsEventCreator();
+                participant.setModelProperty(creator); 
+                // console.log(participant.getModel());
+                this.model.participants.push(participant.getModel());
+                this.model.numberParticipants++;
+            });
+        }
+        else{
+            console.log("throw error, more than one creator!");
+        }
+      
+       
+    }
 
 }
 
