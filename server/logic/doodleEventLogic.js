@@ -7,17 +7,16 @@ exports.createNewDoodleEvent = function (req, res, next) {
     let responseBuilder = new response();
     let doodleEventToSave = new doodleEventModel();
     let newEvent = req.body;
-    for (var key in newEvent) {
-        doodleEventToSave.setDoodleEventModelProperty(key, newEvent[key]);
-    }
+        doodleEventToSave.setModelProperty(newEvent);
     doodleEventToSave.setDoodleEventModelUUID();
-    let doodleEventReadyForDb = doodleEventToSave.getDoodleEventModel();
-    mongodb.insertIntoCollection(dbInfo.dbName, dbInfo.collectionName, doodleEventReadyForDb).then(data => {
-        responseBuilder.setMessage(data.success ? responseBuilder.getNewDoodleEventSuccessMsg() : responseBuilder.getNewDoodleEventFailureMsg());
-        responseBuilder.setSuccess(data.success);
-        res.send(responseBuilder.getResponse());
-    });
-};
+        let doodleEventReadyForDb = doodleEventToSave.getDoodleEventModel();
+        console.log(doodleEventReadyForDb);
+        mongodb.insertIntoCollection(dbInfo.dbName, dbInfo.collectionName, doodleEventReadyForDb).then(data => {
+            responseBuilder.setMessage(data.success ? responseBuilder.getNewDoodleEventSuccessMsg() : responseBuilder.getNewDoodleEventFailureMsg());
+            responseBuilder.setSuccess(data.success);
+            res.send(responseBuilder.getResponse());
+        });
+}
 
 exports.getDoodleEventByUUID = function (req, res, next) {
     let responseBuilder = new response();

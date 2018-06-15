@@ -1,0 +1,19 @@
+
+POST http://localhost:3000/newDoodleEvent
+{
+    "title": "PWP5",
+    "location": "München",
+    "description": "from postman",
+    "eventType": "Treffen",
+    "date": [
+    	{
+    	"date": "2.10.2018",
+        "timeFrom": "13:00",
+        "timeTo": "14:00"
+    	},
+    	{
+    	"date": "5.10.2018",
+        "timeFrom": "5:00",
+        "timeTo": "6:00"
+    	}]	
+}
