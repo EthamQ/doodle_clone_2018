@@ -1,6 +1,5 @@
 
 POST http://localhost:3000/newDoodleEvent
-
 {	
     "title": "doodle event with creator",
     "location": "München",
@@ -21,5 +20,16 @@ POST http://localhost:3000/newDoodleEvent
         "timeFrom": "5:00",
         "timeTo": "6:00"
     	}]
+}
+
+
+
+
+http://localhost:3000/participant/29c1f742-35b8-49c2-a787-b5b978179617
+
+(add your own uuid of an existing event in the url above)
+{
+    		"name": "new participant",
+			"email": "newP.com"
 }
 

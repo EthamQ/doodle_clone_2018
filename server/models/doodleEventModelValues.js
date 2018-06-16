@@ -5,8 +5,8 @@ exports.model = {
     eventType: null,
     location: null,
     numberParticipants: 0,
-    participants: [],
-    date: [],
+    participants: [], //isModel
+    date: [], //isModel
     uuid: null,
     url: 'http://doodleEvent/'
 };

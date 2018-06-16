@@ -1,43 +1,58 @@
 var mongodb = require('mongodb');
 var MongoClient = require('mongodb').MongoClient;
-let databaseName= "mydb";
+let databaseName = "mydb";
 var url = "mongodb://localhost:27017/";
 
 exports.doodleEventDBInfo = {
-  dbName : "doodlePWP",
-  collectionName : "doodleEvent"
+  dbName: "doodlePWP",
+  collectionName: "doodleEvent"
 }
 
 // inserts 'object' into the specified collection
-exports.insertIntoCollection = function(dbName, collectionName, object){
-  return new Promise((resolve, reject) =>{
-    MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
-      if (err) resolve({success: false});
+exports.insertIntoCollection = function (dbName, collectionName, object) {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
+      if (err) resolve({ success: false });
       var dbo = db.db(dbName);
-      dbo.collection(collectionName).insertOne(object, function(err, res) {
-        if (err) resolve({success: false});
+      dbo.collection(collectionName).insertOne(object, function (err, res) {
+        if (err) resolve({ success: false });
         db.close();
-        resolve({success: true});
+        resolve({ success: true });
       });
-    }); 
+    });
   });
 }
 
 // get all items from the specified collection
-exports.getAllItems = function(dbName, collectionName){
-  return new Promise((resolve, reject) =>{
-    MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
-      if (err) resolve({data: null, success: false});
+exports.getAllItems = function (dbName, collectionName) {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
+      if (err) resolve({ data: null, success: false });
       var dbo = db.db(dbName);
-        if (err) resolve({data: null, success: false});
-        dbo.collection(collectionName).find().toArray(function(err, items) {
-          if (err) resolve({data: null, success: false});
-          resolve({data: items, success: true});
-          db.close();
-        });
-    }); 
+      if (err) resolve({ data: null, success: false });
+      dbo.collection(collectionName).find().toArray(function (err, items) {
+        if (err) resolve({ data: null, success: false });
+        resolve({ data: items, success: true });
+        db.close();
+      });
+    });
   });
+}
 
+// TODO: return Promise and success
+exports.updateItem = function (dbName, collectionName, criteria, update) {
+  MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
+    if (err) throw err;
+    let dbo = db.db(dbName);
+    if (err) throw err;
+    let mongodb = require('mongodb');
+    let updateInformation = { $set: update };
+    dbo.collection(collectionName).update(criteria, updateInformation, { w: 1 },
+      function (err, result) {
+        if (err) throw err;
+        console.log('Document Updated Successfully');
+      });
+  });
 }
 
 // exports.createDB = function(dbName){ 
@@ -75,7 +90,7 @@ exports.getAllItems = function(dbName, collectionName){
 //           res.send(items);
 //           db.close();
 //         });
-     
+
 
 //     }); 
 // }
@@ -92,26 +107,12 @@ exports.getAllItems = function(dbName, collectionName){
 //           console.log('Document Removed Successfully');
 //           db.close();
 //         });
-     
+
 
 //     }); 
 // }
 
 
-// exports.updateItemWithId = function(dbName, collectionName, id, updatedItem){
-//   MongoClient.connect(url, function(err, db) {
-//       if (err) throw err;
-//       let dbo = db.db(dbName);
-//         if (err) throw err;
-//         let mongodb = require('mongodb');
-//         // TODO think of attributes to update
-//         dbo.collection(collectionName).update({_id: new mongodb.ObjectID(id)}, { $set: { eventName: updatedItem.title} }, {w:1},
-//         function(err, result){
-//                    if(err) throw err;    
-//                    console.log('Document Updated Successfully');
-//            });
-//     }); 
-// }
 
 
 
