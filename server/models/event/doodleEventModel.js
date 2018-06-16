@@ -8,7 +8,7 @@ const constructorArgs = require('./doodleEventModelValues');
 module.exports = class doodleEventModel extends ModelClass{
 
     constructor() {
-        super(constructorArgs.model, constructorArgs.allowedKeys);
+        super(constructorArgs.model, constructorArgs.allowedKeys, constructorArgs.requiredKeys);
     }
     
     // set properties of this model directly
@@ -31,6 +31,24 @@ module.exports = class doodleEventModel extends ModelClass{
         let newUUID = uuid();
         this.model.uuid = newUUID;
         this.model.url += newUUID;
+    }
+
+   
+
+    isEmpty(value){
+        return value == undefined || value == null || value == "";
+    }
+
+
+    getModel(){
+        this.setDoodleEventModelUUID();
+        this.setTimestamp();
+        console.log("Valid? " + this.modelIsValid());
+        return this.model;
+    }
+
+    setTimestamp(){
+        this.model.timestamp = new Date().toJSON(); 
     }
 
     // add all dates in 'dateArray' to this EventModel

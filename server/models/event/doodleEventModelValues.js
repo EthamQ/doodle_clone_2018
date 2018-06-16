@@ -8,7 +8,8 @@ exports.model = {
     participants: [], //isModel
     date: [], //isModel
     uuid: null,
-    url: 'http://doodleEvent/'
+    url: 'http://doodleEvent/',
+    timestamp: null,
 };
 // all keys the user is allowed to set directly with a request
 exports.allowedKeys = [
@@ -16,4 +17,8 @@ exports.allowedKeys = [
     'description',
     'location',
     'eventType',
+]
+
+exports.requiredKeys = [
+    'title'
 ]

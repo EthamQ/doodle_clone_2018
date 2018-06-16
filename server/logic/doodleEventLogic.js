@@ -10,19 +10,25 @@ exports.createNewDoodleEvent = function (req, res, next) {
     let doodleEventToSave = new DoodleEventModel();
     let newEvent = req.body;
     doodleEventToSave.setValues(newEvent);
-    doodleEventToSave.setDoodleEventModelUUID();
-    let doodleEventReadyForDb = doodleEventToSave.getModel();
-    console.log(doodleEventReadyForDb);
-    mongodb.insertIntoCollection(dbInfo.dbName, dbInfo.collectionName, doodleEventReadyForDb).then(data => {
-        responseBuilder.setMessage(data.success ? responseBuilder.getNewDoodleEventSuccessMsg() : responseBuilder.getNewDoodleEventFailureMsg());
-        responseBuilder.setSuccess(data.success);
-        responseBuilder.addData(doodleEventReadyForDb);
-        res.send(responseBuilder.getResponse());
-    }).catch(function(err){
+    if (doodleEventToSave.modelIsValid()) {
+        let doodleEventReadyForDb = doodleEventToSave.getModel();
+        mongodb.insertIntoCollection(dbInfo.dbName, dbInfo.collectionName, doodleEventReadyForDb).then(data => {
+            responseBuilder.setMessage(data.success ? responseBuilder.getNewDoodleEventSuccessMsg() : responseBuilder.getNewDoodleEventFailureMsg());
+            responseBuilder.setSuccess(data.success);
+            responseBuilder.addData(doodleEventReadyForDb);
+            res.send(responseBuilder.getResponse());
+        }).catch(function (err) {
+            responseBuilder.setSuccess(false);
+            responseBuilder.setMessage(responseBuilder.getNewDoodleEventFailureMsg());
+            res.send(responseBuilder.getResponse());
+        });
+    }
+    else {
         responseBuilder.setSuccess(false);
-        responseBuilder.setMessage(responseBuilder.getNewDoodleEventFailureMsg());
+        responseBuilder.setMessage(responseBuilder.getModelIsInvalidFailureMsg());
         res.send(responseBuilder.getResponse());
-    });
+    }
+
 }
 
 exports.getDoodleEventByUUID = function (req, res, next) {
@@ -53,18 +59,18 @@ exports.addNewParticipant = function (req, res, next) {
     getDoodleEventByUUIDIntern(uuidFromUrl, data => {
         let participantsNew = data.event.participants;
         participantsNew.push(participant.getModel());
-        let criteria = {uuid: uuidFromUrl};
-        let update = {participants: participantsNew};
-        mongodb.updateItem(dbInfo.dbName, dbInfo.collectionName, criteria, update).then(dbdata =>{
+        let criteria = { uuid: uuidFromUrl };
+        let update = { participants: participantsNew };
+        mongodb.updateItem(dbInfo.dbName, dbInfo.collectionName, criteria, update).then(dbdata => {
             responseBuilder.setSuccess(dbdata.success);
             responseBuilder.addData(participantsNew);
             responseBuilder.setMessage(dbdata.success ? responseBuilder.getParticipantAddedSuccessMsg(data.event.title) : responseBuilder.getDatabaseFailureMsg());
             res.send(responseBuilder.getResponse());
-        }).catch(function(err){
+        }).catch(function (err) {
             responseBuilder.setSuccess(false);
             responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
             res.send(responseBuilder.getResponse());
-        }); 
+        });
     });
 }
 

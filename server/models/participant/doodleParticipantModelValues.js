@@ -8,3 +8,7 @@ exports.allowedKeys = [
     'name',
     'email',
 ]
+
+exports.requiredKeys = [
+    'email'
+]

@@ -9,3 +9,7 @@ exports.allowedKeys = [
     'timeFrom',
     'timeTo',
 ]
+
+exports.requiredKeys = [
+    'date'
+]

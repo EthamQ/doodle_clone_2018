@@ -13,9 +13,13 @@ module.exports = class Response{
             GET_DOODLE_EVENT_BY_UUID_FAILURE: "No event with the UUID was found",
             DATABASE_FAILURE: "Something went wrong when communicating with the database",
             ADD_PARTICIPANT_SUCCESS: "Participant was added to the event: ",
+            REQUIRED_KEYS_MISSING_FAILURE: "Required values are missing",
         }
     }
 
+    getModelIsInvalidFailureMsg(){
+        return this.messages.REQUIRED_KEYS_MISSING_FAILURE;
+    }
     getParticipantAddedSuccessMsg(eventTitle){
         return this.messages.ADD_PARTICIPANT_SUCCESS + eventTitle;
     }
