@@ -1,5 +1,5 @@
-var fillModel = require('./fillModels.js');
-const ModelClass = require('./doodleModel');
+var fillModel = require('./../fillModels.js');
+const ModelClass = require('./../doodleModel');
 const constructorArgs = require('./doodleDateModelValues');
 
 module.exports = class DateModel extends ModelClass{

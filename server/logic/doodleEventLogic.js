@@ -1,5 +1,5 @@
-var DoodleEventModel = require('./../models/doodleEventModel');
-var DoodleParticipantModel = require('./../models/doodleParticipantModel');
+var DoodleEventModel = require('./../models/event/doodleEventModel');
+var DoodleParticipantModel = require('./../models/participant/doodleParticipantModel');
 var ResponseBuilder = require('./responseBuilder');
 var mongodb = require('./../MongoDB/dbUtils');
 var dbInfo = mongodb.doodleEventDBInfo;

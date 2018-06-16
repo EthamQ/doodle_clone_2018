@@ -1,4 +1,4 @@
-const ModelClass = require('./doodleModel');
+const ModelClass = require('./../doodleModel');
 let constructorArgs = require('./doodleParticipantModelValues');
 
 module.exports = class Participant extends ModelClass{

@@ -1,8 +1,8 @@
-var fillModel = require('./fillModels.js');
+var fillModel = require('./../fillModels.js');
+const ModelClass = require('./../doodleModel');
 var uuid = require('uuid/v4');
-var DateModel = require('./doodleDateModel');
-const ModelClass = require('./doodleModel');
-const ParticipantModel = require('./doodleParticipantModel');
+var DateModel = require('./../date/doodleDateModel');
+const ParticipantModel = require('./../participant/doodleParticipantModel');
 const constructorArgs = require('./doodleEventModelValues');
 
 module.exports = class doodleEventModel extends ModelClass{
