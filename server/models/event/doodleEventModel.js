@@ -1,7 +1,7 @@
-var fillModel = require('./../fillModels.js');
+const fillModel = require('./../fillModels.js');
 const ModelClass = require('./../doodleModel');
-var uuid = require('uuid/v4');
-var DateModel = require('./../date/doodleDateModel');
+const uuid = require('uuid/v4');
+const DateModel = require('./../date/doodleDateModel');
 const ParticipantModel = require('./../participant/doodleParticipantModel');
 const constructorArgs = require('./doodleEventModelValues');
 
@@ -9,11 +9,12 @@ module.exports = class doodleEventModel extends ModelClass{
 
     constructor() {
         super(constructorArgs.model, constructorArgs.allowedKeys, constructorArgs.requiredKeys);
+        this.datesAreValid = true;
     }
     
     // set properties of this model directly
     // if property is model use setModelProperty of the corresponding model class to assign values
-    setValues(event){
+    setThisAndChildModels(event){
         this.setModelProperty(event);
         // other models in this model
         for (let key in event) {
@@ -26,6 +27,10 @@ module.exports = class doodleEventModel extends ModelClass{
         }  
     }
 
+    childModelsAreValid(){
+      return this.datesAreValid;
+    }
+
     // generate uuid and add it to url
     setDoodleEventModelUUID(){
         let newUUID = uuid();
@@ -33,17 +38,9 @@ module.exports = class doodleEventModel extends ModelClass{
         this.model.url += newUUID;
     }
 
-   
-
-    isEmpty(value){
-        return value == undefined || value == null || value == "";
-    }
-
-
-    getModel(){
+    getModel(){      
         this.setDoodleEventModelUUID();
         this.setTimestamp();
-        console.log("Valid? " + this.modelIsValid());
         return this.model;
     }
 
@@ -57,6 +54,9 @@ module.exports = class doodleEventModel extends ModelClass{
             let dateModel = new DateModel();
             dateModel.setModelProperty(date);
             this.model.date.push(dateModel.getModel());
+            if(this.datesAreValid){
+                this.datesAreValid = dateModel.modelIsValid();
+            }
         });
     }
 
@@ -75,7 +75,6 @@ module.exports = class doodleEventModel extends ModelClass{
             console.log("throw error, more than one creator or no creator!");
         }
     }
-
 }
 
 
