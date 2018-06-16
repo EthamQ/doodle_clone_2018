@@ -18,6 +18,10 @@ exports.createNewDoodleEvent = function (req, res, next) {
         responseBuilder.setSuccess(data.success);
         responseBuilder.addData(doodleEventReadyForDb);
         res.send(responseBuilder.getResponse());
+    }).catch(function(err){
+        responseBuilder.setSuccess(false);
+        responseBuilder.setMessage(responseBuilder.getNewDoodleEventFailureMsg());
+        res.send(responseBuilder.getResponse());
     });
 }
 
@@ -35,11 +39,11 @@ exports.getDoodleEventByUUID = function (req, res, next) {
         responseBuilder.addData(data.event);
         responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDSuccessMsg());
         res.send(responseBuilder.getResponse());
-        resolve(responseBuilder.getResponse());
     });
 }
 
-// TODO: create response for client
+// reads uuid from url, gets the corresponding event, 
+// adds the participant from the requestbody to the participants array of the event
 exports.addNewParticipant = function (req, res, next) {
     let responseBuilder = new ResponseBuilder();
     let uuidFromUrl = req.params.uuid;
@@ -49,14 +53,22 @@ exports.addNewParticipant = function (req, res, next) {
     getDoodleEventByUUIDIntern(uuidFromUrl, data => {
         let participantsNew = data.event.participants;
         participantsNew.push(participant.getModel());
-        console.log(participantsNew);
         let criteria = {uuid: uuidFromUrl};
         let update = {participants: participantsNew};
-        mongodb.updateItem(dbInfo.dbName, dbInfo.collectionName, criteria, update);
-        res.send(participantsNew);
+        mongodb.updateItem(dbInfo.dbName, dbInfo.collectionName, criteria, update).then(dbdata =>{
+            responseBuilder.setSuccess(dbdata.success);
+            responseBuilder.addData(participantsNew);
+            responseBuilder.setMessage(dbdata.success ? responseBuilder.getParticipantAddedSuccessMsg(data.event.title) : responseBuilder.getDatabaseFailureMsg());
+            res.send(responseBuilder.getResponse());
+        }).catch(function(err){
+            responseBuilder.setSuccess(false);
+            responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
+            res.send(responseBuilder.getResponse());
+        }); 
     });
 }
 
+// callback function returns the event and success boolean
 getDoodleEventByUUIDIntern = function (uuidFromUrl, callback) {
     mongodb.getAllItems(dbInfo.dbName, dbInfo.collectionName).then(data => {
         if (data.success) {

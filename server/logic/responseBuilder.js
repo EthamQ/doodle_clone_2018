@@ -12,9 +12,13 @@ module.exports = class Response{
             GET_DOODLE_EVENT_BY_UUID_SUCCESS: "Event with the UUID found",
             GET_DOODLE_EVENT_BY_UUID_FAILURE: "No event with the UUID was found",
             DATABASE_FAILURE: "Something went wrong when communicating with the database",
+            ADD_PARTICIPANT_SUCCESS: "Participant was added to the event: ",
         }
     }
 
+    getParticipantAddedSuccessMsg(eventTitle){
+        return this.messages.ADD_PARTICIPANT_SUCCESS + eventTitle;
+    }
     getNewDoodleEventSuccessMsg(){
         return this.messages.NEW_DOODLE_EVENT_SUCCESS;
     }

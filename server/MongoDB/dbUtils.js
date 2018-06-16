@@ -41,18 +41,21 @@ exports.getAllItems = function (dbName, collectionName) {
 
 // TODO: return Promise and success
 exports.updateItem = function (dbName, collectionName, criteria, update) {
-  MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
-    if (err) throw err;
-    let dbo = db.db(dbName);
-    if (err) throw err;
-    let mongodb = require('mongodb');
-    let updateInformation = { $set: update };
-    dbo.collection(collectionName).update(criteria, updateInformation, { w: 1 },
-      function (err, result) {
-        if (err) throw err;
-        console.log('Document Updated Successfully');
-      });
+  return new Promise((resolve, reject)=>{
+    MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
+      if (err) resolve({ data: null, success: false });
+      let dbo = db.db(dbName);
+      if (err) resolve({ data: null, success: false });
+      let mongodb = require('mongodb');
+      let updateInformation = { $set: update };
+      dbo.collection(collectionName).update(criteria, updateInformation, { w: 1 },
+        function (err, result) {
+          if (err) resolve({ data: null, success: false });
+          resolve({ data: null, success: true })
+        });
+    });
   });
+ 
 }
 
 // exports.createDB = function(dbName){ 
