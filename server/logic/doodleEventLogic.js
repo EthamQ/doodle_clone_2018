@@ -7,7 +7,7 @@ var dbInfo = mongodb.doodleEventDBInfo;
 
 exports.createNewDoodleEvent = function (req, res, next) {
     let responseBuilder = new ResponseBuilder();
-    let doodleEventToSave = new DoodleEventModel();
+    doodleEventToSave = new DoodleEventModel();
     let newEvent = req.body;
     doodleEventToSave.setThisAndChildModels(newEvent);
     if (doodleEventToSave.modelIsValid() && doodleEventToSave.childModelsAreValid()) {

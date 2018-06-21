@@ -12,10 +12,16 @@ exports.doodleEventDBInfo = {
 exports.insertIntoCollection = function (dbName, collectionName, object) {
   return new Promise((resolve, reject) => {
     MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
-      if (err) resolve({ success: false });
+      if (err){
+        console.log(err);
+        resolve({ success: false });
+      } 
       var dbo = db.db(dbName);
-      dbo.collection(collectionName).insertOne(object, function (err, res) {
-        if (err) resolve({ success: false });
+      dbo.collection(collectionName).insertOne({_id: object.uuid, object}, function (err, res) {
+        if (err)  if (err){
+          console.log(err);
+          resolve({ success: false });
+        }   
         db.close();
         resolve({ success: true });
       });
