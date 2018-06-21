@@ -12,6 +12,10 @@ router.post('/newDoodleEvent', logic.createNewDoodleEvent);
 router.get('/doodleEvent/:uuid', logic.getDoodleEventByUUID);
 router.post('/participant/:uuid', logic.addNewParticipant);
 
+router.get('/get', (req, res, next) =>{
+  dbUtils.getOneItems(dbUtils.doodleDateDBInfo.dbName, dbUtils.doodleDateDBInfo.collectionName, '5b2ac3bfa257342fc025dc56');
+});
+
 
 
 

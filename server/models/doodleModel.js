@@ -1,10 +1,16 @@
 var fillModel = require('./fillModels.js');
+let dbUtils = require('./../MongoDB/dbUtils');
 
 module.exports = class Model {
-    constructor(model, allowedKeys, requiredKeys) {
+    constructor(model, allowedKeys, requiredKeys, dbInfo) {
         this.model = model;
         this.allowedKeys = allowedKeys;
-        this.requiredKeys = requiredKeys;   
+        this.requiredKeys = requiredKeys;
+        if(dbInfo){
+            this.dbName = dbInfo.dbName;
+            this.collectionName = dbInfo.collectionName; 
+        }  
+        
     }
 
     getModel(){
@@ -31,5 +37,24 @@ module.exports = class Model {
 
     isEmpty(value){
         return value == undefined || value == null || value == "" || value == [];
+    }
+
+    saveModelInDatabase(){
+        console.log(this.model);
+        return new Promise((resolve, reject) =>{
+            dbUtils.insertIntoCollection(this.dbName, this.collectionName, this.model).then(data =>{
+                resolve(data);   
+            }).catch(err =>{
+                console.log(err);
+            });
+        });
+    }
+
+    setResponseBuilder(responseBuilder){
+        this.responseBuilder = responseBuilder;
+    }
+
+    getResponse(){
+        return this.responseBuilder.getResponse();
     }
 }

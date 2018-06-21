@@ -1,3 +1,5 @@
+const dbUtils = require('./../../MongoDB/dbUtils');
+
 exports.model = {
     title: null,
     description: null,
@@ -5,8 +7,8 @@ exports.model = {
     eventType: null,
     location: null,
     numberParticipants: 0,
-    participants: [], //instanceof doodleParticipantModel()
-    date: [], //instanceof doodleDateModel()
+    // participants: [], //instanceof doodleParticipantModel()
+    // date: [], //instanceof doodleDateModel()
     uuid: null,
     url: 'http://doodleEvent/',
     timestamp: null,
@@ -22,3 +24,5 @@ exports.allowedKeys = [
 exports.requiredKeys = [
     'title'
 ]
+
+exports.dbInfo = dbUtils.doodleEventDBInfo;

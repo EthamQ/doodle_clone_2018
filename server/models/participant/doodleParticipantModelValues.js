@@ -12,3 +12,6 @@ exports.allowedKeys = [
 exports.requiredKeys = [
     'email'
 ]
+
+const dbUtils = require('./../../MongoDB/dbUtils');
+exports.dbInfo = null;

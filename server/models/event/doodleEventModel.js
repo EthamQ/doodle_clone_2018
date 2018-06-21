@@ -4,27 +4,37 @@ const uuid = require('uuid/v4');
 const DateModel = require('./../date/doodleDateModel');
 const ParticipantModel = require('./../participant/doodleParticipantModel');
 const constructorArgs = require('./doodleEventModelValues');
+const dbUtils = require('./../../MongoDB/dbUtils');
 
 module.exports = class doodleEventModel extends ModelClass{
 
     constructor() {
-        super(constructorArgs.model, constructorArgs.allowedKeys, constructorArgs.requiredKeys);
+        super(
+            constructorArgs.model,
+            constructorArgs.allowedKeys,
+            constructorArgs.requiredKeys,
+            constructorArgs.dbInfo
+        );
         this.datesAreValid = true;
     }
     
     // set properties of this model directly
     // if property is model use setModelProperty of the corresponding model class to assign values
-    setThisAndChildModels(event){
-        this.setModelProperty(event);
+    setChildModelProperties(event){
         // other models in this model
-        for (let key in event) {
-            switch(key){
-                case 'date': this.addDates(event[key]);
-                break;
-                case 'participants': this.addCreator(event[key]);
-                break;
-            }
-        }  
+        // for (let key in event) {
+        //     switch(key){
+        //         case 'date': this.addDates(event[key]);
+        //         break;
+        //         case 'participants': this.addCreator(event[key]);
+        //         break;
+        //     }
+        // }  
+    }
+
+    generateAndSetRequiredProperties(){
+        this.setDoodleEventModelUUID();
+        this.setTimestamp();
     }
 
     childModelsAreValid(){
@@ -53,7 +63,12 @@ module.exports = class doodleEventModel extends ModelClass{
         dateArray.map(date =>{
             let dateModel = new DateModel();
             dateModel.setModelProperty(date);
-            this.model.date.push(dateModel.getModel());
+            dateModel.setUUID(this.model.uuid);
+            // console.log(dateModel);
+            dateModel.saveModelInDatabase().then(data =>{
+            //    console.log(data);
+               this.model.date.push(data.insertedId);
+           });
             if(this.datesAreValid){
                 this.datesAreValid = dateModel.modelIsValid();
             }
@@ -75,6 +90,8 @@ module.exports = class doodleEventModel extends ModelClass{
             console.log("throw error, more than one creator or no creator!");
         }
     }
+
+    
 }
 
 

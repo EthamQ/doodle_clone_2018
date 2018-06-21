@@ -9,26 +9,14 @@ exports.createNewDoodleEvent = function (req, res, next) {
     let responseBuilder = new ResponseBuilder();
     let doodleEventToSave = new DoodleEventModel();
     let newEvent = req.body;
-    doodleEventToSave.setThisAndChildModels(newEvent);
-    if (doodleEventToSave.modelIsValid() && doodleEventToSave.childModelsAreValid()) {
-        let doodleEventReadyForDb = doodleEventToSave.getModel();
-        mongodb.insertIntoCollection(dbInfo.dbName, dbInfo.collectionName, doodleEventReadyForDb).then(data => {
-            responseBuilder.setMessage(data.success ? responseBuilder.getNewDoodleEventSuccessMsg() : responseBuilder.getNewDoodleEventFailureMsg());
-            responseBuilder.setSuccess(data.success);
-            responseBuilder.addData(doodleEventReadyForDb);
-            res.send(responseBuilder.getResponse());
-        }).catch(function (err) {
-            responseBuilder.setSuccess(false);
-            responseBuilder.setMessage(responseBuilder.getNewDoodleEventFailureMsg());
-            res.send(responseBuilder.getResponse());
-        });
-    }
-    else {
-        responseBuilder.setSuccess(false);
-        responseBuilder.setMessage(responseBuilder.getModelIsInvalidFailureMsg());
-        res.send(responseBuilder.getResponse());
-    }
-
+    doodleEventToSave.setResponseBuilder(responseBuilder);
+    doodleEventToSave.generateAndSetRequiredProperties();
+    doodleEventToSave.setModelProperty(newEvent);
+    doodleEventToSave.setChildModelProperties(newEvent);
+        setTimeout(()=>{
+            doodleEventToSave.saveModelInDatabase();
+            res.send(doodleEventToSave.getResponse());
+        }, 1000);
 }
 
 exports.getDoodleEventByUUID = function (req, res, next) {

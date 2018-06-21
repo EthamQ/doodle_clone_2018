@@ -4,7 +4,11 @@ const constructorArgs = require('./doodleDateModelValues');
 
 module.exports = class DateModel extends ModelClass{
     constructor() {
-        super(constructorArgs.model, constructorArgs.allowedKeys, constructorArgs.requiredKeys);
+        super(constructorArgs.model, constructorArgs.allowedKeys, constructorArgs.requiredKeys, constructorArgs.dbInfo);
+    }
+
+    setUUID(uuid){
+        this.model.uuid = uuid;
     }
 
 }
