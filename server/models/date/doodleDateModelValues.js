@@ -1,4 +1,5 @@
 exports.model = {
+    _id: null,
     date: null,
     timeFrom: null,
     timeTo: null,

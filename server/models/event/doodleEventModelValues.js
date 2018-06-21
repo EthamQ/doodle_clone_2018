@@ -1,14 +1,16 @@
 const dbUtils = require('./../../MongoDB/dbUtils');
 
 exports.model = {
+    _id: null,
     title: null,
     description: null,
     isActive: true,
     eventType: null,
     location: null,
     numberParticipants: 0,
-    // participants: [], //instanceof doodleParticipantModel()
-    // date: [], //instanceof doodleDateModel()
+    creator: null,
+    participants: [], //instanceof doodleParticipantModel()
+    date: [], //instanceof doodleDateModel()
     uuid: null,
     url: 'http://doodleEvent/',
     timestamp: null,

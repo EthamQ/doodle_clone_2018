@@ -2,15 +2,21 @@ var mongodb = require('mongodb');
 var MongoClient = require('mongodb').MongoClient;
 let databaseName = "mydb";
 var url = "mongodb://localhost:27017/";
+const uuid = require('uuid/v4');
 
 exports.doodleEventDBInfo = {
-  dbName: "doodlePWP2",
-  collectionName: "doodleEvent2"
+  dbName: "doodlePWP",
+  collectionName: "doodleEvent"
 }
 
 exports.doodleDateDBInfo = {
   dbName: "doodlePWP",
-  collectionName: "doodleDate1"
+  collectionName: "doodleDate"
+}
+
+exports.doodleParticipantDBInfo = {
+  dbName: "doodlePWP",
+  collectionName: "doodleParticipants"
 }
 
 exports.insertIntoCollection2 = function (dbName, collectionName, object,dbo) {
@@ -37,10 +43,11 @@ exports.insertIntoCollection = function (dbName, collectionName, object) {
       if (err) throw err;
       
       let dbo = db.db(dbName);
+      // console.log(object);
       dbo.collection(collectionName).insertOne(object, function (err, res) {
         if (err) throw err;
         db.close();
-        resolve({ success: true });
+        resolve({ success: true , insertedId: object._id});
       });
     });
   });

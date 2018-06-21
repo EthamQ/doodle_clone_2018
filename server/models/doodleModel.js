@@ -17,11 +17,26 @@ module.exports = class Model {
         return this.model;
     }
 
+
     // set values of properties that aren't models themselves (defined in allowedKeys)
-    setModelProperty(object){
-        for (let key in object) {
-            fillModel.fillModelProperty(this.allowedKeys, this.model, key, object[key]);
-        }  
+    setModelProperty(object, isDate){
+        if(isDate===true){
+            for (let key in object) {
+                // console.log(key);
+                // console.log(object);
+                fillModel.fillModelProperty2(this.allowedKeys, this.model, key, object[key]).then(el =>{
+                    console.log(el);
+                });
+            }  
+        }
+        else{
+            for (let key in object) {
+                // console.log(key);
+                // console.log(object);
+                fillModel.fillModelProperty(this.allowedKeys, this.model, key, object[key]);
+            }  
+        }
+      
     }
     // implement if child models exist
     setThisAndChildModels(object) { }
@@ -40,7 +55,7 @@ module.exports = class Model {
     }
 
     saveModelInDatabase(){
-        console.log(this.model);
+        // console.log(this.model);
         return new Promise((resolve, reject) =>{
             dbUtils.insertIntoCollection(this.dbName, this.collectionName, this.model).then(data =>{
                 resolve(data);   
