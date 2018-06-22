@@ -19,6 +19,8 @@ router.get('/get', (req, res, next) =>{
 // body: {name, email}
 router.post('/participant/:uuid', logic.addOnlyParticipant);
 
+router.post('/dateParticipant', logic.addDateToExistingParticipant);
+
 
 
 

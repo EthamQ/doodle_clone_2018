@@ -15,7 +15,8 @@ module.exports = class doodleEventModel extends ModelClass {
             constructorArgs.requiredKeys,
             constructorArgs.dbInfo
         );
-        this.model.dates = [];
+        this.model.date = [];
+        this.model.participant = [];
         this.datesAreValid = true;
         this.tempdates = [];
     }
@@ -42,7 +43,8 @@ module.exports = class doodleEventModel extends ModelClass {
                 });
             }
             if (key == 'creator') {
-                this.model.creator = {name: event[key].name, email: event[key].email, uuid: uuid()};
+                this.model.creator = {name: event[key].name, email: event[key].email, creatorEventUUID: uuid()};
+                this.model.numberParticipants++;
             }
         }
     }

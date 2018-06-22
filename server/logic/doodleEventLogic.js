@@ -21,20 +21,34 @@ exports.createNewDoodleEvent = function (req, res, next) {
 }
 
 exports.getDoodleEventByUUID = function (req, res, next) {
-    let responseBuilder = new ResponseBuilder();
     let uuidUrl = req.params.uuid;
-    getDoodleEventByUUIDIntern(uuidUrl, data => {
-        responseBuilder.setSuccess(data.success);
-        if (!data.success) {
-            responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
-        }
-        else {
-            responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDFailureMsg());
-        }
-        responseBuilder.addData(data.event);
-        responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDSuccessMsg());
-        res.send(responseBuilder.getResponse());
+    getDatesByEventIdIntern(uuidUrl, dateArray => {
+        getParticipantByUUID(uuidUrl, partArray =>{
+            // console.log(dateArray);
+            // console.log(partArray);
+            let responseBuilder = new ResponseBuilder();
+    
+            getDoodleEventByUUIDIntern(uuidUrl, data => {
+                responseBuilder.setSuccess(data.success);
+                if (!data.success) {
+                    responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
+                }
+                else {
+                    responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDFailureMsg());
+                }
+                data.event.date = dateArray;
+                data.event.participants = partArray;
+                // console.log(data.event);
+                responseBuilder.addData(data.event);
+                responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDSuccessMsg());
+                res.send(responseBuilder.getResponse());
+            });
+        });
     });
+
+
+
+  
 }
 
 // reads uuid from url, gets the corresponding event, 
@@ -78,7 +92,7 @@ getDoodleEventByUUIDIntern = function (uuidFromUrl, callback) {
 
 // callback function returns the event and success boolean
 getAllDatesIntern = function (callback) {
-    console.log("alldates");
+    // console.log("alldates");
     mongodb.getAllItems(mongodb.doodleDateDBInfo.dbName, mongodb.doodleDateDBInfo.collectionName).then(data => {
         if (data.success) {
                     callback({data});
@@ -87,7 +101,7 @@ getAllDatesIntern = function (callback) {
 }
 
 getDatesByEventIdIntern = function (eventId, callback) {
-    console.log("alldates");
+    // console.log("alldates");
     mongodb.getAllItems(mongodb.doodleDateDBInfo.dbName, mongodb.doodleDateDBInfo.collectionName).then(data => {
         if (data.success) {
             // console.log(data.data);
@@ -102,7 +116,7 @@ exports.addPart = function(req, res, next){
     return new Promise((resolve, reject) =>{
         let eventUUID;
         let dateId = req.body.dateId;
-        console.log(dateId);
+        // console.log(dateId);
         getAllDatesIntern(data => {
             data.data.data.map(date =>{
                 if(date._id === dateId){
@@ -144,14 +158,117 @@ exports.addOnlyParticipant = function(req, res, next){
     let eventUUID = req.params.uuid;
     let participant = req.body;
     let dates = [];
+    let part_id = uuid();
   
     getDatesByEventIdIntern(eventUUID, data =>{
-        console.log(data);
+        // console.log(data);
         data.map(el =>{
             dates.push({dateId: el._id, participates: false});
         });
-        newParticipant = {_id: uuid(),eventUUID: eventUUID, name: participant.name, email: participant.email, dates: dates};
+        newParticipant = {_id: part_id,eventUUID: eventUUID, name: participant.name, email: participant.email, dates: dates};
         mongodb.insertIntoCollection(mongodb.doodleParticipantDBInfo.dbName, mongodb.doodleParticipantDBInfo.collectionName, newParticipant);
     });
+
+    getDoodleEventByUUIDIntern(eventUUID, data =>{
+        let participantsOld = data.event.participants;
+        console.log(data.participants);
+        participantsOld.push({participantId: part_id});
+        let criteria = {uuid: eventUUID};
+        let update = {participants: participantsOld};
+        mongodb.updateItem(mongodb.doodleEventDBInfo.dbName, mongodb.doodleEventDBInfo.collectionName, criteria, update);
+    });
+
+    // // TODO: add partId to event
+    // getDoodleEventByUUIDIntern(eventUUID, data => {
+    //     // console.log(data.event);
+    // });
+
+    incrementNumberParticipants(eventUUID).then(data =>{
+        // console.log(data);
+    });
+
    
+}
+
+getNumberOfParticipants = function(uuid, callback){
+    getDoodleEventByUUIDIntern(uuid, data =>{
+        callback(data.event.numberParticipants);
+    });
+}
+
+incrementNumberParticipants = function(uuid){
+    console.log('inside inrement');
+    return new Promise((resolve, reject) => {
+        getNumberOfParticipants(uuid, number =>{
+            console.log('number Participants: ' + number);
+            let criteria = {uuid: uuid};
+            let update = {numberParticipants: (number+1)};
+            mongodb.updateItem(mongodb.doodleEventDBInfo.dbName, mongodb.doodleEventDBInfo.collectionName, criteria, update).then(data =>{
+                resolve(data);
+            }).catch(err =>{
+                reject(err);
+            });
+        });
+    });
+    
+
+   
+}
+
+// sets date with date id true in dates array of an participant
+exports.addDateToExistingParticipant = function(req, res, next){
+    let partId = req.body.participantId;
+    let dateId = req.body.dateId;
+    getParticipantById(partId, data =>{
+        // console.log(data.dates);
+        let newDatesArray= data.dates;
+        newDatesArray.map(date => {
+            if(date.dateId === dateId){
+                // console.log(date);
+                date.participates = true;
+                // update array in database
+                let criteria = {_id: partId};
+                let update = {dates: newDatesArray};
+                mongodb.updateItem(mongodb.doodleParticipantDBInfo.dbName, mongodb.doodleParticipantDBInfo.collectionName, criteria, update);
+
+            }
+        })
+    });
+
+
+}
+
+getAllParticipatesIntern = function (callback) {
+    // console.log("allparts");
+    mongodb.getAllItems(mongodb.doodleParticipantDBInfo.dbName, mongodb.doodleParticipantDBInfo.collectionName).then(data => {
+        if (data.success) {
+                    callback({data});
+        }
+    });
+}
+
+getParticipantById = function(partId, callback){
+    getAllParticipatesIntern(data =>{
+        // console.log(data.data.data);
+        let partArray = data.data.data;
+        partArray.map(p =>{
+            if(p._id == partId){
+                callback(p);
+            }
+        });
+    });
+}
+
+getParticipantByUUID = function(eventUUID, callback){
+    let participants = [];
+    getAllParticipatesIntern(data =>{
+        // console.log(data.data.data);
+        let partArray = data.data.data;
+        partArray.map(p =>{
+            if(p.eventUUID === eventUUID){
+                participants.push(p);
+            }
+        });
+        callback(participants);
+    });
 }
