@@ -20,7 +20,7 @@ router.get('/get', (req, res, next) =>{
 // router.post('/participant/:uuid', logic.addNewParticipant);
 
 // get an event by its uuid
-router.get('/event/:uuid', logic.getDoodleEventByUUID);
+router.get('/event/:uuid', logic.receiveEventToSave);
 // body: {name, email}, add one participant to an event with this uuid
 router.post('/participant/:uuid', logic.addParticipantToEvent);
 

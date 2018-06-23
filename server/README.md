@@ -64,42 +64,41 @@ Success:
     "message": "Event with the UUID found",
     "data": [
         {
-            "_id": string,
+            "creatorAccess": boolean,
             "title": string,
             "description": string,
-            "isActive": boolean,
+            "isActive": true,
             "eventType": string,
             "location": string,
             "numberParticipants": number,
             "creator": {
                 "name": string,
-                "email": string,
-                "creatorEventUUID": string //will be hidden later
+                "email": string
             },
             "participants": [
                 {
-                    "_id": string, //participantId
-                    "eventUUID": string, //will be removed later
+                    "participantId": string,
                     "name": string,
                     "email": string,
+                    "dates": [
+                        {
+                            "dateId": string,
+                            "participates": boolean
+                        }
+                    ]
                 }
             ],
-            "date": [
+            "dates": [
                 {
-                    "_id": string, //dateId
+                    "dateId": string,
                     "date": string,
                     "timeFrom": string,
-                    "timeTo": string,
-                    "uuid": string //of this event, will be removed later
-                }
+                    "timeTo": string
+                },
             ],
-            "uuid": "eb60bb8e-4f18-4b01-acea-3b2fc08b9659", //of this event
-            "url": "http://doodleEvent/eb60bb8e-4f18-4b01-acea-3b2fc08b9659",
+            "uuid": string,
+            "url": string,
             "timestamp": string
-        },
-        {
-            "creatorAccess": boolean //true if uuid of the creator in url, else false
         }
     ]
 }
-

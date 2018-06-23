@@ -19,20 +19,20 @@ exports.doodleParticipantDBInfo = {
   collectionName: "doodleParticipants"
 }
 
-exports.insertIntoCollection2 = function (dbName, collectionName, object,dbo) {
+exports.insertIntoCollection2 = function (dbName, collectionName, object, dbo) {
   return new Promise((resolve, reject) => {
-      dbo.collection(collectionName).insertOne(object, function (err, res) {
-        if (err) resolve({ success: false });
-        db.close();
-        // console.log("document inserted");
-        if(res){
-          // console.log(res.ops[0]._id);
-          resolve({ success: true , insertedId: res.ops[0]._id, insertedItem: res.ops[0]});
-        }
-        // console.log(object);
-        
-      });
-    
+    dbo.collection(collectionName).insertOne(object, function (err, res) {
+      if (err) resolve({ success: false });
+      db.close();
+      // console.log("document inserted");
+      if (res) {
+        // console.log(res.ops[0]._id);
+        resolve({ success: true, insertedId: res.ops[0]._id, insertedItem: res.ops[0] });
+      }
+      // console.log(object);
+
+    });
+
   });
 }
 
@@ -41,13 +41,13 @@ exports.insertIntoCollection = function (dbName, collectionName, object) {
   return new Promise((resolve, reject) => {
     MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
       if (err) throw err;
-      
+
       let dbo = db.db(dbName);
       // console.log(object);
       dbo.collection(collectionName).insertOne(object, function (err, res) {
         if (err) throw err;
         db.close();
-        resolve({ success: true , insertedId: object._id});
+        resolve({ success: true, insertedId: object._id });
       });
     });
   });
@@ -61,7 +61,7 @@ exports.getOneItems = function (dbName, collectionName, id) {
       if (err) resolve({ data: null, success: false });
       let dbo = db.db(dbName);
       if (err) resolve({ data: null, success: false });
-      dbo.collection(collectionName).find({_id: new mongodb.ObjectID(id)}).toArray(function (err, items) {
+      dbo.collection(collectionName).find({ _id: new mongodb.ObjectID(id) }).toArray(function (err, items) {
         if (err) resolve({ data: null, success: false });
         console.log(items);
         resolve({ data: items, success: true });
@@ -88,17 +88,27 @@ exports.getAllItems = function (dbName, collectionName) {
   });
 }
 
-getItemByObjectId = function(dbName, collectionName, objectId){
-  getAllItems(dbName, collectionName).then(data =>{
-    data.data.map(item => {
-     console.log(item._id);
+exports.getItemById = function (dbName, collectionName, id) {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
+      if (err) reject(err);
+      var dbo = db.db(dbName);
+      if (err) reject(err);
+      dbo.collection(collectionName).findOne({ _id: id }, function (err, result) {
+        if (err) reject(err);
+        resolve({ data: result, success: true });
+        db.close();
+      });
     });
   });
+
+
+
 }
 
 // TODO: return Promise and success
 exports.updateItem = function (dbName, collectionName, criteria, update) {
-  return new Promise((resolve, reject)=>{
+  return new Promise((resolve, reject) => {
     MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
       if (err) resolve({ data: null, success: false });
       let dbo = db.db(dbName);
@@ -112,7 +122,7 @@ exports.updateItem = function (dbName, collectionName, criteria, update) {
         });
     });
   });
- 
+
 }
 
 // exports.createDB = function(dbName){ 
