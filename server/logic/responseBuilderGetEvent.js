@@ -1,4 +1,4 @@
-const logic = require('./doodleEventLogic');
+var logic = require('./doodleEventLogic.js');
 var mongodb = require('./../MongoDB/dbUtils');
 responseData = {};
 participantsSet = false;
@@ -34,53 +34,31 @@ setCreatorAccess = function(boolean){
 }
 
 processDatesEntryByUUID = function(uuidEvent){
-    // logic.getDatesByEventIdIntern(uuidEvent, dateArray => {
-    //     processDatesEntry(dateArray);
-    // });
     if(!datesSet){
         datesSet = true;
-        getDatesByEventIdIntern(uuidEvent, dateArray => {
+        logic.getDatesByEventIdIntern(uuidEvent, dateArray => {
             processDatesEntry(dateArray);
         });
     }
-   
 }
 
 processParticipantsEntryByUUID = function(uuidEvent){
     if(!participantsSet){
         participantsSet = true;
-        // console.log("inside function participants: " + uuidEvent);
-        getParticipantByUUID(uuidEvent, partArray =>{
+        console.log("inside function participants: " + uuidEvent);
+        logic.getParticipantByUUID(uuidEvent, partArray =>{
             processParticipantsEntry(partArray);
         });
-    }
-   
+    } 
 }
 
-getParticipantByUUID = function(eventUUID, callback){
-    let participants = [];
-    getAllParticipatesIntern(data =>{
-        // console.log(data.data.data);
-        let partArray = data.data.data;
-        partArray.map(p =>{
-            if(p.eventUUID === eventUUID){
-                participants.push(p);
-            }
-        });
-        callback(participants);
+processEventEntryByUUID = function(uuidEvent, callback){
+    getDoodleEventByUUIDIntern(uuidEvent, data => {
+        processEventEntry(data.event);
+        callback(data.success);
     });
 }
 
-getDatesByEventIdIntern = function (eventId, callback) {
-    // console.log("alldates");
-    mongodb.getAllItems(mongodb.doodleDateDBInfo.dbName, mongodb.doodleDateDBInfo.collectionName).then(data => {
-        if (data.success) {
-            // console.log(data.data);
-            let eventsWithEventId = data.data.filter(el => el.uuid == eventId);
-            callback(eventsWithEventId);
-        }
-    });
-}
 
 processDatesEntry = function(dateArray){
     dateArray.map(date => {
@@ -133,41 +111,7 @@ module.exports = {
     processDatesEntryByUUID: processDatesEntryByUUID,
     initResponseData: initResponseData,
     setCreatorAccess: setCreatorAccess,
-    processParticipantsEntryByUUID: processParticipantsEntryByUUID
+    processParticipantsEntryByUUID: processParticipantsEntryByUUID,
+    processEventEntryByUUID: processEventEntryByUUID
 
   }
-
-// {
-//     dateId: "",
-//     participates: false
-// },
-
-// name: "Raphael",
-//             email: "raphael.com",
-
-//             {
-//                 _id: "2fdc7525-e86d-48a7-83cc-9450ffccafd0",
-//                 eventUUID: "eb60bb8e-4f18-4b01-acea-3b2fc08b9659",
-//                 name: "string",
-//                 email: "string",
-//                 dates: [
-                    
-//                 ]
-//             }
-
-
-
-//             {
-//                 "_id": "ee978eb4-24be-4331-a867-4e1b04b3755b",
-//                 "date": "12.5.18",
-//                 "timeFrom": "10:00",
-//                 "timeTo": "14:00",
-//                 "uuid": "eb60bb8e-4f18-4b01-acea-3b2fc08b9659"
-//             },
-//             {
-//                 "_id": "ca3a44ba-3f97-4cf5-b222-35642b66eb83",
-//                 "date": "10.5.18",
-//                 "timeFrom": "12:00",
-//                 "timeTo": "14:00",
-//                 "uuid": "eb60bb8e-4f18-4b01-acea-3b2fc08b9659"
-//             }

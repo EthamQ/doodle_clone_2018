@@ -5,6 +5,8 @@ var mongodb = require('./../MongoDB/dbUtils');
 var dbInfo = mongodb.doodleEventDBInfo;
 const uuid = require('uuid/v4');
 let responseDataGetEvent = require('./responseBuilderGetEvent');
+const participantLogic = require('./participantLogic.js');
+const dateLogic = require('./dateLogic');
 
 
 prepareNewDoodleEvent = function (req, res, next) {
@@ -19,7 +21,6 @@ prepareNewDoodleEvent = function (req, res, next) {
         doodleEventToSave.setChildModelProperties(newEvent);
             resolve(doodleEventToSave);
     });
-  
 }
 
 createNewDoodleEvent = function (req, res, next){
@@ -29,22 +30,20 @@ createNewDoodleEvent = function (req, res, next){
     });
 }
 
-getDoodleEventByUUID = function (req, res, next) {
+getDoodleEventDataByUUID = function (req, res, next) {
     return new Promise((resolve, reject) => {
         let uuidEvent = req.params.uuid;
         responseDataGetEvent.initResponseData();
         let responseBuilder = new ResponseBuilder();
         // look for event with event uuid
-        getDoodleEventByUUIDIntern(uuidEvent, data => {
-            responseDataGetEvent.processEventEntry(data.event);
-            responseDataGetEvent.processParticipantsEntryByUUID(uuidEvent);
-            responseDataGetEvent.processDatesEntryByUUID(uuidEvent);
-            responseBuilder.setSuccess(data.success);
-            console.log("getDoodleEventByUUIDIntern success: " + data.success);
+        responseDataGetEvent.processEventEntryByUUID(uuidEvent, success =>{
+            responseBuilder.setSuccess(success);
             // event with uuid found
-            if (data.success) {
-                responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDSuccessMsg());
+            if (success) {
+                responseDataGetEvent.processParticipantsEntryByUUID(uuidEvent);
+                responseDataGetEvent.processDatesEntryByUUID(uuidEvent);
                 responseDataGetEvent.setCreatorAccess(false);
+                responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDSuccessMsg());
                 resolve(responseBuilder);
             }
             // event with uuid not found
@@ -52,8 +51,9 @@ getDoodleEventByUUID = function (req, res, next) {
                 // look if a creator has this uuid
                 getDoodleEventByCreatorUUIDIntern(uuidEvent, data => {
                     if (data.success) {
-                        console.log(data);
                         responseDataGetEvent.processEventEntry(data.event);
+                        responseDataGetEvent.processParticipantsEntryByUUID(data.uuidEvent);
+                        responseDataGetEvent.processDatesEntryByUUID(data.uuidEvent);
                         responseDataGetEvent.setCreatorAccess(true);
                         responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDSuccessMsg());
                         resolve(responseBuilder);
@@ -64,14 +64,12 @@ getDoodleEventByUUID = function (req, res, next) {
                     }
                 });
             }
-
         });
     });
-
 }
 
-receiveEventToSave = function (req, res, next) {
-    getDoodleEventByUUID(req, res, next).then(responseBuilder => {
+sendEventDataToClient = function (req, res, next) {
+    getDoodleEventDataByUUID(req, res, next).then(responseBuilder => {
         setTimeout(() => {
             // console.log(responseDataGetEvent.getResponseData());
             responseBuilder.addData(responseDataGetEvent.getResponseData());
@@ -80,31 +78,7 @@ receiveEventToSave = function (req, res, next) {
     });
 }
 
-// reads uuid from url, gets the corresponding event, 
-// adds the participant from the requestbody to the participants array of the event
-addNewParticipant = function (req, res, next) {
-    let responseBuilder = new ResponseBuilder();
-    let uuidFromUrl = req.params.uuid;
-    let participant = new DoodleParticipantModel();
-    let participantToAdd = req.body;
-    participant.setModelProperty(participantToAdd, false);
-    getDoodleEventByUUIDIntern(uuidFromUrl, data => {
-        let participantsNew = data.event.participants;
-        participantsNew.push(participant.getModel());
-        let criteria = { uuid: uuidFromUrl };
-        let update = { participants: participantsNew };
-        mongodb.updateItem(dbInfo.dbName, dbInfo.collectionName, criteria, update).then(dbdata => {
-            responseBuilder.setSuccess(dbdata.success);
-            responseBuilder.addData(participantsNew);
-            responseBuilder.setMessage(dbdata.success ? responseBuilder.getParticipantAddedSuccessMsg(data.event.title) : responseBuilder.getDatabaseFailureMsg());
-            res.send(responseBuilder.getResponse());
-        }).catch(function (err) {
-            responseBuilder.setSuccess(false);
-            responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
-            res.send(responseBuilder.getResponse());
-        });
-    });
-}
+
 
 // callback function returns the event and success boolean
 getDoodleEventByUUIDIntern = function (uuidFromUrl, callback) {
@@ -123,169 +97,53 @@ getDoodleEventByUUIDIntern = function (uuidFromUrl, callback) {
 
 // callback function returns the event and success boolean
 getDoodleEventByCreatorUUIDIntern = function (uuidFromUrl, callback) {
-    // console.log("now in creatoruuid function with uuid: " + uuidFromUrl);
     mongodb.getAllItems(dbInfo.dbName, dbInfo.collectionName).then(data => {
-        // console.log(data);
-        if (data.success) {
-            data.data.map(event => {
-                // console.log(event.creator);
+        let arrayAllEvents = data.data;
+        if(arrayAllEvents.length != 0){
+            arrayAllEvents.map(event => {
                 if (event.creator.creatorEventUUID == uuidFromUrl) {
-                    console.log("creator found");
-                    callback({ event: event, success: data.success });
+                    callback({ event: event, uuidEvent: event.uuid, success: true });
                 }
             });
         }
-    });
-}
-
-// callback function returns the event and success boolean
-getAllDatesIntern = function (callback) {
-    // console.log("alldates");
-    mongodb.getAllItems(mongodb.doodleDateDBInfo.dbName, mongodb.doodleDateDBInfo.collectionName).then(data => {
-        if (data.success) {
-            callback({ data });
+        else{
+            callback({ event: null, uuidEvent: null, success: false });
         }
-    });
-}
-
-getDatesByEventIdIntern = function (eventId, callback) {
-    // console.log("alldates");
-    mongodb.getAllItems(mongodb.doodleDateDBInfo.dbName, mongodb.doodleDateDBInfo.collectionName).then(data => {
-        if (data.success) {
-            // console.log(data.data);
-            let eventsWithEventId = data.data.filter(el => el.uuid == eventId);
-            callback(eventsWithEventId);
-        }
-    });
-}
-getDatesByEventIdIntern = function (eventId, callback) {
-    // console.log("alldates");
-    mongodb.getAllItems(mongodb.doodleDateDBInfo.dbName, mongodb.doodleDateDBInfo.collectionName).then(data => {
-        if (data.success) {
-            // console.log(data.data);
-            let eventsWithEventId = data.data.filter(el => el.uuid == eventId);
-            callback(eventsWithEventId);
-        }
+    }).catch(err =>{
+        callback({ event: null, uuidEvent: null, success: false });
     });
 }
 
 
-addParticipantToEvent = function (req, res, next) {
-    let eventUUID = req.params.uuid;
-    let participant = req.body;
-    let dates = [];
-    let part_id = uuid();
-
-    getDatesByEventIdIntern(eventUUID, data => {
-        data.map(el => {
-            dates.push({ dateId: el._id, participates: false });
-        });
-        newParticipant = { _id: part_id, eventUUID: eventUUID, name: participant.name, email: participant.email, dates: dates };
-        mongodb.insertIntoCollection(mongodb.doodleParticipantDBInfo.dbName, mongodb.doodleParticipantDBInfo.collectionName, newParticipant);
-    });
-
-    getDoodleEventByUUIDIntern(eventUUID, data => {
-        let participantsOld = data.event.participants;
-        participantsOld.push({ participantId: part_id });
-        let criteria = { uuid: eventUUID };
-        let update = { participants: participantsOld };
-        mongodb.updateItem(mongodb.doodleEventDBInfo.dbName, mongodb.doodleEventDBInfo.collectionName, criteria, update);
-    });
-    incrementNumberParticipants(eventUUID).then(data => {
-        // 
-    });
-
-
-}
-
-getNumberOfParticipants = function (uuid, callback) {
-    getDoodleEventByUUIDIntern(uuid, data => {
-        callback(data.event.numberParticipants);
-    });
-}
-
-incrementNumberParticipants = function (uuid) {
-    console.log('inside inrement');
-    return new Promise((resolve, reject) => {
-        getNumberOfParticipants(uuid, number => {
-            console.log('number Participants: ' + number);
-            let criteria = { uuid: uuid };
-            let update = { numberParticipants: (number + 1) };
-            mongodb.updateItem(mongodb.doodleEventDBInfo.dbName, mongodb.doodleEventDBInfo.collectionName, criteria, update).then(data => {
-                resolve(data);
-            }).catch(err => {
-                reject(err);
-            });
-        });
-    });
 
 
 
-}
-
-// sets date with date id true in dates array of an participant
-addDateToExistingParticipant = function (req, res, next) {
-    let partId = req.body.participantId;
-    let dateId = req.body.dateId;
-    getParticipantById(partId, data => {
-        let newDatesArray = data.dates;
-        newDatesArray.map(date => {
-            if (date.dateId === dateId) {
-                date.participates = true;
-                // update array in database
-                let criteria = { _id: partId };
-                let update = { dates: newDatesArray };
-                mongodb.updateItem(mongodb.doodleParticipantDBInfo.dbName, mongodb.doodleParticipantDBInfo.collectionName, criteria, update);
-
-            }
-        })
-    });
 
 
-}
 
-getAllParticipatesIntern = function (callback) {
-    mongodb.getAllItems(mongodb.doodleParticipantDBInfo.dbName, mongodb.doodleParticipantDBInfo.collectionName).then(data => {
-        if (data.success) {
-            callback({ data });
-        }
-    });
-}
 
-getParticipantById = function (partId, callback) {
-    getAllParticipatesIntern(data => {
-        // console.log(data.data.data);
-        let partArray = data.data.data;
-        partArray.map(p => {
-            if (p._id == partId) {
-                callback(p);
-            }
-        });
-    });
-}
 
-getParticipantByUUID = function (eventUUID, callback) {
-    let participants = [];
-    getAllParticipatesIntern(data => {
-        // console.log(data.data.data);
-        let partArray = data.data.data;
-        partArray.map(p => {
-            if (p.eventUUID === eventUUID) {
-                participants.push(p);
-            }
-        });
-        callback(participants);
-    });
-}
+
+
+
+
+
+
+
+
+module.exports.getParticipantByUUID = getParticipantByUUID;
+module.exports.getDatesByEventIdIntern = getDatesByEventIdIntern;
+module.exports.getDoodleEventByUUIDIntern = getDoodleEventByUUIDIntern;
+
+
 
 
 module.exports = {
     addDateToExistingParticipant: addDateToExistingParticipant,
     addParticipantToEvent: addParticipantToEvent,
     getDatesByEventIdIntern: getDatesByEventIdIntern,
-    getDoodleEventByUUID: getDoodleEventByUUID,
-    addNewParticipant: addNewParticipant,
     createNewDoodleEvent: createNewDoodleEvent,
     getDoodleEventByUUIDIntern: getDoodleEventByUUIDIntern,
-    receiveEventToSave: receiveEventToSave
+    getAllParticipatesIntern: getAllParticipatesIntern,
+    sendEventDataToClient: sendEventDataToClient,
 }

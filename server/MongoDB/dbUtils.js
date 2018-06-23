@@ -76,11 +76,11 @@ exports.getOneItems = function (dbName, collectionName, id) {
 exports.getAllItems = function (dbName, collectionName) {
   return new Promise((resolve, reject) => {
     MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
-      if (err) resolve({ data: null, success: false });
+      if (err) reject(err);
       var dbo = db.db(dbName);
-      if (err) resolve({ data: null, success: false });
+      if (err) reject(err);
       dbo.collection(collectionName).find().toArray(function (err, items) {
-        if (err) resolve({ data: null, success: false });
+        if (err) reject(err);
         resolve({ data: items, success: true });
         db.close();
       });
@@ -101,9 +101,21 @@ exports.getItemById = function (dbName, collectionName, id) {
       });
     });
   });
+}
 
-
-
+exports.getOneItemBy = function (dbName, collectionName, criteria) {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
+      if (err) reject(err);
+      var dbo = db.db(dbName);
+      if (err) reject(err);
+      dbo.collection(collectionName).findOne(criteria, function (err, result) {
+        if (err) reject(err);
+        resolve({ data: result, success: true });
+        db.close();
+      });
+    });
+  });
 }
 
 // TODO: return Promise and success
