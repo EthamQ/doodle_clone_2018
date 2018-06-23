@@ -8,18 +8,24 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.post('/newDoodleEvent', logic.createNewDoodleEvent);
-router.get('/doodleEvent/:uuid', logic.getDoodleEventByUUID);
-// router.post('/participant/:uuid', logic.addNewParticipant);
+router.post('/event/new', logic.createNewDoodleEvent);
 
 router.get('/get', (req, res, next) =>{
   dbUtils.getOneItems(dbUtils.doodleDateDBInfo.dbName, dbUtils.doodleDateDBInfo.collectionName, '5b2ac3bfa257342fc025dc56');
 });
 
-// body: {name, email}
-router.post('/participant/:uuid', logic.addOnlyParticipant);
 
-router.post('/dateParticipant', logic.addDateToExistingParticipant);
+
+
+// router.post('/participant/:uuid', logic.addNewParticipant);
+
+// get an event by its uuid
+router.get('/event/:uuid', logic.getDoodleEventByUUID);
+// body: {name, email}, add one participant to an event with this uuid
+router.post('/participant/:uuid', logic.addParticipantToEvent);
+
+// add a participant to an existing date
+router.post('/participant/date', logic.addDateToExistingParticipant);
 
 
 

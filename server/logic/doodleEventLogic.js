@@ -27,21 +27,40 @@ exports.getDoodleEventByUUID = function (req, res, next) {
             // console.log(dateArray);
             // console.log(partArray);
             let responseBuilder = new ResponseBuilder();
-    
+            console.log("now start get doodle event normal");
             getDoodleEventByUUIDIntern(uuidUrl, data => {
+                console.log("geteventbyuuid success?: " + data.success);
                 responseBuilder.setSuccess(data.success);
-                if (!data.success) {
-                    responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
+                if (data.success) {
+                    console.log("normal access to event");
+                    data.event.date = dateArray;
+                    data.event.participants = partArray;
+                    responseBuilder.addData(data.event);
+                    responseBuilder.addData({creatorAccess: false});
+                    responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDSuccessMsg());
+                    res.send(responseBuilder.getResponse());
                 }
+                 // look for creator id
                 else {
-                    responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDFailureMsg());
+                    console.log("now look for creator: ");
+                    getDoodleEventByCreatorUUIDIntern(uuidUrl, data =>{
+                        console.log(data);
+                        if(data.success){
+                            console.log("creator access to event");
+                            data.event.date = dateArray;
+                            data.event.participants = partArray;
+                            responseBuilder.addData(data.event);
+                            responseBuilder.addData({creatorAccess: true});
+                            responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDSuccessMsg());
+                            res.send(responseBuilder.getResponse());
+                        }
+                        else{
+                            responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
+                            res.send(responseBuilder.getResponse());
+                        }
+                    });
                 }
-                data.event.date = dateArray;
-                data.event.participants = partArray;
-                // console.log(data.event);
-                responseBuilder.addData(data.event);
-                responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDSuccessMsg());
-                res.send(responseBuilder.getResponse());
+               
             });
         });
     });
@@ -79,10 +98,33 @@ exports.addNewParticipant = function (req, res, next) {
 
 // callback function returns the event and success boolean
 getDoodleEventByUUIDIntern = function (uuidFromUrl, callback) {
+    console.log("now inside get doodle event normal");
     mongodb.getAllItems(dbInfo.dbName, dbInfo.collectionName).then(data => {
         if (data.success) {
             data.data.map(event => {
                 if (event.uuid == uuidFromUrl) {
+                    console.log(event);
+                    callback({ event: event, success: data.success });
+                }
+            });
+            callback({ event: null, success: false });
+        }
+        else{
+            callback({ event: null, success: data.success });
+        }
+    });
+}
+
+// callback function returns the event and success boolean
+getDoodleEventByCreatorUUIDIntern = function (uuidFromUrl, callback) {
+    console.log("now in creatoruuid function with uuid: " + uuidFromUrl);
+    mongodb.getAllItems(dbInfo.dbName, dbInfo.collectionName).then(data => {
+        // console.log(data);
+        if (data.success) {
+            data.data.map(event => {
+                console.log(event.creator);
+                if (event.creator.creatorEventUUID == uuidFromUrl) {
+                    console.log("found");
                     callback({ event: event, success: data.success });
                 }
             });
@@ -154,7 +196,7 @@ exports.addDatesToParti = function(req, res, next){
     let participantId;
 }
 
-exports.addOnlyParticipant = function(req, res, next){
+exports.addParticipantToEvent = function(req, res, next){
     let eventUUID = req.params.uuid;
     let participant = req.body;
     let dates = [];

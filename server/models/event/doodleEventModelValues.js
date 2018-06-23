@@ -7,7 +7,7 @@ exports.model = {
     isActive: true,
     eventType: null,
     location: null,
-    numberParticipants: 0,
+    numberParticipants: 1,
     creator: null,
     participants: [], //instanceof doodleParticipantModel()
     date: [], //instanceof doodleDateModel()

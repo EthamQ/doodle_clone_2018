@@ -16,9 +16,7 @@ module.exports = class doodleEventModel extends ModelClass {
             constructorArgs.dbInfo
         );
         this.model.date = [];
-        this.model.participant = [];
         this.datesAreValid = true;
-        this.tempdates = [];
     }
 
     // set properties of this model directly
@@ -44,7 +42,6 @@ module.exports = class doodleEventModel extends ModelClass {
             }
             if (key == 'creator') {
                 this.model.creator = {name: event[key].name, email: event[key].email, creatorEventUUID: uuid()};
-                this.model.numberParticipants++;
             }
         }
     }
