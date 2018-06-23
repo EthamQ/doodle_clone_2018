@@ -18,7 +18,7 @@ Expected data about the new event in the post request:
     	"date": string,
         "timeFrom": string,
         "timeTo": string
-    	},
+    	}
     ]
 }
 

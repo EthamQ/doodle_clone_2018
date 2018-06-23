@@ -7,19 +7,26 @@ const uuid = require('uuid/v4');
 let responseDataGetEvent = require('./responseBuilderGetEvent');
 
 
-createNewDoodleEvent = function (req, res, next) {
-    let responseBuilder = new ResponseBuilder();
-    let doodleEventToSave = new DoodleEventModel();
-    let newEvent = req.body;
-    responseDataGetEvent.initResponseData();
-    doodleEventToSave.setResponseBuilder(responseBuilder);
-    doodleEventToSave.generateAndSetRequiredProperties();
-    doodleEventToSave.setModelProperty(newEvent, false);
-    doodleEventToSave.setChildModelProperties(newEvent);
-    setTimeout(() => {
+prepareNewDoodleEvent = function (req, res, next) {
+    return new Promise((resolve, reject) =>{
+        let responseBuilder = new ResponseBuilder();
+        let doodleEventToSave = new DoodleEventModel();
+        let newEvent = req.body;
+        responseDataGetEvent.initResponseData();
+        doodleEventToSave.setResponseBuilder(responseBuilder);
+        doodleEventToSave.generateAndSetRequiredProperties();
+        doodleEventToSave.setModelProperty(newEvent, false);
+        doodleEventToSave.setChildModelProperties(newEvent);
+            resolve(doodleEventToSave);
+    });
+  
+}
+
+createNewDoodleEvent = function (req, res, next){
+    prepareNewDoodleEvent(req, res, next).then(doodleEventToSave=>{
         doodleEventToSave.saveModelInDatabase();
         res.send(doodleEventToSave.getResponse());
-    }, 2000);
+    });
 }
 
 getDoodleEventByUUID = function (req, res, next) {
@@ -33,6 +40,7 @@ getDoodleEventByUUID = function (req, res, next) {
             responseDataGetEvent.processParticipantsEntryByUUID(uuidEvent);
             responseDataGetEvent.processDatesEntryByUUID(uuidEvent);
             responseBuilder.setSuccess(data.success);
+            console.log("getDoodleEventByUUIDIntern success: " + data.success);
             // event with uuid found
             if (data.success) {
                 responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDSuccessMsg());
@@ -44,17 +52,15 @@ getDoodleEventByUUID = function (req, res, next) {
                 // look if a creator has this uuid
                 getDoodleEventByCreatorUUIDIntern(uuidEvent, data => {
                     if (data.success) {
+                        console.log(data);
                         responseDataGetEvent.processEventEntry(data.event);
-                        // data.event.date = dateArray;
-                        // data.event.participants = partArray;
                         responseDataGetEvent.setCreatorAccess(true);
                         responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDSuccessMsg());
-                        responseBuilder.addData(responseDataGetEvent.getResponseData());
-                        // resolve(responseBuilder);
+                        resolve(responseBuilder);
                     }
                     else {
                         responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
-                        // resolve(responseBuilder);
+                        resolve(responseBuilder);
                     }
                 });
             }
@@ -71,7 +77,6 @@ receiveEventToSave = function (req, res, next) {
             responseBuilder.addData(responseDataGetEvent.getResponseData());
             res.send(responseBuilder.getResponse());
         }, 2000);
-
     });
 }
 
@@ -104,10 +109,15 @@ addNewParticipant = function (req, res, next) {
 // callback function returns the event and success boolean
 getDoodleEventByUUIDIntern = function (uuidFromUrl, callback) {
     mongodb.getItemById(dbInfo.dbName, dbInfo.collectionName, uuidFromUrl).then(data =>{
-        console.log(data);
-        callback({ event: data.data, success: data.success });
+        if(data.data != null){
+            callback({ event: data.data, success: true });
+        }
+        else{
+            callback({ event: null, success: false });
+        }
     }).catch(err =>{
         console.log(err);
+        callback({ event: null, success: false });
     });
 }
 
@@ -120,7 +130,7 @@ getDoodleEventByCreatorUUIDIntern = function (uuidFromUrl, callback) {
             data.data.map(event => {
                 // console.log(event.creator);
                 if (event.creator.creatorEventUUID == uuidFromUrl) {
-                    console.log("found");
+                    console.log("creator found");
                     callback({ event: event, success: data.success });
                 }
             });
@@ -160,48 +170,6 @@ getDatesByEventIdIntern = function (eventId, callback) {
 }
 
 
-// exports.addPart = function(req, res, next){
-//     return new Promise((resolve, reject) =>{
-//         let eventUUID;
-//         let dateId = req.body.dateId;
-//         // console.log(dateId);
-//         getAllDatesIntern(data => {
-//             data.data.data.map(date =>{
-//                 if(date._id === dateId){
-//                     eventUUID = date.uuid;
-//                     resolve({eventUUID: eventUUID, dateId: dateId, dates: data.data.data});
-//                 }
-//             });
-//         });
-//     });
-
-
-// }
-
-addDatesToPart = function (req, res, next) {
-    return new Promise((resolve, reject) => {
-        let part = [];
-        this.addPart(req, res, next).then(data => {
-            data.dates.map(el => {
-                if (el.uuid = data.eventUUID) {
-                    if (el._id == data.dateId) {
-                        part.push({ dateId: dateId, takesPart: true });
-                    }
-                    else {
-                        part.push({ dateId: dateId, takesPart: false });
-                    }
-                }
-            });
-        });
-    });
-
-}
-
-// exports.addDatesToParti = function(req, res, next){
-//     let eventUUID = req.body.eventId;
-//     let participantId;
-// }
-
 addParticipantToEvent = function (req, res, next) {
     let eventUUID = req.params.uuid;
     let participant = req.body;
@@ -209,7 +177,6 @@ addParticipantToEvent = function (req, res, next) {
     let part_id = uuid();
 
     getDatesByEventIdIntern(eventUUID, data => {
-        // console.log(data);
         data.map(el => {
             dates.push({ dateId: el._id, participates: false });
         });
@@ -219,20 +186,13 @@ addParticipantToEvent = function (req, res, next) {
 
     getDoodleEventByUUIDIntern(eventUUID, data => {
         let participantsOld = data.event.participants;
-        console.log(data.participants);
         participantsOld.push({ participantId: part_id });
         let criteria = { uuid: eventUUID };
         let update = { participants: participantsOld };
         mongodb.updateItem(mongodb.doodleEventDBInfo.dbName, mongodb.doodleEventDBInfo.collectionName, criteria, update);
     });
-
-    // // TODO: add partId to event
-    // getDoodleEventByUUIDIntern(eventUUID, data => {
-    //     // console.log(data.event);
-    // });
-
     incrementNumberParticipants(eventUUID).then(data => {
-        // console.log(data);
+        // 
     });
 
 
@@ -268,11 +228,9 @@ addDateToExistingParticipant = function (req, res, next) {
     let partId = req.body.participantId;
     let dateId = req.body.dateId;
     getParticipantById(partId, data => {
-        // console.log(data.dates);
         let newDatesArray = data.dates;
         newDatesArray.map(date => {
             if (date.dateId === dateId) {
-                // console.log(date);
                 date.participates = true;
                 // update array in database
                 let criteria = { _id: partId };
@@ -287,7 +245,6 @@ addDateToExistingParticipant = function (req, res, next) {
 }
 
 getAllParticipatesIntern = function (callback) {
-    // console.log("allparts");
     mongodb.getAllItems(mongodb.doodleParticipantDBInfo.dbName, mongodb.doodleParticipantDBInfo.collectionName).then(data => {
         if (data.success) {
             callback({ data });
@@ -325,13 +282,10 @@ getParticipantByUUID = function (eventUUID, callback) {
 module.exports = {
     addDateToExistingParticipant: addDateToExistingParticipant,
     addParticipantToEvent: addParticipantToEvent,
-    addDatesToPart: addDatesToPart,
     getDatesByEventIdIntern: getDatesByEventIdIntern,
     getDoodleEventByUUID: getDoodleEventByUUID,
     addNewParticipant: addNewParticipant,
     createNewDoodleEvent: createNewDoodleEvent,
     getDoodleEventByUUIDIntern: getDoodleEventByUUIDIntern,
     receiveEventToSave: receiveEventToSave
-
-
 }

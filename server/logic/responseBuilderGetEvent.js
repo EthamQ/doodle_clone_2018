@@ -49,7 +49,7 @@ processDatesEntryByUUID = function(uuidEvent){
 processParticipantsEntryByUUID = function(uuidEvent){
     if(!participantsSet){
         participantsSet = true;
-        console.log("inside function participants: " + uuidEvent);
+        // console.log("inside function participants: " + uuidEvent);
         getParticipantByUUID(uuidEvent, partArray =>{
             processParticipantsEntry(partArray);
         });
@@ -94,7 +94,7 @@ processDatesEntry = function(dateArray){
 }
 
 processParticipantsEntry = function(participantsArray){
-    console.log("inside processParticipantsEntry");
+    // console.log("inside processParticipantsEntry");
     participantsArray.map(participant => {
         responseData.participants.push({
             participantId: participant._id,

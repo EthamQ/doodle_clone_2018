@@ -25,7 +25,7 @@ router.get('/event/:uuid', logic.receiveEventToSave);
 router.post('/participant/:uuid', logic.addParticipantToEvent);
 
 // add a participant to an existing date
-router.post('/participant/date', logic.addDateToExistingParticipant);
+router.post('/participant/add/date', logic.addDateToExistingParticipant);
 
 
 
