@@ -214,5 +214,6 @@ module.exports = {
     getDoodleEventByUUID: getDoodleEventByUUID,
     getAllParticipatesIntern: getAllParticipatesIntern,
     sendEventDataToClient: sendEventDataToClient,
-    updateDoodleEvent: updateDoodleEvent
+    updateDoodleEvent: updateDoodleEvent,
+    getDoodleEventByCreatorUUID: getDoodleEventByCreatorUUID,
 }

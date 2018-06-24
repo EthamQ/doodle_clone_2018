@@ -1,7 +1,22 @@
 Routes and how to use them:
+##############################################
+
+Overview:
+1. Creating a new loodle event
+router.post('/event/new', logic.createNewDoodleEvent);
+2. Add a participant to an event:
+router.post('/participant/:uuid', logic.addParticipantToEvent);
+3. Add a date from an event to a participant:
+router.post('/participant/date', logic.addDateToExistingParticipant);
+4. Get a doodle event by its uuid
+router.get('/event/:uuid', logic.getDoodleEventByUUID);
+5. Update title, description, eventType, location of an event if you are the creator of an event
+router.post('/event/update/:creatorUUID', logic.updateDoodleEvent);
+6. Add one or multiple dates to an event if you are the creator
+router.post('/date/add/:creatorUUID', dateLogic.addDatesToExistingEvent);
 
 ##############################################
-Creating a new loodle event
+1. Creating a new loodle event
 router.post('/event/new', logic.createNewDoodleEvent);
 Expected data about the new event in the post request:
 {
@@ -23,7 +38,7 @@ Expected data about the new event in the post request:
 }
 
 ##############################################
-Add a participant to an event:
+2. Add a participant to an event:
 router.post('/participant/:uuid', logic.addParticipantToEvent);
 Expected data about the new participator in the post request:
 {
@@ -37,7 +52,7 @@ the uuid of the event
 Response from the server:
 
 ##############################################
-Add a date from an event to a participant:
+3. Add a date from an event to a participant:
 router.post('/participant/date', logic.addDateToExistingParticipant);
 Expected data about the date and participant in the post request:
 {
@@ -46,7 +61,7 @@ Expected data about the date and participant in the post request:
 }
 
 ##############################################
-Get a doodle event by its uuid
+4. Get a doodle event by its uuid
 router.get('/event/:uuid', logic.getDoodleEventByUUID);
 Expected data about the event in the url:
 /:uuid
@@ -98,12 +113,8 @@ Success:
     ]
 }
 
-
-
-
-
 ##############################################
-Update title, description, eventType, location of an event if you are the creator of an event
+5. Update title, description, eventType, location of an event if you are the creator of an event
 router.post('/event/update/:creatorUUID', logic.updateDoodleEvent);
 Expected data in the url:
 /:creatorUUID:
@@ -115,4 +126,22 @@ Expected data in the post request:
     "location": string,
     "description": string,
     "eventType": string
+}
+
+##############################################
+6. Add one or multiple dates to an event if you are the creator
+router.post('/date/add/:creatorUUID', dateLogic.addDatesToExistingEvent);
+Expected data in the url:
+/:creatorUUID:
+the uuid of the creator, so only he can update those values
+
+Expected data in the post request:
+{
+	"dates":[
+		{
+			"date": string,
+			"timeFrom": string,
+			"timeTo": string
+        }
+		]
 }
