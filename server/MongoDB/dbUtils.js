@@ -40,14 +40,14 @@ exports.insertIntoCollection2 = function (dbName, collectionName, object, dbo) {
 exports.insertIntoCollection = function (dbName, collectionName, object) {
   return new Promise((resolve, reject) => {
     MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
-      if (err) throw err;
+      if (err) reject(err);
 
       let dbo = db.db(dbName);
       // console.log(object);
       dbo.collection(collectionName).insertOne(object, function (err, res) {
-        if (err) throw err;
+        if (err) reject(err);
         db.close();
-        resolve({ success: true, insertedId: object._id });
+        resolve({ success: true, savedItem: object });
       });
     });
   });
@@ -55,21 +55,7 @@ exports.insertIntoCollection = function (dbName, collectionName, object) {
 
 
 
-exports.getOneItems = function (dbName, collectionName, id) {
-  return new Promise((resolve, reject) => {
-    MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
-      if (err) resolve({ data: null, success: false });
-      let dbo = db.db(dbName);
-      if (err) resolve({ data: null, success: false });
-      dbo.collection(collectionName).find({ _id: new mongodb.ObjectID(id) }).toArray(function (err, items) {
-        if (err) resolve({ data: null, success: false });
-        console.log(items);
-        resolve({ data: items, success: true });
-        db.close();
-      });
-    });
-  });
-}
+
 
 
 // get all items from the specified collection
@@ -122,15 +108,15 @@ exports.getOneItemBy = function (dbName, collectionName, criteria) {
 exports.updateItem = function (dbName, collectionName, criteria, update) {
   return new Promise((resolve, reject) => {
     MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
-      if (err) resolve({ data: null, success: false });
+      if (err) reject(err);
       let dbo = db.db(dbName);
-      if (err) resolve({ data: null, success: false });
+      if (err) reject(err);
       let mongodb = require('mongodb');
       let updateInformation = { $set: update };
       dbo.collection(collectionName).update(criteria, updateInformation, { w: 1 },
         function (err, result) {
-          if (err) resolve({ data: null, success: false });
-          resolve({ data: null, success: true })
+          if (err) reject(err);
+          resolve({ success: true })
         });
     });
   });

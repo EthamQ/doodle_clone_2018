@@ -52,5 +52,10 @@ module.exports = class Model {
         });
     }
 
+    setId(id, callback){
+        this.model._id = id;
+        callback();
+    }
+
    
 }

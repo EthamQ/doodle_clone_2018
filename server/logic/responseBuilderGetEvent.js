@@ -48,7 +48,7 @@ addParticipantsByUUID = function(uuidEvent, callback){
     if(!participantsSet){
         participantsSet = true;
         console.log("inside function participants: " + uuidEvent);
-        logic.getParticipantByUUID(uuidEvent, data =>{
+        logic.getParticipantsByUUID(uuidEvent, data =>{
             if(data.success){
                 processParticipantsEntry(data, () =>{
                     callback({success: true});
@@ -63,12 +63,11 @@ addParticipantsByUUID = function(uuidEvent, callback){
 }
 
 addEventDataByUUID = function(uuidEvent, callback){
-    getDoodleEventByUUIDIntern(uuidEvent, data => {
+    getDoodleEventByUUID(uuidEvent, data => {
         addEventData(data.event);
         callback(data.success);
     });
 }
-
 
 processDatesEntry = function(dateArray, callback){
     dateArray.map(date => {
@@ -108,7 +107,6 @@ addEventData = function(eventFromDatabase){
         responseData.url = eventFromDatabase.url;
         responseData.timestamp = eventFromDatabase.timestamp;
     }
-    
 }
 
 getResponseData = function(){
@@ -125,5 +123,4 @@ module.exports = {
     setCreatorAccess: setCreatorAccess,
     addParticipantsByUUID: addParticipantsByUUID,
     addEventDataByUUID: addEventDataByUUID
-
   }

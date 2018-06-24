@@ -8,32 +8,50 @@ let responseDataGetEvent = require('./responseBuilderGetEvent');
 const participantLogic = require('./participantLogic.js');
 const dateLogic = require('./dateLogic');
 
-
+/**
+ * creates DoodleEventModel() object, fills its values with the values
+ * of the request data and then resolves the model object in a promise
+ */
 prepareNewDoodleEvent = function (req, res, next) {
     return new Promise((resolve, reject) => {
-        let responseBuilder = new ResponseBuilder();
         let doodleEventToSave = new DoodleEventModel();
         let newEvent = req.body;
-        responseDataGetEvent.initResponseData();
-        doodleEventToSave.generateAndSetRequiredProperties()
-        doodleEventToSave.setModelProperty(newEvent, () =>{
-            doodleEventToSave.setChildModelProperties(newEvent, ()=>{
+        doodleEventToSave.generateAndSetRequiredProperties();
+        doodleEventToSave.setModelProperty(newEvent, () => {
+            doodleEventToSave.setChildModelProperties(newEvent, () => {
                 resolve(doodleEventToSave);
             });
-            
         });
-        
-        
     });
 }
 
 /**
  * called by the router
+ * receives a DoodleEventModel() object, saves it in the database
+ * and creates a response for the client
  */
-createNewDoodleEvent = function (req, res, next) {
+saveNewDoodleEvent = function (req, res, next) {
+    let responseBuilder = new ResponseBuilder();
+    // get DoodleEventModel() with set values
     prepareNewDoodleEvent(req, res, next).then(doodleEventToSave => {
-        doodleEventToSave.saveModelInDatabase();
-        res.send("created");
+        // save it in DB
+        doodleEventToSave.saveModelInDatabase().then(data => {
+            // set values for response to client
+            if (data.success) {
+                responseBuilder.setMessage(responseBuilder.getNewDoodleEventSuccessMsg());
+                responseBuilder.addData(data.savedItem);
+            }
+            else {
+                responseBuilder.setMessage(responseBuilder.getNewDoodleEventFailureMsg());
+            }
+            responseBuilder.setSuccess(data.success);
+            res.send(responseBuilder.getResponse());
+        }).catch(err => {
+            responseBuilder.setSuccess(false);
+            responseBuilder.setMessage(responseBuilder.getNewDoodleEventFailureMsg());
+            res.send(responseBuilder.getResponse());
+        });
+
     });
 }
 
@@ -52,39 +70,41 @@ getDoodleEventDataByUUID = function (req, res, next) {
             responseBuilder.setSuccess(success);
             // event with uuid found
             if (success) {
-                responseDataGetEvent.addParticipantsByUUID(uuidEvent, () =>{
-                    responseDataGetEvent.addDatesByUUID(uuidEvent, ()=>{
+                responseDataGetEvent.addParticipantsByUUID(uuidEvent, () => {
+                    responseDataGetEvent.addDatesByUUID(uuidEvent, () => {
                         responseDataGetEvent.setCreatorAccess(false);
                         responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDSuccessMsg());
                         resolve(responseBuilder);
                     });
-                }); 
+                });
             }
             // event with uuid not found
             else {
                 // look if a creator has this uuid
-                getDoodleEventByCreatorUUIDIntern(uuidEvent, data => {
+                getDoodleEventByCreatorUUID(uuidEvent, data => {
                     if (data.success) {
                         // event with creator uuid found
                         responseDataGetEvent.addEventData(data.event);
-                        responseDataGetEvent.addParticipantsByUUID(data.uuidEvent, pData =>{
-                            responseDataGetEvent.addDatesByUUID(data.uuidEvent, ()=>{
-                                if(pData.success){
+                        responseDataGetEvent.addParticipantsByUUID(data.uuidEvent, pData => {
+                            responseDataGetEvent.addDatesByUUID(data.uuidEvent, () => {
+                                if (pData.success) {
                                     responseDataGetEvent.setCreatorAccess(true);
                                     responseBuilder.setSuccess(true);
                                     responseBuilder.setMessage(responseBuilder.getDoodleEventByCreatorUUIDSuccessMsg());
                                     resolve(responseBuilder);
                                 }
-                                else{
+                                // event with creator uuid not found, uuid doesn't exist
+                                else {
                                     responseBuilder.setSuccess(false);
-                                    responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
+                                    responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDFailureMsg());
                                     resolve(responseBuilder);
-                                }  
+                                }
                             });
                         });
                     }
                     else {
-                        responseBuilder.setSuccess(true);
+                        // failure when reading the database
+                        responseBuilder.setSuccess(false);
                         responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
                         resolve(responseBuilder);
                     }
@@ -101,16 +121,18 @@ getDoodleEventDataByUUID = function (req, res, next) {
  */
 sendEventDataToClient = function (req, res, next) {
     getDoodleEventDataByUUID(req, res, next).then(responseBuilder => {
-            responseBuilder.addData(responseDataGetEvent.getResponseData());
-            res.send(responseBuilder.getResponse());
+        responseBuilder.addData(responseDataGetEvent.getResponseData());
+        res.send(responseBuilder.getResponse());
     });
 }
 
-
-
-// callback function returns the event and success boolean
-getDoodleEventByUUIDIntern = function (uuidFromUrl, callback) {
-    mongodb.getItemById(dbInfo.dbName, dbInfo.collectionName, uuidFromUrl).then(data => {
+/**
+ * looks for the event with uuid = 'uuidEvent'
+ * returns the { event: event, success: true } in a callback on success
+ * { event: null, success: false } in a callback on failure
+ */
+getDoodleEventByUUID = function (uuidEvent, callback) {
+    mongodb.getItemById(dbInfo.dbName, dbInfo.collectionName, uuidEvent).then(data => {
         if (data.data != null) {
             callback({ event: data.data, success: true });
         }
@@ -123,13 +145,18 @@ getDoodleEventByUUIDIntern = function (uuidFromUrl, callback) {
     });
 }
 
-// callback function returns the event and success boolean
-getDoodleEventByCreatorUUIDIntern = function (uuidFromUrl, callback) {
+/**
+ * looks for the event with creatorUUID = 'uuidCreator'
+ * on success: returns { event: event, uuidEvent: event.uuid, success: true } in a callback
+ * on failure: returns { event: null, uuidEvent: null, success: false } in a callback
+ */
+getDoodleEventByCreatorUUID = function (uuidCreator, callback) {
     mongodb.getAllItems(dbInfo.dbName, dbInfo.collectionName).then(data => {
         let arrayAllEvents = data.data;
         if (arrayAllEvents.length != 0) {
+            // look for creator uuid in event
             arrayAllEvents.map(event => {
-                if (event.creator.creatorEventUUID == uuidFromUrl) {
+                if (event.creator.creatorEventUUID == uuidCreator) {
                     callback({ event: event, uuidEvent: event.uuid, success: true });
                 }
             });
@@ -143,35 +170,15 @@ getDoodleEventByCreatorUUIDIntern = function (uuidFromUrl, callback) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-module.exports.getParticipantByUUID = getParticipantByUUID;
+module.exports.getParticipantsByUUID = getParticipantsByUUID;
 module.exports.getDatesByEventIdIntern = getDatesByEventIdIntern;
-module.exports.getDoodleEventByUUIDIntern = getDoodleEventByUUIDIntern;
-
-
-
-
+module.exports.getDoodleEventByUUID = getDoodleEventByUUID;
 module.exports = {
     addDateToExistingParticipant: addDateToExistingParticipant,
     addParticipantToEvent: addParticipantToEvent,
     getDatesByEventIdIntern: getDatesByEventIdIntern,
-    createNewDoodleEvent: createNewDoodleEvent,
-    getDoodleEventByUUIDIntern: getDoodleEventByUUIDIntern,
+    saveNewDoodleEvent: saveNewDoodleEvent,
+    getDoodleEventByUUID: getDoodleEventByUUID,
     getAllParticipatesIntern: getAllParticipatesIntern,
     sendEventDataToClient: sendEventDataToClient,
 }

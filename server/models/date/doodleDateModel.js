@@ -13,9 +13,4 @@ module.exports = class DateModel extends ModelClass{
         callback();
     }
 
-    setId(id, callback){
-        this.model._id = id;
-        callback();
-    }
-
 }

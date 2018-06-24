@@ -13,7 +13,7 @@ module.exports = class Response{
             GET_DOODLE_EVENT_BY_CREATOR_UUID_SUCCESS: "Event with the UUID of the creator found",
             GET_DOODLE_EVENT_BY_UUID_FAILURE: "No event with the UUID was found",
             DATABASE_FAILURE: "Something went wrong when communicating with the database",
-            ADD_PARTICIPANT_SUCCESS: "Participant was added to the event: ",
+            ADD_PARTICIPANT_SUCCESS: "Participant was added to the event",
             REQUIRED_KEYS_MISSING_FAILURE: "Required values are missing",
         }
     }
@@ -21,8 +21,8 @@ module.exports = class Response{
     getModelIsInvalidFailureMsg(){
         return this.messages.REQUIRED_KEYS_MISSING_FAILURE;
     }
-    getParticipantAddedSuccessMsg(eventTitle){
-        return this.messages.ADD_PARTICIPANT_SUCCESS + eventTitle;
+    getParticipantAddedSuccessMsg(){
+        return this.messages.ADD_PARTICIPANT_SUCCESS;
     }
     getNewDoodleEventSuccessMsg(){
         return this.messages.NEW_DOODLE_EVENT_SUCCESS;

@@ -19,7 +19,6 @@ module.exports = class doodleEventModel extends ModelClass {
         this.datesAreValid = true;
     }
 
-    // set properties of this model directly
     // if property is model use setModelProperty of the corresponding model class to assign values
     setChildModelProperties(event, callback) {
         for (let key in event) {
@@ -62,7 +61,7 @@ module.exports = class doodleEventModel extends ModelClass {
     }
 
     setTimestamp() {
-        this.model.timestamp = new Date().toJSON();
+        this.model.timestamp = new Date();
     }
 
     /**

@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
 });
 
 // create a new event
-router.post('/event/new', logic.createNewDoodleEvent);
+router.post('/event/new', logic.saveNewDoodleEvent);
 
 // get an event by its uuid
 router.get('/event/:uuid', logic.sendEventDataToClient);
