@@ -15,9 +15,17 @@ module.exports = class Response{
             DATABASE_FAILURE: "Something went wrong when communicating with the database",
             ADD_PARTICIPANT_SUCCESS: "Participant was added to the event",
             REQUIRED_KEYS_MISSING_FAILURE: "Required values are missing",
+            ADD_DATE_TO_PARTICIPANT_SUCCESS: "Date was added to the participant",
+            ADD_DATE_TO_PARTICIPANT_FAILURE: "Date could not be added to the participant",
         }
     }
 
+    getDateAddedToParticipantSuccessMsg(){
+        return this.messages.ADD_DATE_TO_PARTICIPANT_SUCCESS;
+    }
+    getDateAddedToParticipantFailureMsg(){
+        return this.message.ADD_DATE_TO_PARTICIPANT_FAILURE;
+    }
     getModelIsInvalidFailureMsg(){
         return this.messages.REQUIRED_KEYS_MISSING_FAILURE;
     }

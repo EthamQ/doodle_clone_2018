@@ -171,12 +171,12 @@ getDoodleEventByCreatorUUID = function (uuidCreator, callback) {
 
 
 module.exports.getParticipantsByUUID = getParticipantsByUUID;
-module.exports.getDatesByEventIdIntern = getDatesByEventIdIntern;
+module.exports.getDatesByEventId = getDatesByEventId;
 module.exports.getDoodleEventByUUID = getDoodleEventByUUID;
 module.exports = {
     addDateToExistingParticipant: addDateToExistingParticipant,
     addParticipantToEvent: addParticipantToEvent,
-    getDatesByEventIdIntern: getDatesByEventIdIntern,
+    getDatesByEventId: getDatesByEventId,
     saveNewDoodleEvent: saveNewDoodleEvent,
     getDoodleEventByUUID: getDoodleEventByUUID,
     getAllParticipatesIntern: getAllParticipatesIntern,

@@ -4,6 +4,8 @@ let databaseName = "mydb";
 var url = "mongodb://localhost:27017/";
 const uuid = require('uuid/v4');
 
+// info about the different collection
+// to use as input for the database functions
 exports.doodleEventDBInfo = {
   dbName: "doodlePWP",
   collectionName: "doodleEvent"
@@ -18,25 +20,13 @@ exports.doodleParticipantDBInfo = {
   dbName: "doodlePWP",
   collectionName: "doodleParticipants"
 }
-
-exports.insertIntoCollection2 = function (dbName, collectionName, object, dbo) {
-  return new Promise((resolve, reject) => {
-    dbo.collection(collectionName).insertOne(object, function (err, res) {
-      if (err) resolve({ success: false });
-      db.close();
-      // console.log("document inserted");
-      if (res) {
-        // console.log(res.ops[0]._id);
-        resolve({ success: true, insertedId: res.ops[0]._id, insertedItem: res.ops[0] });
-      }
-      // console.log(object);
-
-    });
-
-  });
-}
-
-// inserts 'object' into the specified collection
+ 
+/**
+ * inserts 'object' into the specified collection
+ * @param {*} dbName 
+ * @param {*} collectionName 
+ * @param {*} object 
+ */
 exports.insertIntoCollection = function (dbName, collectionName, object) {
   return new Promise((resolve, reject) => {
     MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
@@ -53,12 +43,9 @@ exports.insertIntoCollection = function (dbName, collectionName, object) {
   });
 }
 
-
-
-
-
-
-// get all items from the specified collection
+/**
+ * get all items from the specified collection
+ */
 exports.getAllItems = function (dbName, collectionName) {
   return new Promise((resolve, reject) => {
     MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
@@ -74,6 +61,12 @@ exports.getAllItems = function (dbName, collectionName) {
   });
 }
 
+/**
+ * get one item from the specified collection with the specified _id attribute
+ * @param {*} dbName 
+ * @param {*} collectionName 
+ * @param {*} id 
+ */
 exports.getItemById = function (dbName, collectionName, id) {
   return new Promise((resolve, reject) => {
     MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
@@ -104,7 +97,13 @@ exports.getOneItemBy = function (dbName, collectionName, criteria) {
   });
 }
 
-// TODO: return Promise and success
+/**
+ * update one item in the specified collection
+ * @param {*} dbName 
+ * @param {*} collectionName 
+ * @param {*} criteria expects following object: {attributeToLookFor: AttributeValueToLookFor}
+ * @param {*} update expects following object: {attributeYouWantToChange: newValue}
+ */
 exports.updateItem = function (dbName, collectionName, criteria, update) {
   return new Promise((resolve, reject) => {
     MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
@@ -120,48 +119,7 @@ exports.updateItem = function (dbName, collectionName, criteria, update) {
         });
     });
   });
-
 }
-
-// exports.createDB = function(dbName){ 
-//     let urlCreate = url + dbName;
-//     MongoClient.connect(urlCreate, function(err, db) {
-//       if (err) throw err;
-//       console.log("Database created!");
-//       db.close();
-//     });
-// }
-
-// exports.createCollection = function(dbName, collectionName){
-//         MongoClient.connect(url, function(err, db) {
-//             if (err) throw err;
-//             var dbo = db.db(dbName);
-//             dbo.createCollection(collectionName, function(err, res) {
-//               if (err) throw err;
-//               console.log("Collection created!");
-//               db.close();
-//             });
-//           }); 
-// }
-
-
-
-
-// exports.getAllItems = function(dbName, collectionName, res){
-//   MongoClient.connect(url, function(err, db) {
-//       if (err) throw err;
-//       var dbo = db.db(dbName);
-//         if (err) throw err;
-//         // db.close();
-//         dbo.collection(collectionName).find().toArray(function(err, items) {
-//           if (err) throw err;
-//           res.send(items);
-//           db.close();
-//         });
-
-
-//     }); 
-// }
 
 // exports.deleteItemWithId = function(dbName, collectionName, id){
 //   MongoClient.connect(url, function(err, db) {

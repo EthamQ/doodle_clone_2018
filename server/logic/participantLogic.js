@@ -25,6 +25,7 @@ getParticipantById = function (partId, callback) {
         callback(participant);
     }).catch(err => {
         console.log(err);
+        callback(null);
     })
 }
 
@@ -43,7 +44,6 @@ getParticipantsByUUID = function (eventUUID, callback) {
         else {
             callback({ data: null, success: false });
         }
-
     });
 }
 
@@ -66,7 +66,6 @@ incrementNumberParticipants = function (uuid) {
         });
     });
     });
-   
 }
 
 /**
@@ -75,7 +74,7 @@ incrementNumberParticipants = function (uuid) {
  */
 addParticipantToParticipantCollection = function(eventUUID, participant, part_id){
     return new Promise((resolve,reject)=>{
-    getDatesByEventIdIntern(eventUUID, dateArray => {
+    getDatesByEventId(eventUUID, dateArray => {
         let participantModel = new DoodleParticipantModel();
         participantModel.setDates(dateArray).then(() => {
             participantModel.setModelProperty(participant, () => {
@@ -133,7 +132,6 @@ addParticipantToEvent = function (req, res, next) {
     let participant = req.body;
     let dates = [];
     let part_id = uuid();
-
     addParticipantToParticipantCollection(eventUUID, participant, part_id).then(data =>{
         updateParticipantsInEventCollection(eventUUID, participant, part_id).then(data =>{
             incrementNumberParticipants(eventUUID).then(data =>{
@@ -142,7 +140,6 @@ addParticipantToEvent = function (req, res, next) {
                     responseBuilder.setMessage(responseBuilder.getParticipantAddedSuccessMsg());
                     res.send(responseBuilder.getResponse());
                 }
-
             }).catch(err =>{
                 responseBuilder.setSuccess(false);
                 res.send(responseBuilder.getResponse());

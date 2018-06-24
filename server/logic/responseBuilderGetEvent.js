@@ -36,7 +36,7 @@ setCreatorAccess = function(boolean){
 addDatesByUUID = function(uuidEvent, callback){
     if(!datesSet){
         datesSet = true;
-        logic.getDatesByEventIdIntern(uuidEvent, dateArray => {
+        logic.getDatesByEventId(uuidEvent, dateArray => {
             processDatesEntry(dateArray, ()=>{
                 callback();
             });
