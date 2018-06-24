@@ -4,76 +4,97 @@ const uuid = require('uuid/v4');
 const DateModel = require('./../date/doodleDateModel');
 const ParticipantModel = require('./../participant/doodleParticipantModel');
 const constructorArgs = require('./doodleEventModelValues');
+const dbUtils = require('./../../MongoDB/dbUtils');
 
-module.exports = class doodleEventModel extends ModelClass{
+module.exports = class doodleEventModel extends ModelClass {
 
     constructor() {
-        super(constructorArgs.model, constructorArgs.allowedKeys, constructorArgs.requiredKeys);
+        super(
+            constructorArgs.getNewModel(),
+            constructorArgs.allowedKeys,
+            constructorArgs.requiredKeys,
+            constructorArgs.dbInfo
+        );
+
         this.datesAreValid = true;
     }
-    
-    // set properties of this model directly
+
     // if property is model use setModelProperty of the corresponding model class to assign values
-    setThisAndChildModels(event){
-        this.setModelProperty(event);
-        // other models in this model
+    setChildModelProperties(event, callback) {
         for (let key in event) {
-            switch(key){
-                case 'date': this.addDates(event[key]);
-                break;
-                case 'participants': this.addCreator(event[key]);
-                break;
+            if (key == 'date') {
+                this.saveDatesInDB(event[key], () =>{
+                    // make sure it is finished
+                });
             }
-        }  
+            if (key == 'creator') {
+                this.returnCreatorObject(event[key], creatorObject =>{
+                    this.model.creator = creatorObject;
+                });
+            }
+        }
+        callback();
     }
 
-    childModelsAreValid(){
-      return this.datesAreValid;
+    /**
+     * generate and set this.model.uuid and this.model.timestamp
+     */
+    generateAndSetRequiredProperties() {
+        this.setDoodleEventModelUUID();
+        this.setTimestamp();
+    }
+
+    childModelsAreValid() {
+        return this.datesAreValid;
     }
 
     // generate uuid and add it to url
-    setDoodleEventModelUUID(){
+    setDoodleEventModelUUID() {
         let newUUID = uuid();
         this.model.uuid = newUUID;
         this.model.url += newUUID;
+        this.model._id = newUUID;
     }
 
-    getModel(){      
-        this.setDoodleEventModelUUID();
-        this.setTimestamp();
+    getModel() {
         return this.model;
     }
 
-    setTimestamp(){
-        this.model.timestamp = new Date().toJSON(); 
+    setTimestamp() {
+        this.model.timestamp = new Date();
     }
 
-    // add all dates in 'dateArray' to this EventModel
-    addDates(dateArray){
-        dateArray.map(date =>{
+    /**
+     * 
+     * @param dateArray array of dates sent by the client
+     * 
+     * @param callback function that returns an array of date objects
+     * that should all be saved in the date collection in the database
+     */
+    saveDatesInDB(dateArray, callback) {
+        dateArray.map(date => {
+            let newDateId = uuid();
             let dateModel = new DateModel();
-            dateModel.setModelProperty(date);
-            this.model.date.push(dateModel.getModel());
-            if(this.datesAreValid){
-                this.datesAreValid = dateModel.modelIsValid();
-            }
+            dateModel.setModelProperty(date, ()=>{
+                dateModel.setId(newDateId, ()=>{
+                    dateModel.setUUID(this.model.uuid, ()=>{
+                        dateModel.saveModelInDatabase();
+                    });
+                });
+            });
+            this.model.date.push({ date_id: newDateId });
         });
+        callback();
     }
 
     // add one participant with isCreator: true to this model
-    addCreator(participantArray){
-        if(participantArray.length === 1){
-            participantArray.map(creator =>{
-                let participant = new ParticipantModel();
-                participant.setIsEventCreator();
-                participant.setModelProperty(creator); 
-                this.model.participants.push(participant.getModel());
-                this.model.numberParticipants++;
-            });
+    returnCreatorObject(creatorFromRequest, callback) {
+        let creator = {
+            name: creatorFromRequest.name,
+            email: creatorFromRequest.email,
+            creatorEventUUID: uuid()
         }
-        else{
-            console.log("throw error, more than one creator or no creator!");
-        }
+        callback(creator);
     }
 }
 
