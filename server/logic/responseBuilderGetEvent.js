@@ -1,6 +1,9 @@
 var logic = require('./doodleEventLogic.js');
 var mongodb = require('./../MongoDB/dbUtils');
+// to fill the data of the responseBuilder
 responseData = {};
+// to prevent the that the function gets called twice
+// when the reason for this issue is found these booleans can be removed
 participantsSet = false;
 datesSet = false;
 
@@ -27,8 +30,6 @@ initResponseData = function(){
     }
 }
 
-
-
 setCreatorAccess = function(boolean){
     responseData.creatorAccess = boolean;
 }
@@ -47,7 +48,6 @@ addDatesByUUID = function(uuidEvent, callback){
 addParticipantsByUUID = function(uuidEvent, callback){
     if(!participantsSet){
         participantsSet = true;
-        console.log("inside function participants: " + uuidEvent);
         logic.getParticipantsByUUID(uuidEvent, data =>{
             if(data.success){
                 processParticipantsEntry(data, () =>{
@@ -57,7 +57,6 @@ addParticipantsByUUID = function(uuidEvent, callback){
             else{
                 callback({success: false});
             }
-           
         });
     } 
 }

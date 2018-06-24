@@ -56,6 +56,39 @@ saveNewDoodleEvent = function (req, res, next) {
 }
 
 /**
+ * update title, description, eventType, location of an event
+ */
+updateDoodleEvent = function (req, res, next) {
+    let responseBuilder = new ResponseBuilder();
+    creatorUUID = req.params.creatorUUID;
+    getDoodleEventByCreatorUUID(creatorUUID, data => {
+        if (data.success) {
+            responseBuilder.setSuccess(true);
+            responseBuilder.setMessage("Event successfully updated");
+            let criteria = { uuid: data.uuidEvent };
+            let update = {
+                title: req.body.title,
+                location: req.body.location,
+                description: req.body.description,
+                eventType: req.body.eventType,
+            }
+            mongodb.updateItem(mongodb.doodleEventDBInfo.dbName, mongodb.doodleEventDBInfo.collectionName, criteria, update).then(data => {
+                res.send(responseBuilder.getResponse());
+            }).catch(err => {
+                responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
+                res.send(responseBuilder.getResponse());
+            });
+
+        }
+        else {
+            responseBuilder.setSuccess(false);
+            responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDFailureMsg());
+            res.send(responseBuilder.getResponse());
+        }
+    });
+}
+
+/**
  * stores data about the event with the corresponding uuid in
  * responseDataGetEvent.js to send it in sendEventDataToClient()
  * resolves an instance of responseBuilder with set success and message
@@ -181,4 +214,5 @@ module.exports = {
     getDoodleEventByUUID: getDoodleEventByUUID,
     getAllParticipatesIntern: getAllParticipatesIntern,
     sendEventDataToClient: sendEventDataToClient,
+    updateDoodleEvent: updateDoodleEvent
 }

@@ -22,8 +22,6 @@ Expected data about the new event in the post request:
     ]
 }
 
-Response from the server:
-
 ##############################################
 Add a participant to an event:
 router.post('/participant/:uuid', logic.addParticipantToEvent);
@@ -47,15 +45,12 @@ Expected data about the date and participant in the post request:
     "dateId": string
 }
 
-Response from the server:
-
-
 ##############################################
 Get a doodle event by its uuid
 router.get('/event/:uuid', logic.getDoodleEventByUUID);
 Expected data about the event in the url:
 /:uuid
-uuid of the event
+uuid of the event or uuid from the creator
 
 Response from the server:
 Success:
@@ -101,4 +96,23 @@ Success:
             "timestamp": string
         }
     ]
+}
+
+
+
+
+
+##############################################
+Update title, description, eventType, location of an event if you are the creator of an event
+router.post('/event/update/:creatorUUID', logic.updateDoodleEvent);
+Expected data in the url:
+/:creatorUUID:
+the uuid of the creator, so only he can update those values
+
+Expected data in the post request:
+{
+	"title": string,
+    "location": string,
+    "description": string,
+    "eventType": string
 }

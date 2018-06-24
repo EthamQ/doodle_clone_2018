@@ -10,14 +10,17 @@ router.get('/', function(req, res, next) {
 
 // create a new event
 router.post('/event/new', logic.saveNewDoodleEvent);
-
 // get an event by its uuid
 router.get('/event/:uuid', logic.sendEventDataToClient);
 // body: {name, email}, add one participant to an event with this uuid
 router.post('/participant/:uuid', logic.addParticipantToEvent);
-
 // add a participant to an existing date
 router.post('/participant/add/date', logic.addDateToExistingParticipant);
+
+/**
+ * update title, description, eventType, location of an event
+ */
+router.post('/event/update/:creatorUUID', logic.updateDoodleEvent);
 
 
 
