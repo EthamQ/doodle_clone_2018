@@ -1,14 +1,23 @@
 var mongodb = require('./../MongoDB/dbUtils');
 const uuid = require('uuid/v4');
 
+/**
+ * returns all participants in the participants collection in a callback
+ */
 getAllParticipatesIntern = function (callback) {
     mongodb.getAllItems(mongodb.doodleParticipantDBInfo.dbName, mongodb.doodleParticipantDBInfo.collectionName).then(data => {
         if (data.success) {
-            callback({ data });
+            callback({ data: data.data , success: true});
         }
+    }).catch(err=>{
+        callback({ data: null, success: false });
     });
 }
 
+/**
+ * returns one participant object with the specified _id 
+ * from the participants collection in a callback
+ */
 getParticipantById = function (partId, callback) {
     mongodb.getItemById(mongodb.doodleParticipantDBInfo.dbName, mongodb.doodleParticipantDBInfo.collectionName, partId).then(participant =>{
         callback(participant);
@@ -19,14 +28,21 @@ getParticipantById = function (partId, callback) {
 
 getParticipantByUUID = function (eventUUID, callback) {
     let participants = [];
+    console.log("yoyo getParticipantByUUID");
     getAllParticipatesIntern(data => {
-        let partArray = data.data.data;
-        partArray.map(p => {
-            if (p.eventUUID === eventUUID) {
-                participants.push(p);
-            }
-        });
-        callback(participants);
+        if(data.success){
+            let partArray = data.data;
+            partArray.map(p => {
+                if (p.eventUUID === eventUUID) {
+                    participants.push(p);
+                }
+            });
+            callback({data: participants, success: true});
+        }
+        else{
+            callback({data: null, success: false});
+        }
+        
     });
 }
 

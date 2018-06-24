@@ -48,10 +48,16 @@ addParticipantsByUUID = function(uuidEvent, callback){
     if(!participantsSet){
         participantsSet = true;
         console.log("inside function participants: " + uuidEvent);
-        logic.getParticipantByUUID(uuidEvent, partArray =>{
-            processParticipantsEntry(partArray, () =>{
-                callback();
-            });
+        logic.getParticipantByUUID(uuidEvent, data =>{
+            if(data.success){
+                processParticipantsEntry(data, () =>{
+                    callback({success: true});
+                });
+            }
+            else{
+                callback({success: false});
+            }
+           
         });
     } 
 }
@@ -76,7 +82,8 @@ processDatesEntry = function(dateArray, callback){
     callback();
 }
 
-processParticipantsEntry = function(participantsArray, callback){
+processParticipantsEntry = function(data, callback){
+    let participantsArray = data.data;
     participantsArray.map(participant => {
         responseData.participants.push({
             participantId: participant._id,

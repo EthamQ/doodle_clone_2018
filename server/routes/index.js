@@ -8,16 +8,8 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+// create a new event
 router.post('/event/new', logic.createNewDoodleEvent);
-
-router.get('/get', (req, res, next) =>{
-  dbUtils.getOneItems(dbUtils.doodleDateDBInfo.dbName, dbUtils.doodleDateDBInfo.collectionName, '5b2ac3bfa257342fc025dc56');
-});
-
-
-
-
-// router.post('/participant/:uuid', logic.addNewParticipant);
 
 // get an event by its uuid
 router.get('/event/:uuid', logic.sendEventDataToClient);

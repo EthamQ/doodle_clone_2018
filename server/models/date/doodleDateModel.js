@@ -5,18 +5,17 @@ const uuid = require('uuid/v4');
 
 module.exports = class DateModel extends ModelClass{
     constructor() {
-        super(constructorArgs.model, constructorArgs.allowedKeys, constructorArgs.requiredKeys, constructorArgs.dbInfo);
-    for(let key in this.model){
-        this.model[key] = null;
-    }
+        super(constructorArgs.getNewModel(), constructorArgs.allowedKeys, constructorArgs.requiredKeys, constructorArgs.dbInfo);
     }
 
-    setUUID(uuid){
+    setUUID(uuid, callback){
         this.model.uuid = uuid;
+        callback();
     }
 
-    setId(id){
+    setId(id, callback){
         this.model._id = id;
+        callback();
     }
 
 }

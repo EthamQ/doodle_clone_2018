@@ -19,24 +19,11 @@ module.exports = class Model {
 
 
     // set values of properties that aren't models themselves (defined in allowedKeys)
-    setModelProperty(object, isDate){
-        if(isDate===true){
-            for (let key in object) {
-                // console.log(key);
-                // console.log(object);
-                fillModel.fillModelProperty2(this.allowedKeys, this.model, key, object[key]).then(el =>{
-                    console.log(el);
+    setModelProperty(object, callback){
+                fillModel.fillModelProperty(this.allowedKeys, this.model, object, filledModel =>{
+                    this.model = filledModel;
                 });
-            }  
-        }
-        else{
-            for (let key in object) {
-                // console.log(key);
-                // console.log(object);
-                fillModel.fillModelProperty(this.allowedKeys, this.model, key, object[key]);
-            }  
-        }
-      
+                callback();         
     }
     // implement if child models exist
     setThisAndChildModels(object) { }
@@ -65,11 +52,5 @@ module.exports = class Model {
         });
     }
 
-    setResponseBuilder(responseBuilder){
-        this.responseBuilder = responseBuilder;
-    }
-
-    getResponse(){
-        return this.responseBuilder.getResponse();
-    }
+   
 }

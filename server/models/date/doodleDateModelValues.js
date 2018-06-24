@@ -5,6 +5,17 @@ exports.model = {
     timeTo: null,
     uuid: null
 }
+
+exports.getNewModel = function(){
+    let model = {
+        _id: null,
+        date: null,
+        timeFrom: null,
+        timeTo: null,
+        uuid: null
+    }
+    return model; 
+}
 // all keys the user is allowed to set directly with a request
 exports.allowedKeys = [
     'date',

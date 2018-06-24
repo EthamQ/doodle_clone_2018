@@ -10,42 +10,36 @@ module.exports = class doodleEventModel extends ModelClass {
 
     constructor() {
         super(
-            constructorArgs.model,
+            constructorArgs.getNewModel(),
             constructorArgs.allowedKeys,
             constructorArgs.requiredKeys,
             constructorArgs.dbInfo
         );
-        this.model.date = [];
+
         this.datesAreValid = true;
     }
 
     // set properties of this model directly
     // if property is model use setModelProperty of the corresponding model class to assign values
-    setChildModelProperties(event) {
-        // other models in this model
-        // for (let key in event) {
-        //     switch(key){
-        //         case 'date': this.addDates(event[key]);
-        //         break;
-        //         // case 'participants': this.addCreator(event[key]);
-        //         // break;
-        //     }
-
+    setChildModelProperties(event, callback) {
         for (let key in event) {
             if (key == 'date') {
-                event[key].map(el =>{
-                    let id = uuid();
-                    let date = {_id: id, date: el.date, timeFrom: el.timeFrom, timeTo: el.timeTo, uuid: this.model.uuid};
-                    this.model.date.push({date_id: id});
-                    dbUtils.insertIntoCollection(dbUtils.doodleDateDBInfo.dbName, dbUtils.doodleDateDBInfo.collectionName, date);
+                this.saveDatesInDB(event[key], () =>{
+                    // make sure it is finished
                 });
             }
             if (key == 'creator') {
-                this.model.creator = {name: event[key].name, email: event[key].email, creatorEventUUID: uuid()};
+                this.returnCreatorObject(event[key], creatorObject =>{
+                    this.model.creator = creatorObject;
+                });
             }
         }
+        callback();
     }
 
+    /**
+     * generate and set this.model.uuid and this.model.timestamp
+     */
     generateAndSetRequiredProperties() {
         this.setDoodleEventModelUUID();
         this.setTimestamp();
@@ -64,8 +58,6 @@ module.exports = class doodleEventModel extends ModelClass {
     }
 
     getModel() {
-        this.setDoodleEventModelUUID();
-        this.setTimestamp();
         return this.model;
     }
 
@@ -73,63 +65,38 @@ module.exports = class doodleEventModel extends ModelClass {
         this.model.timestamp = new Date().toJSON();
     }
 
-    // add all dates in 'dateArray' to this EventModel
-
-
-    addtotempdates(data) {
-        return new Promise((resolve, reject) => {
-            this.tempdates.push(data);
-        });
-
-    }
-
-    addDates(date) {
-        return new Promise((resolve, reject) => {
+    /**
+     * 
+     * @param dateArray array of dates sent by the client
+     * 
+     * @param callback function that returns an array of date objects
+     * that should all be saved in the date collection in the database
+     */
+    saveDatesInDB(dateArray, callback) {
+        dateArray.map(date => {
+            let newDateId = uuid();
             let dateModel = new DateModel();
-            dateModel.setId(uuid());
-            dateModel.setModelProperty(date, true);
-            dateModel.setUUID(this.model.uuid);
-            resolve(dateModel);
-            // console.log(dateModel);
-            // console.log(date);
-            // console.log(dateModel.getModel());
-            // dateModel.saveModelInDatabase().then(data =>{
-            //     //    console.log(data);
-            //        this.model.date.push(data.insertedId);
-            //    });
-
-
-            // if(this.datesAreValid){
-            //     this.datesAreValid = dateModel.modelIsValid();
-            // }
+            dateModel.setModelProperty(date, ()=>{
+                dateModel.setId(newDateId, ()=>{
+                    dateModel.setUUID(this.model.uuid, ()=>{
+                        dateModel.saveModelInDatabase();
+                    });
+                });
+            });
+            this.model.date.push({ date_id: newDateId });
         });
-
-
-    }
-
-    save(dateModel) {
-        console.log(dateModel);
-        dateModel.saveModelInDatabase().then(data => {
-            this.model.date.push('ff');
-        });
+        callback();
     }
 
     // add one participant with isCreator: true to this model
-    addCreator(creator) {
-        if (participantArray.length === 1) {
-
-                let participant = new ParticipantModel();
-                participant.setIsEventCreator();
-                participant.setModelProperty(creator, false);
-                this.model.creator = participant.getModel();
-                this.model.numberParticipants++;
+    returnCreatorObject(creatorFromRequest, callback) {
+        let creator = {
+            name: creatorFromRequest.name,
+            email: creatorFromRequest.email,
+            creatorEventUUID: uuid()
         }
-        else {
-            console.log("throw error, more than one creator or no creator!");
-        }
+        callback(creator);
     }
-
-
 }
 
 
