@@ -1,0 +1,49 @@
+
+  <div class="card-viewer">
+    <div class="card-viewer-header">
+      <mat-progress-bar mode="determinate" value="1"></mat-progress-bar>
+    </div>
+    <div class="card-viewer-body">
+      <mat-horizontal-stepper [linear]="isLinear" #stepper>
+        <mat-step [stepControl]="firstFormGroup">
+        <form [formGroup]="firstFormGroup">
+          <ng-template matStepLabel>Dein Name</ng-template>
+          <mat-form-field>
+            <input matInput placeholder="Name" formControlName="firstCtrl" required>
+          </mat-form-field>
+          <div>
+            <button mat-button matStepperNext style="background-color: darkorange ; color: white">Next</button>
+          </div>
+        </form>
+      </mat-step>
+        <mat-step [stepControl]="secondFormGroup">
+          <form [formGroup]="secondFormGroup">
+            <ng-template matStepLabel>Deine Mail Adresse</ng-template>
+            <mat-form-field>
+              <input matInput placeholder="Address" formControlName="secondCtrl" required>
+            </mat-form-field>
+            <div>
+              <button mat-button matStepperNext style="background-color: darkorange ; color: white">Next</button>
+            </div>
+          </form>
+        </mat-step>
+        <mat-step [stepControl]="thridFormGroup">
+          <form [formGroup]="thridFormGroup">
+            <ng-template matStepLabel>Wähle deine Daten</ng-template>
+              <app-calendar></app-calendar>
+            <div>
+              <button mat-button matStepperNext style="background-color: darkorange ; color: white">Next</button>
+            </div>
+          </form>
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>Done</ng-template>
+          <app-result></app-result>
+          <div>
+            <button mat-button matStepperNext style="background-color: darkgreen ; color: white">Submit</button>
+          </div>
+        </mat-step>
+      </mat-horizontal-stepper>
+    </div>
+  </div>
+
