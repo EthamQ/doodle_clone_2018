@@ -38,10 +38,8 @@ getNumberOfParticipants = function (uuid, callback) {
 }
 
 incrementNumberParticipants = function (uuid) {
-    console.log('inside inrement');
     return new Promise((resolve, reject) => {
         getNumberOfParticipants(uuid, number => {
-            console.log('number Participants: ' + number);
             let criteria = { uuid: uuid };
             let update = { numberParticipants: (number + 1) };
             mongodb.updateItem(mongodb.doodleEventDBInfo.dbName, mongodb.doodleEventDBInfo.collectionName, criteria, update).then(data => {

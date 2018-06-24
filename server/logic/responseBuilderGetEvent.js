@@ -33,34 +33,38 @@ setCreatorAccess = function(boolean){
     responseData.creatorAccess = boolean;
 }
 
-processDatesEntryByUUID = function(uuidEvent){
+addDatesByUUID = function(uuidEvent, callback){
     if(!datesSet){
         datesSet = true;
         logic.getDatesByEventIdIntern(uuidEvent, dateArray => {
-            processDatesEntry(dateArray);
+            processDatesEntry(dateArray, ()=>{
+                callback();
+            });
         });
     }
 }
 
-processParticipantsEntryByUUID = function(uuidEvent){
+addParticipantsByUUID = function(uuidEvent, callback){
     if(!participantsSet){
         participantsSet = true;
         console.log("inside function participants: " + uuidEvent);
         logic.getParticipantByUUID(uuidEvent, partArray =>{
-            processParticipantsEntry(partArray);
+            processParticipantsEntry(partArray, () =>{
+                callback();
+            });
         });
     } 
 }
 
-processEventEntryByUUID = function(uuidEvent, callback){
+addEventDataByUUID = function(uuidEvent, callback){
     getDoodleEventByUUIDIntern(uuidEvent, data => {
-        processEventEntry(data.event);
+        addEventData(data.event);
         callback(data.success);
     });
 }
 
 
-processDatesEntry = function(dateArray){
+processDatesEntry = function(dateArray, callback){
     dateArray.map(date => {
         responseData.dates.push({
             dateId: date._id,
@@ -69,10 +73,10 @@ processDatesEntry = function(dateArray){
             timeTo: date.timeTo,
         });
     });
+    callback();
 }
 
-processParticipantsEntry = function(participantsArray){
-    // console.log("inside processParticipantsEntry");
+processParticipantsEntry = function(participantsArray, callback){
     participantsArray.map(participant => {
         responseData.participants.push({
             participantId: participant._id,
@@ -81,9 +85,10 @@ processParticipantsEntry = function(participantsArray){
             dates: participant.dates
         });
     });
+    callback();
 }
 
-processEventEntry = function(eventFromDatabase){
+addEventData = function(eventFromDatabase){
     if(eventFromDatabase){
         responseData.title = eventFromDatabase.title;
         responseData.description = eventFromDatabase.description;
@@ -105,13 +110,13 @@ getResponseData = function(){
 
 module.exports = {
     getResponseData: getResponseData,
-    processEventEntry: processEventEntry,
+    addEventData: addEventData,
     processParticipantsEntry: processParticipantsEntry,
     processDatesEntry: processDatesEntry,
-    processDatesEntryByUUID: processDatesEntryByUUID,
+    addDatesByUUID: addDatesByUUID,
     initResponseData: initResponseData,
     setCreatorAccess: setCreatorAccess,
-    processParticipantsEntryByUUID: processParticipantsEntryByUUID,
-    processEventEntryByUUID: processEventEntryByUUID
+    addParticipantsByUUID: addParticipantsByUUID,
+    addEventDataByUUID: addEventDataByUUID
 
   }
