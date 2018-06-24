@@ -133,7 +133,7 @@ addParticipantToEvent = function (req, res, next) {
     let dates = [];
     let part_id = uuid();
     addParticipantToParticipantCollection(eventUUID, participant, part_id).then(data =>{
-        updateParticipantsInEventCollection(eventUUID, participant, part_id).then(data =>{
+        updateParticipantsInEventCollection(eventUUID, part_id).then(data =>{
             incrementNumberParticipants(eventUUID).then(data =>{
                 if(data.success){
                     responseBuilder.setSuccess(true);
