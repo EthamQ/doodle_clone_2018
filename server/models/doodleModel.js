@@ -1,21 +1,29 @@
 var fillModel = require('./fillModels.js');
+let dbUtils = require('./../MongoDB/dbUtils');
 
 module.exports = class Model {
-    constructor(model, allowedKeys, requiredKeys) {
+    constructor(model, allowedKeys, requiredKeys, dbInfo) {
         this.model = model;
         this.allowedKeys = allowedKeys;
-        this.requiredKeys = requiredKeys;   
+        this.requiredKeys = requiredKeys;
+        if(dbInfo){
+            this.dbName = dbInfo.dbName;
+            this.collectionName = dbInfo.collectionName; 
+        }  
+        
     }
 
     getModel(){
         return this.model;
     }
 
+
     // set values of properties that aren't models themselves (defined in allowedKeys)
-    setModelProperty(object){
-        for (let key in object) {
-            fillModel.fillModelProperty(this.allowedKeys, this.model, key, object[key]);
-        }  
+    setModelProperty(object, callback){
+                fillModel.fillModelProperty(this.allowedKeys, this.model, object, filledModel =>{
+                    this.model = filledModel;
+                });
+                callback();         
     }
     // implement if child models exist
     setThisAndChildModels(object) { }
@@ -32,4 +40,22 @@ module.exports = class Model {
     isEmpty(value){
         return value == undefined || value == null || value == "" || value == [];
     }
+
+    saveModelInDatabase(){
+        // console.log(this.model);
+        return new Promise((resolve, reject) =>{
+            dbUtils.insertIntoCollection(this.dbName, this.collectionName, this.model).then(data =>{
+                resolve(data);   
+            }).catch(err =>{
+                console.log(err);
+            });
+        });
+    }
+
+    setId(id, callback){
+        this.model._id = id;
+        callback();
+    }
+
+   
 }
