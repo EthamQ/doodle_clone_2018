@@ -1,10 +1,8 @@
-export class DatesModel{
-  tag: number;
-  monat: string;
-  wochentag: string;
+export class ParticipantModel{
+  name: string;
+  selection: boolean[];
   constructor(data: any = {}) {
-    this.tag = data.tag;
-    this.monat = data.monat;
-    this.wochentag = data.wochentag;
+    this.name = data.name;
+    this.selection = [true, false, true, false, true, false, true];
   }
 }

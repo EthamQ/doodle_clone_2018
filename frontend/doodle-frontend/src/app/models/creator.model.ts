@@ -1,8 +1,8 @@
-export class ParticipantModel{
+export class CreatorModel{
   name: string;
-  selection: boolean[];
-  constructor(data: any = {}) {
-    this.name = data.name;
-    this.selection = [true, false, true, false, true, false, true];
+  email: string;
+  constructor() {
+    this.name = 'Name';
+    this.email = 'E-Mail';
   }
 }

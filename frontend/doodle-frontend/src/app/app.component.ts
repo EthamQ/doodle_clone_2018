@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {NgbProgressbarConfig} from '@ng-bootstrap/ng-bootstrap';
+import {DateService} from "./services/date.service";
 
 @Component({
   selector: 'app-root',
@@ -9,12 +10,8 @@ import {NgbProgressbarConfig} from '@ng-bootstrap/ng-bootstrap';
 
 })
 export class AppComponent {
-  constructor(config: NgbProgressbarConfig) {
-    // customize default values of progress bars used by this component tree
-    config.max = 1000;
-    config.striped = true;
-    config.animated = true;
-    config.type = 'success';
-    config.height = '20px';
+  dateService: DateService;
+  constructor(@Inject(DateService) dateService: DateService){
+  this.dateService = dateService;
   }
 }
