@@ -79,15 +79,15 @@ addDateToExistingParticipant = function (req, res, next) {
  * adds the dates in the request to the event in the event collection
  * and creates new entries for them in the date collection
  */
-addDatesToExistingEvent = function(req, res, next){
+addDatesToExistingEvent = function (req, res, next) {
     let responseBuilder = new ResponseBuilder();
     let dates = req.body.dates;
-    generateDateIds(dates, newDateIds=>{
-        addDatesToDateCollection(req, res, next, newDateIds, responseBuilder).then(data =>{
-            addDatesToEvent(data.event, newDateIds, data.responseBuilder).then(responseBuilder =>{
+    generateDateIds(dates, newDateIds => {
+        addDatesToDateCollection(req, res, next, newDateIds, responseBuilder).then(data => {
+            addDatesToEvent(data.event, newDateIds, data.responseBuilder).then(responseBuilder => {
                 responseBuilder.setMessage("Dates have been added to the event");
                 res.send(responseBuilder.getResponse());
-            }).catch(err =>{
+            }).catch(err => {
                 responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
                 responseBuilder.setSuccess(false);
                 res.send(responseBuilder.getResponse());
@@ -100,9 +100,9 @@ addDatesToExistingEvent = function(req, res, next){
  * generate one new id for each date in the dates array
  * and return them in a callback
  */
-generateDateIds = function(dates, callback){
+generateDateIds = function (dates, callback) {
     let newDateIds = [];
-    dates.map(date =>{
+    dates.map(date => {
         newDateIds.push(uuid());
     });
     callback(newDateIds);
@@ -112,24 +112,24 @@ generateDateIds = function(dates, callback){
  * adds the dates from the request to the dates collection
  * adds all the ids from the dateIds Array
  */
-addDatesToDateCollection = function(req, res, next, dateIds, responseBuilder){
-    return new Promise((resolve, reject) =>{
+addDatesToDateCollection = function (req, res, next, dateIds, responseBuilder) {
+    return new Promise((resolve, reject) => {
         let dates = req.body.dates;
         let creatorUUID = req.params.creatorUUID;
         console.log(dateIds);
-        getDoodleEventByCreatorUUID(creatorUUID, data=>{
+        getDoodleEventByCreatorUUID(creatorUUID, data => {
             let uuidEvent = data.uuidEvent;
             let event = data.event;
             // add dates to date collection
             let i = 0;
-            dates.map(date =>{
+            dates.map(date => {
                 let dateModel = new DateModel();
-                dateModel.setId(dateIds[i++], ()=>{
-                    dateModel.setUUID(uuidEvent, ()=>{
-                        dateModel.setModelProperty(date, ()=>{
-                            dateModel.saveModelInDatabase().then(data =>{
+                dateModel.setId(dateIds[i++], () => {
+                    dateModel.setUUID(uuidEvent, () => {
+                        dateModel.setModelProperty(date, () => {
+                            dateModel.saveModelInDatabase().then(data => {
                                 responseBuilder.setSuccess(data.success);
-                            }).catch(err =>{
+                            }).catch(err => {
                                 console.log(err);
                                 reject(err);
                             });
@@ -137,8 +137,8 @@ addDatesToDateCollection = function(req, res, next, dateIds, responseBuilder){
                     });
                 });
             });
-            resolve({event: event, responseBuilder: responseBuilder});
-        }); 
+            resolve({ event: event, responseBuilder: responseBuilder });
+        });
     });
 }
 
@@ -146,18 +146,18 @@ addDatesToDateCollection = function(req, res, next, dateIds, responseBuilder){
  * updates the date array of an event in the event collection
  * adds the date ids of the dateIds Array
  */
-addDatesToEvent = function(event, dateIds, responseBuilder){
-    return new Promise((resolve, reject)=>{
+addDatesToEvent = function (event, dateIds, responseBuilder) {
+    return new Promise((resolve, reject) => {
         let datesToUpdate = event.date;
-        dateIds.map(id =>{
-            datesToUpdate.push({date_id: id});
+        dateIds.map(id => {
+            datesToUpdate.push({ date_id: id });
         });
-        let criteria = {uuid: event.uuid};
-        let update = {date: datesToUpdate};
-        mongodb.updateItem(mongodb.doodleEventDBInfo.dbName, mongodb.doodleEventDBInfo.collectionName, criteria, update).then(data=>{
+        let criteria = { uuid: event.uuid };
+        let update = { date: datesToUpdate };
+        mongodb.updateItem(mongodb.doodleEventDBInfo.dbName, mongodb.doodleEventDBInfo.collectionName, criteria, update).then(data => {
             responseBuilder.setSuccess(data.success);
             resolve(responseBuilder);
-        }).catch(err =>{
+        }).catch(err => {
             reject(err);
         });
     });
@@ -169,15 +169,15 @@ addDatesToEvent = function(event, dateIds, responseBuilder){
  * updates a date with the 'dateId' from the body with the values
  * from 'date' from the request
  */
-updateExistingDate = function(req, res, next){
+updateExistingDate = function (req, res, next) {
     let responseBuilder = new ResponseBuilder();
     let creatorUUID = req.params.creatorUUID;
     let dateId = req.body.dateId;
     let newDate = req.body.date;
 
     creatorIdValid(creatorUUID, valid => {
-        if(valid){
-            let criteria = {_id: dateId};
+        if (valid) {
+            let criteria = { _id: dateId };
             let update = {
                 date: newDate.date,
                 timeFrom: newDate.timeFrom,
@@ -188,36 +188,116 @@ updateExistingDate = function(req, res, next){
                 mongodb.doodleDateDBInfo.collectionName,
                 criteria,
                 update
-            ).then(data =>{
-                if(data.success){
+            ).then(data => {
+                if (data.success) {
                     responseBuilder.setMessage("Date successfully updated");
                     responseBuilder.setSuccess(true);
                     res.send(responseBuilder.getResponse());
                 }
-            }).catch(err=>{
-                    responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
-                    responseBuilder.setSuccess(false);
-                    res.send(responseBuilder.getResponse());
+            }).catch(err => {
+                responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
+                responseBuilder.setSuccess(false);
+                res.send(responseBuilder.getResponse());
             });
         }
-        else{
+        else {
             responseBuilder.setMessage("Not a valid creator uuid");
             responseBuilder.setSuccess(false);
             res.send(responseBuilder.getResponse());
         }
     });
-
-
-
 }
 
-creatorIdValid  = function(creatorUUID, callback){
-    getDoodleEventByCreatorUUID(creatorUUID, data=>{
-        if(data.success){
+creatorIdValid = function (creatorUUID, callback) {
+    getDoodleEventByCreatorUUID(creatorUUID, data => {
+        if (data.success) {
             callback(true);
         }
-        else{
+        else {
             callback(false);
+        }
+    });
+}
+
+
+/**
+ * called by the router
+ * POST '/date/delete/:creatorUUID'
+ * deletes a date from the event and the date collection given its dateId
+ * and function checks if creatorUUID exists
+ * TODO: check if date belongs to this creator uuid
+ */
+deleteDatesFromEvent = function (req, res, next) {
+    let responseBuilder = new ResponseBuilder();
+    let creatorUUID = req.params.creatorUUID;
+    let dateId = req.body.dateId;
+    getDoodleEventByCreatorUUID(creatorUUID, data => {
+        if(data.success){
+            removeDateInEventCollection(creatorUUID, dateId, data).then(() => {
+                removeDateInDateCollection(creatorUUID, dateId).then(() => {
+                    responseBuilder.setSuccess(true);
+                    res.setMessage("Date successfully removed");
+                    res.send(responseBuilder.getResponse());
+                }).catch(err => {
+                    responseBuilder.setSuccess(false);
+                    res.send(responseBuilder.getResponse());
+                });
+            }).catch(err => {
+                responseBuilder.setSuccess(false);
+                res.send(responseBuilder.getResponse());
+            });
+        }
+        else{
+            responseBuilder.setSuccess(false);
+            res.send(responseBuilder.getResponse());
+        }
+    });
+}
+
+removeDateInDateCollection = function (creatorUUID, dateId) {
+    return new Promise((resolve, reject) => {
+        mongodb.deleteItemWithId(
+            mongodb.doodleDateDBInfo.dbName,
+            mongodb.doodleDateDBInfo.collectionName,
+            dateId
+        ).then(() => {
+            resolve();
+        }).catch(err => {
+            reject(new Error("Something went wrong when deleting the date from the date collection"));
+        });
+    });
+}
+
+removeDateInEventCollection = function (creatorUUID, dateId, data) {
+    return new Promise((resolve, reject) => {
+        let uuidEvent = data.uuidEvent;
+        let event = data.event;
+        let datesUpdated = event.date;
+        for (let i = 0; i < datesUpdated.length; i++) {
+            console.log(datesUpdated[i]);
+            if (datesUpdated[i].date_id == dateId) {
+                datesUpdated.splice(i, 1);
+                let criteria = { uuid: uuidEvent };
+                let update = { date: datesUpdated };
+                mongodb.updateItem(
+                    mongodb.doodleEventDBInfo.dbName,
+                    mongodb.doodleEventDBInfo.collectionName,
+                    criteria,
+                    update
+                ).then(data => {
+                    if (data.success) {
+                        resolve();
+                    }
+                }).catch(err => {
+                    reject(err);
+                });
+                break;
+            }
+            else {
+                if (i === datesUpdated.length) {
+                    reject(new Error("dateId not found in event collection"));
+                }
+            }
         }
     });
 }
@@ -227,5 +307,6 @@ module.exports = {
     getDatesByEventId: getDatesByEventId,
     addDateToExistingParticipant: addDateToExistingParticipant,
     addDatesToExistingEvent: addDatesToExistingEvent,
-    updateExistingDate: updateExistingDate
+    updateExistingDate: updateExistingDate,
+    deleteDatesFromEvent: deleteDatesFromEvent,
 }

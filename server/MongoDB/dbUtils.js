@@ -115,28 +115,28 @@ exports.updateItem = function (dbName, collectionName, criteria, update) {
       dbo.collection(collectionName).update(criteria, updateInformation, { w: 1 },
         function (err, result) {
           if (err) reject(err);
-          resolve({ success: true })
+          resolve({ success: true });
         });
     });
   });
 }
 
-// exports.deleteItemWithId = function(dbName, collectionName, id){
-//   MongoClient.connect(url, function(err, db) {
-//       if (err) throw err;
-//       var dbo = db.db(dbName);
-//         if (err) throw err;
-//         console.log("remove connect");
-//         var mongodb = require('mongodb');
-//         dbo.collection(collectionName).remove({_id: new mongodb.ObjectID(id)}, {w:1}, function(err, result) {
-//           if(err) throw err;    
-//           console.log('Document Removed Successfully');
-//           db.close();
-//         });
-
-
-//     }); 
-// }
+exports.deleteItemWithId = function(dbName, collectionName, _id){
+  return new Promise((resolve, reject)=>{
+    MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+      if (err) reject(err);
+      var dbo = db.db(dbName);
+        if (err) reject(err);
+        var mongodb = require('mongodb');
+        dbo.collection(collectionName).remove({_id: _id}, {w:1}, function(err, result) {
+          if(err) reject(err);   
+          resolve();
+          db.close();
+        });
+    }); 
+  });
+ 
+}
 
 
 

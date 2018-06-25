@@ -16,6 +16,8 @@ router.post('/event/update/:creatorUUID', logic.updateDoodleEvent);
 router.post('/date/add/:creatorUUID', dateLogic.addDatesToExistingEvent);
 7. Update dates of an event if you are the creator
 router.post('/date/add/:creatorUUID', dateLogic.addDatesToExistingEvent);
+8. Delete a date with its dateId of an event if you are the creator
+router.post('/date/delete/:creatorUUID', dateLogic.deleteDatesFromEvent);
 
 ##############################################
 1. Creating a new loodle event
@@ -164,4 +166,17 @@ Expected data in the post request:
 		"timeFrom": string,
 		"timeTo": string
 	}
+}
+
+##############################################
+8. Delete a date with its dateId of an event if you are the creator
+router.post('/date/delete/:creatorUUID', dateLogic.deleteDatesFromEvent);
+
+Expected data in the url:
+/:creatorUUID:
+the uuid of the creator, so only he can update those values
+
+Expected data in the post request:
+{
+	"dateId": string
 }

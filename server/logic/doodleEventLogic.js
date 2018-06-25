@@ -184,20 +184,29 @@ getDoodleEventByUUID = function (uuidEvent, callback) {
  * on failure: returns { event: null, uuidEvent: null, success: false } in a callback
  */
 getDoodleEventByCreatorUUID = function (uuidCreator, callback) {
+    console.log("inside getDoodleEventByCreatorUUID");
     mongodb.getAllItems(dbInfo.dbName, dbInfo.collectionName).then(data => {
         let arrayAllEvents = data.data;
         if (arrayAllEvents.length != 0) {
             // look for creator uuid in event
-            arrayAllEvents.map(event => {
-                if (event.creator.creatorEventUUID == uuidCreator) {
-                    callback({ event: event, uuidEvent: event.uuid, success: true });
+            for(let i = 0; i < arrayAllEvents.length; i++ ){
+                if (arrayAllEvents[i].creator.creatorEventUUID == uuidCreator) {
+                    console.log("creatorid found");
+                    callback({ event: arrayAllEvents[i], uuidEvent: arrayAllEvents[i].uuid, success: true });
                 }
-            });
+                // creator id not found, end of array
+                else{
+                    if(i === (arrayAllEvents.length)){
+                        console.log("creatorid not found");
+                        callback({ event: null, uuidEvent: null, success: false });
+                    }
+                }
+                
+            }
         }
-        else {
-            callback({ event: null, uuidEvent: null, success: false });
-        }
+    
     }).catch(err => {
+        console.log(err);
         callback({ event: null, uuidEvent: null, success: false });
     });
 }
