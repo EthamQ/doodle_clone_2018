@@ -1,10 +1,8 @@
-export class DatesModel{
-  tag: number;
-  monat: string;
-  wochentag: string;
+export class ResultModel{
+  sumSelection: number [];
+  sumParticipants : number;
   constructor(data: any = {}) {
-    this.tag = data.tag;
-    this.monat = data.monat;
-    this.wochentag = data.wochentag;
+    this.sumSelection = [3,0,3,0,3,0,3];
+    this.sumParticipants = 3;
   }
 }
