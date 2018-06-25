@@ -5,6 +5,7 @@ import {CreateService} from "../../services/create.service";
 import {DatesModel} from "../../models/dates.model";
 @Component({
   selector: 'app-calendar',
+  styleUrls: ['./calendar.component.css'],
   templateUrl: './calendar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
