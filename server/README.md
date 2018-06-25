@@ -14,6 +14,8 @@ router.get('/event/:uuid', logic.getDoodleEventByUUID);
 router.post('/event/update/:creatorUUID', logic.updateDoodleEvent);
 6. Add one or multiple dates to an event if you are the creator
 router.post('/date/add/:creatorUUID', dateLogic.addDatesToExistingEvent);
+7. Update dates of an event if you are the creator
+router.post('/date/add/:creatorUUID', dateLogic.addDatesToExistingEvent);
 
 ##############################################
 1. Creating a new loodle event
@@ -144,4 +146,22 @@ Expected data in the post request:
 			"timeTo": string
         }
 		]
+}
+
+##############################################
+7. Update dates of an event if you are the creator
+router.post('/date/update/:creatorUUID', dateLogic.updateExistingDate);
+
+Expected data in the url:
+/:creatorUUID:
+the uuid of the creator, so only he can update those values
+
+Expected data in the post request:
+{
+	"dateId": string,
+	"date":{
+		"date": string,
+		"timeFrom": string,
+		"timeTo": string
+	}
 }

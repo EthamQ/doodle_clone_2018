@@ -161,12 +161,71 @@ addDatesToEvent = function(event, dateIds, responseBuilder){
             reject(err);
         });
     });
- 
+}
+
+/**
+ * called by the router
+ * POST '/date/update/:creatorUUID'
+ * updates a date with the 'dateId' from the body with the values
+ * from 'date' from the request
+ */
+updateExistingDate = function(req, res, next){
+    let responseBuilder = new ResponseBuilder();
+    let creatorUUID = req.params.creatorUUID;
+    let dateId = req.body.dateId;
+    let newDate = req.body.date;
+
+    creatorIdValid(creatorUUID, valid => {
+        if(valid){
+            let criteria = {_id: dateId};
+            let update = {
+                date: newDate.date,
+                timeFrom: newDate.timeFrom,
+                timeTo: newDate.timeTo
+            }
+            mongodb.updateItem(
+                mongodb.doodleDateDBInfo.dbName,
+                mongodb.doodleDateDBInfo.collectionName,
+                criteria,
+                update
+            ).then(data =>{
+                if(data.success){
+                    responseBuilder.setMessage("Date successfully updated");
+                    responseBuilder.setSuccess(true);
+                    res.send(responseBuilder.getResponse());
+                }
+            }).catch(err=>{
+                    responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
+                    responseBuilder.setSuccess(false);
+                    res.send(responseBuilder.getResponse());
+            });
+        }
+        else{
+            responseBuilder.setMessage("Not a valid creator uuid");
+            responseBuilder.setSuccess(false);
+            res.send(responseBuilder.getResponse());
+        }
+    });
+
+
+
+}
+
+creatorIdValid  = function(creatorUUID, callback){
+    getDoodleEventByCreatorUUID(creatorUUID, data=>{
+        if(data.success){
+            callback(true);
+        }
+        else{
+            callback(false);
+        }
+    });
 }
 
 module.exports = {
     getAllDatesIntern: getAllDatesIntern,
     getDatesByEventId: getDatesByEventId,
     addDateToExistingParticipant: addDateToExistingParticipant,
-    addDatesToExistingEvent: addDatesToExistingEvent
+    addDatesToExistingEvent: addDatesToExistingEvent,
+    updateExistingDate: updateExistingDate
 }

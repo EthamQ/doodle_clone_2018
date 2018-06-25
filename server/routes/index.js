@@ -39,12 +39,12 @@ router.post('/event/update/:creatorUUID', logic.updateDoodleEvent);
  */
 router.post('/date/add/:creatorUUID', dateLogic.addDatesToExistingEvent);
 
-// TODO
 /**
  * update dates of an event if you are the creator
  */
-router.post('/date/update/:creatorUUID');
+router.post('/date/update/:creatorUUID', dateLogic.updateExistingDate);
 
+// TODO
 /**
  * delete dates of an event if you are the creator
  */
