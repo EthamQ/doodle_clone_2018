@@ -7,7 +7,7 @@ router.post('/event/new', logic.createNewDoodleEvent);
 2. Add a participant to an event:
 router.post('/participant/:uuid', logic.addParticipantToEvent);
 3. Add a date from an event to a participant:
-router.post('/participant/date', logic.addDateToExistingParticipant);
+router.post('/date/participant/add', dateLogic.addDateToParticipant);
 4. Get a doodle event by its uuid
 router.get('/event/:uuid', logic.getDoodleEventByUUID);
 5. Update title, description, eventType, location of an event if you are the creator of an event
@@ -20,6 +20,8 @@ router.post('/date/add/:creatorUUID', dateLogic.addDatesToExistingEvent);
 router.post('/date/delete/:creatorUUID', dateLogic.deleteDatesFromEvent);
 9. delete an event if you are the creator
 router.post('/event/delete/:creatorUUID', logic.deleteEvent);
+10. Remove a date from a participant:
+router.post('/date/participant/remove', dateLogic.removeDateFromParticipant);
 
 ##############################################
 1. Creating a new loodle event
@@ -59,7 +61,7 @@ Response from the server:
 
 ##############################################
 3. Add a date from an event to a participant:
-router.post('/participant/date', logic.addDateToExistingParticipant);
+router.post('/date/participant/add', dateLogic.addDateToParticipant);
 Expected data about the date and participant in the post request:
 {
     "participantId": string,
@@ -195,3 +197,15 @@ Expected data in the post request: => empty
 { 
 
 }
+
+##############################################
+10. Remove a date from a participant:
+router.post('/date/participant/remove', dateLogic.removeDateFromParticipant);
+
+Expected data about the date and participant in the post request:
+{
+    "participantId": string,
+    "dateId": string
+}
+
+##############################################

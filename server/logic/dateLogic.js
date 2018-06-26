@@ -32,47 +32,7 @@ getDatesByEventId = function (eventId, callback) {
     });
 }
 
-/**
- * called by the route POST '/participant/add/date'
- * a participant has an array with all dates of the event he takes part
- * sets the 'participates' value of the date boolean to true
- * expects from the POST request: {participantId, dateId}
- */
-addDateToExistingParticipant = function (req, res, next) {
-    let responseBuilder = new ResponseBuilder();
-    let partId = req.body.participantId;
-    let dateId = req.body.dateId;
-    getParticipantById(partId, data => {
-        if (data == null) {
-            responseBuilder.setSuccess(false);
-            responseBuilder.setMessage("A participant with the id wasn't found");
-            res.send(responseBuilder.getResponse());
-        }
-        else {
-            let newDatesArray = data.data.dates;
-            newDatesArray.map(date => {
-                if (date.dateId === dateId) {
-                    date.participates = true;
-                    // update array in database
-                    let criteria = { _id: partId };
-                    let update = { dates: newDatesArray };
-                    mongodb.updateItem(mongodb.doodleParticipantDBInfo.dbName, mongodb.doodleParticipantDBInfo.collectionName, criteria, update)
-                        .then(data => {
-                            if (data.success) {
-                                responseBuilder.setSuccess(true);
-                                responseBuilder.setMessage(responseBuilder.getDateAddedToParticipantSuccessMsg());
-                                res.send(responseBuilder.getResponse());
-                            }
-                        }).catch(err => {
-                            responseBuilder.setSuccess(false);
-                            responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
-                            res.send(responseBuilder.getResponse());
-                        });
-                }
-            })
-        }
-    });
-}
+
 
 /**
  * calles by POST '/date/add/:creatorUUID'
@@ -302,11 +262,84 @@ removeDateInEventCollection = function (creatorUUID, dateId, data) {
     });
 }
 
+/**
+ * deletes all the dates with the uuid in the date collection
+ */
+deleteDatesByUUID = function (uuid) {
+    return new Promise((resolve, reject) => {
+        let criteria = { uuid: uuid };
+        mongodb.deleteItemWithCriteria(
+            mongodb.doodleDateDBInfo.dbName,
+            mongodb.doodleDateDBInfo.collectionName,
+            criteria).then(() => {
+                resolve();
+            }).catch(err => {
+                reject(err);
+            });
+    });
+}
+
+/**
+ * called by the route POST '/participant/add/date'
+ * a participant has an array with all dates of the event he takes part
+ * sets the 'participates' value of the date boolean to true
+ * expects from the POST request: {participantId, dateId}
+ */
+addOrRemoveDateFromParticipant = function (req, res, next, shouldAdd, successMessage) {
+    let responseBuilder = new ResponseBuilder();
+    let partId = req.body.participantId;
+    let dateId = req.body.dateId;
+    getParticipantById(partId, data => {
+        if (data == null) {
+            responseBuilder.setSuccess(false);
+            responseBuilder.setMessage("A participant with the id wasn't found");
+            res.send(responseBuilder.getResponse());
+        }
+        else {
+            let newDatesArray = data.data.dates;
+            newDatesArray.map(date => {
+                if (date.dateId === dateId) {
+                    date.participates = shouldAdd;
+                    // update array in database
+                    let criteria = { _id: partId };
+                    let update = { dates: newDatesArray };
+                    mongodb.updateItem(mongodb.doodleParticipantDBInfo.dbName, mongodb.doodleParticipantDBInfo.collectionName, criteria, update)
+                        .then(data => {
+                            if (data.success) {
+                                responseBuilder.setSuccess(true);
+                                responseBuilder.setMessage(successMessage);
+                                res.send(responseBuilder.getResponse());
+                            }
+                        }).catch(err => {
+                            responseBuilder.setSuccess(false);
+                            responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
+                            res.send(responseBuilder.getResponse());
+                        });
+                }
+            })
+        }
+    });
+}
+
+removeDateFromParticipant = function(req, res, next){
+    let shouldAdd = false;
+    let successMessage = "Date was removed from the participant";
+    addOrRemoveDateFromParticipant(req, res, next, shouldAdd, successMessage);
+}
+addDateToParticipant = function(req, res, next){
+    let shouldAdd = true;
+    let successMessage = "Date was added to the participant";
+    addOrRemoveDateFromParticipant(req, res, next, shouldAdd, successMessage);
+}
+
 module.exports = {
     getAllDatesIntern: getAllDatesIntern,
     getDatesByEventId: getDatesByEventId,
-    addDateToExistingParticipant: addDateToExistingParticipant,
+    addDateToParticipant: addDateToParticipant,
     addDatesToExistingEvent: addDatesToExistingEvent,
     updateExistingDate: updateExistingDate,
     deleteDatesFromEvent: deleteDatesFromEvent,
+    deleteDatesByUUID: deleteDatesByUUID,
+    removeDateFromParticipant: removeDateFromParticipant,
+    addDateToParticipant: addDateToParticipant,
 }

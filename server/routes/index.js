@@ -1,39 +1,52 @@
 var express = require('express');
 var router = express.Router();
 var dbUtils = require('./../MongoDB/dbUtils');
-var logic = require('./../logic/doodleEventLogic.js');
+var eventLogic = require('./../logic/doodleEventLogic.js');
 var dateLogic = require('./../logic/dateLogic');
+var participantLogic = require('./../logic/participantLogic');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+
+// ########################################################
+// event routes
+// ########################################################
 /**
  * create a new event
  */
-router.post('/event/new', logic.saveNewDoodleEvent);
+router.post('/event/new', eventLogic.saveNewDoodleEvent);
 
 /**
- * get an event by its uuid
+ * delete an event if you are the creator
  */
-router.get('/event/:uuid', logic.sendEventDataToClient);
+router.post('/event/delete/:creatorUUID', eventLogic.deleteEvent);
 
 /**
- * add one participant to an event with this uuid
+ * get an event by its uuid or the creator uuid
  */
-router.post('/participant/:uuid', logic.addParticipantToEvent);
-
-/**
- * add a participant to an existing date
- */
-router.post('/participant/add/date', logic.addDateToExistingParticipant);
+router.get('/event/:uuid', eventLogic.sendEventDataToClient);
 
 /**
  * update title, description, eventType, location of an event
  */
-router.post('/event/update/:creatorUUID', logic.updateDoodleEvent);
+router.post('/event/update/:creatorUUID', eventLogic.updateDoodleEvent);
 
+
+// ########################################################
+// participant routes
+// ########################################################
+/**
+ * add one participant to an event with this uuid
+ */
+router.post('/participant/:uuid', participantLogic.addParticipantToEvent);
+
+
+// ########################################################
+// date routes
+// ########################################################
 /**
  * add dates to an event if you are the creator
  */
@@ -50,9 +63,16 @@ router.post('/date/update/:creatorUUID', dateLogic.updateExistingDate);
 router.post('/date/delete/:creatorUUID', dateLogic.deleteDatesFromEvent);
 
 /**
- * delete an event if you are the creator
+ * add a date to a participant
  */
-router.post('/event/delete/:creatorUUID', logic.deleteEvent);
+router.post('/date/participant/add', dateLogic.addDateToParticipant);
+
+/**
+ * remove a date from a participant
+ */
+router.post('/date/participant/remove', dateLogic.removeDateFromParticipant);
+
+
 
 
 // TODO
@@ -61,51 +81,9 @@ router.post('/event/delete/:creatorUUID', logic.deleteEvent);
  */
 router.post('/participant/delete/:eventUUID');
 
-/**
- * remove a date from a participant
- */
-router.post('/participant/remove/date/:eventUUID');
+
 
 // TEST
 
-
-
-
-
-
-
-
-
-// router.get('/allEvents', function(req, res, next) {
-//   let dbInfo = dbUtils.taskDBInfo;
-//   res.setHeader('Content-Type', 'application/json');
-//   dbUtils.getAllItems(dbInfo.dbName, dbInfo.collectionName, res);
-  
-  
-// });
-
-// router.post('/newDoodleEvent', function(req, res, next){
-//   console.log("create new doodle event post request received");
-//   let dbInfo = dbUtils.taskDBInfo;
-//   logic.createNewDoodleEvent(req.body);
-//   // dbUtils.insertIntoCollection(dbInfo.dbName, dbInfo.collectionName, req.body);
-// });
-
-
-
-// router.post('/removeItem', function(req, res, next) {
-//   let dbInfo = dbUtils.taskDBInfo;
-//   res.setHeader('Content-Type', 'application/json');
-//   let id = req.body.id;
-//   dbUtils.deleteItemWithId(dbInfo.dbName, dbInfo.collectionName, id);
-// });
-
-// router.post('/updateItem', function(req, res, next) {
-//   let dbInfo = dbUtils.taskDBInfo;
-//   res.setHeader('Content-Type', 'application/json');
-//   let id = req.body.id;
-//   let updatedItem = req.body.task;
-//   dbUtils.updateItemWithId(dbInfo.dbName, dbInfo.collectionName, id, updatedItem);
-// });
 
 module.exports = router;

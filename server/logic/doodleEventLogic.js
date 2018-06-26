@@ -252,23 +252,6 @@ deleteEvent = function (req, res, next) {
 }
 
 /**
- * deletes all the dates with the uuid in the date collection
- */
-deleteDatesByUUID = function (uuid) {
-    return new Promise((resolve, reject) => {
-        let criteria = { uuid: uuid };
-        mongodb.deleteItemWithCriteria(
-            mongodb.doodleDateDBInfo.dbName,
-            mongodb.doodleDateDBInfo.collectionName,
-            criteria).then(() => {
-                resolve();
-            }).catch(err => {
-                reject(err);
-            });
-    });
-}
-
-/**
  * deletes all the participants with the uuid in the participant collection
  */
 deleteParticipantsByUUID = function (uuid) {
@@ -292,7 +275,6 @@ module.exports.getParticipantsByUUID = getParticipantsByUUID;
 module.exports.getDatesByEventId = getDatesByEventId;
 module.exports.getDoodleEventByUUID = getDoodleEventByUUID;
 module.exports = {
-    addDateToExistingParticipant: addDateToExistingParticipant,
     addParticipantToEvent: addParticipantToEvent,
     getDatesByEventId: getDatesByEventId,
     saveNewDoodleEvent: saveNewDoodleEvent,
