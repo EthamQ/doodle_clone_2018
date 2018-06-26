@@ -135,9 +135,24 @@ exports.deleteItemWithId = function(dbName, collectionName, _id){
         });
     }); 
   });
- 
 }
 
+exports.deleteItemWithCriteria = function(dbName, collectionName, criteria){
+  return new Promise((resolve, reject)=>{
+    MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+      if (err) reject(err);
+      var dbo = db.db(dbName);
+        if (err) reject(err);
+        var mongodb = require('mongodb');
+        dbo.collection(collectionName).remove(criteria, {w:1}, function(err, result) {
+          if(err) reject(err);   
+          console.log("resolve deleteItemWithCriteria");
+          resolve();
+          db.close();
+        });
+    }); 
+  });
+}
 
 
 

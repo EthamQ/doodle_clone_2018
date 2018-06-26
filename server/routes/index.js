@@ -49,14 +49,13 @@ router.post('/date/update/:creatorUUID', dateLogic.updateExistingDate);
  */
 router.post('/date/delete/:creatorUUID', dateLogic.deleteDatesFromEvent);
 
-
-// TODO
-
 /**
  * delete an event if you are the creator
  */
-router.post('/event/delete/:creatorUUID');
+router.post('/event/delete/:creatorUUID', logic.deleteEvent);
 
+
+// TODO
 /**
  * delete a participator of an event
  */
@@ -66,6 +65,8 @@ router.post('/participant/delete/:eventUUID');
  * remove a date from a participant
  */
 router.post('/participant/remove/date/:eventUUID');
+
+// TEST
 
 
 

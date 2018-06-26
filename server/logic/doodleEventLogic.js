@@ -189,28 +189,104 @@ getDoodleEventByCreatorUUID = function (uuidCreator, callback) {
         let arrayAllEvents = data.data;
         if (arrayAllEvents.length != 0) {
             // look for creator uuid in event
-            for(let i = 0; i < arrayAllEvents.length; i++ ){
+            for (let i = 0; i < arrayAllEvents.length; i++) {
                 if (arrayAllEvents[i].creator.creatorEventUUID == uuidCreator) {
                     console.log("creatorid found");
                     callback({ event: arrayAllEvents[i], uuidEvent: arrayAllEvents[i].uuid, success: true });
+                    break;
                 }
                 // creator id not found, end of array
-                else{
-                    if(i === (arrayAllEvents.length)){
+                else {
+                    if (i === (arrayAllEvents.length - 1)) {
                         console.log("creatorid not found");
                         callback({ event: null, uuidEvent: null, success: false });
                     }
                 }
-                
             }
         }
-    
     }).catch(err => {
         console.log(err);
         callback({ event: null, uuidEvent: null, success: false });
     });
 }
 
+/**
+ * called by router
+ * POST '/event/delete/:creatorUUID'
+ * deletes an event with the creator id in the event collection
+ * then deletes the corresponding dates and participants
+ * in the date and participant collection
+ */
+deleteEvent = function (req, res, next) {
+    let responseBuilder = new ResponseBuilder();
+    let creatorUUID = req.params.creatorUUID;
+    getDoodleEventByCreatorUUID(creatorUUID, data => {
+        if (data.success) {
+            let event = data.event;
+            let uuid = event.uuid;
+            // delete event
+            mongodb.deleteItemWithId(
+                mongodb.doodleEventDBInfo.dbName,
+                mongodb.doodleEventDBInfo.collectionName,
+                uuid).then(() => {
+                    deleteParticipantsByUUID(uuid).then(()=>{
+                        deleteDatesByUUID(uuid).then(()=>{
+                            responseBuilder.setSuccess(true);
+                            responseBuilder.setMessage("Event and its dates/participants successfully removed");
+                            res.send(responseBuilder.getResponse());
+                        });
+                    });
+                }).catch(err => {
+                    console.log(err);
+                    responseBuilder.setSuccess(false);
+                    responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
+                    res.send(responseBuilder.getResponse());
+                });
+        }
+        else {
+            responseBuilder.setSuccess(false);
+            responseBuilder.setMessage("Event with this creator uuid not found");
+            res.send(responseBuilder.getResponse());
+        }
+    });
+}
+
+/**
+ * deletes all the dates with the uuid in the date collection
+ */
+deleteDatesByUUID = function (uuid) {
+    return new Promise((resolve, reject) => {
+        let criteria = { uuid: uuid };
+        mongodb.deleteItemWithCriteria(
+            mongodb.doodleDateDBInfo.dbName,
+            mongodb.doodleDateDBInfo.collectionName,
+            criteria).then(() => {
+                resolve();
+            }).catch(err => {
+                reject(err);
+            });
+    });
+}
+
+/**
+ * deletes all the participants with the uuid in the participant collection
+ */
+deleteParticipantsByUUID = function (uuid) {
+    console.log("inside deleteParticipantsByUUID");
+    return new Promise((resolve, reject) => {
+        let criteria = { eventUUID: uuid };
+        mongodb.deleteItemWithCriteria(
+            mongodb.doodleParticipantDBInfo.dbName,
+            mongodb.doodleParticipantDBInfo.collectionName,
+            criteria).then(() => {
+                console.log("resolve deleteParticipantsByUUID");
+                resolve();
+            }).catch(err => {
+                console.log("reject deleteParticipantsByUUID");
+                reject(err);
+            });
+    });
+}
 
 module.exports.getParticipantsByUUID = getParticipantsByUUID;
 module.exports.getDatesByEventId = getDatesByEventId;
@@ -225,4 +301,5 @@ module.exports = {
     sendEventDataToClient: sendEventDataToClient,
     updateDoodleEvent: updateDoodleEvent,
     getDoodleEventByCreatorUUID: getDoodleEventByCreatorUUID,
+    deleteEvent: deleteEvent,
 }

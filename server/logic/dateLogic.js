@@ -294,7 +294,7 @@ removeDateInEventCollection = function (creatorUUID, dateId, data) {
                 break;
             }
             else {
-                if (i === datesUpdated.length) {
+                if (i === (datesUpdated.length-1)) {
                     reject(new Error("dateId not found in event collection"));
                 }
             }
