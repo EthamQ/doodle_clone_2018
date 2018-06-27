@@ -1,5 +1,5 @@
 var logic = require('./doodleEventLogic.js');
-var mongodb = require('./../MongoDB/dbUtils');
+var mongodb = require('./../../MongoDB/dbUtils');
 // to fill the data of the responseBuilder
 responseData = {};
 // to prevent the that the function gets called twice
@@ -92,6 +92,20 @@ processParticipantsEntry = function(data, callback){
     });
     callback();
 }
+
+let keys = [
+    'location',
+    'title',
+    'description',
+    'eventType',
+    'location',
+    'numberParticipants',
+    'uuid',
+    'url',
+    'timestamp'
+]
+    
+
 
 addEventData = function(eventFromDatabase){
     if(eventFromDatabase){

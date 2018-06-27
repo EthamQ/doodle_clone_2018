@@ -1,12 +1,12 @@
-var DoodleEventModel = require('./../models/event/doodleEventModel');
-var DoodleParticipantModel = require('./../models/participant/doodleParticipantModel');
-var ResponseBuilder = require('./responseBuilder');
-var mongodb = require('./../MongoDB/dbUtils');
+var DoodleEventModel = require('./../../models/event/doodleEventModel');
+var DoodleParticipantModel = require('./../../models/participant/doodleParticipantModel');
+var ResponseBuilder = require('./../responseBuilder');
+var mongodb = require('./../../MongoDB/dbUtils');
 var dbInfo = mongodb.doodleEventDBInfo;
 const uuid = require('uuid/v4');
 let responseDataGetEvent = require('./responseBuilderGetEvent');
-const participantLogic = require('./participantLogic.js');
-const dateLogic = require('./dateLogic');
+const participantLogic = require('./../participant/participantLogic');
+const dateLogic = require('./../date/dateLogic');
 
 /**
  * creates DoodleEventModel() object, fills its values with the values
@@ -34,26 +34,32 @@ saveNewDoodleEvent = function (req, res, next) {
     let responseBuilder = new ResponseBuilder();
     // get DoodleEventModel() with set values
     prepareNewDoodleEvent(req, res, next).then(doodleEventToSave => {
-        // save it in DB
-        doodleEventToSave.saveModelInDatabase().then(data => {
-            // set values for response to client
-            if (data.success) {
-                responseBuilder.setMessage(responseBuilder.getNewDoodleEventSuccessMsg());
-                responseBuilder.addData(data.savedItem);
-            }
-            else {
+        if(doodleEventToSave.modelIsValid()){
+            // save it in DB
+            doodleEventToSave.saveModelInDatabase().then(data => {
+                // set values for response to client
+                if (data.success) {
+                    responseBuilder.setMessage(responseBuilder.getNewDoodleEventSuccessMsg());
+                    responseBuilder.addData(data.savedItem);
+                }
+                else {
+                    responseBuilder.setMessage(responseBuilder.getNewDoodleEventFailureMsg());
+                }
+                responseBuilder.setSuccess(data.success);
+                res.send(responseBuilder.getResponse());
+            }).catch(err => {
+                responseBuilder.setSuccess(false);
                 responseBuilder.setMessage(responseBuilder.getNewDoodleEventFailureMsg());
-            }
-            responseBuilder.setSuccess(data.success);
-            res.send(responseBuilder.getResponse());
-        }).catch(err => {
-            responseBuilder.setSuccess(false);
-            responseBuilder.setMessage(responseBuilder.getNewDoodleEventFailureMsg());
-            res.send(responseBuilder.getResponse());
-        });
-
+                res.send(responseBuilder.getResponse());
+            });
+        }
+        else{
+        
+        }
     });
 }
+       
+
 
 /**
  * update title, description, eventType, location of an event

@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var dbUtils = require('./../MongoDB/dbUtils');
-var eventLogic = require('./../logic/doodleEventLogic.js');
-var dateLogic = require('./../logic/dateLogic');
-var participantLogic = require('./../logic/participantLogic');
+var eventLogic = require('./../logic/event/doodleEventLogic.js');
+var dateLogic = require('./../logic/date/dateLogic');
+var participantLogic = require('./../logic/participant/participantLogic');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -43,6 +43,11 @@ router.post('/event/update/:creatorUUID', eventLogic.updateDoodleEvent);
  */
 router.post('/participant/:uuid', participantLogic.addParticipantToEvent);
 
+/**
+ * delete a participator of an event
+ */
+router.post('/participant/remove/:eventUUID', participantLogic.removeParticipant);
+
 
 // ########################################################
 // date routes
@@ -76,10 +81,7 @@ router.post('/date/participant/remove', dateLogic.removeDateFromParticipant);
 
 
 // TODO
-/**
- * delete a participator of an event
- */
-router.post('/participant/delete/:eventUUID');
+
 
 
 

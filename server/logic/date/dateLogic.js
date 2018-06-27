@@ -1,10 +1,10 @@
-var mongodb = require('./../MongoDB/dbUtils');
-const participantLogic = require('./participantLogic');
-const eventLogic = require('./doodleEventLogic');
-var ResponseBuilder = require('./responseBuilder');
-var DateModel = require('./../models/date/doodleDateModel');
+var mongodb = require('./../../MongoDB/dbUtils');
+const participantLogic = require('./../participant/participantLogic');
+const eventLogic = require('./../event/doodleEventLogic');
+var ResponseBuilder = require('./../responseBuilder');
+var DateModel = require('./../../models/date/doodleDateModel');
 const uuid = require('uuid/v4');
-var mongodb = require('./../MongoDB/dbUtils');
+var mongodb = require('./../../MongoDB/dbUtils');
 
 /**
  * return all dates in the date collection in a callback

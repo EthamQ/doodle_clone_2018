@@ -11,7 +11,12 @@
 exports.fillModelProperty = function(allowedKeys, modelToFill, object, callback){
     for (let key in object) {
         if(allowedKeys.indexOf(key) != -1){
-            modelToFill[key] = object[key];
+            if(object[key]){
+                modelToFill[key] = object[key];
+            }
+            else{
+                modelToFill[key] = '';
+            }
         }    
      }  
      callback(modelToFill);

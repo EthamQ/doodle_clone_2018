@@ -22,6 +22,8 @@ router.post('/date/delete/:creatorUUID', dateLogic.deleteDatesFromEvent);
 router.post('/event/delete/:creatorUUID', logic.deleteEvent);
 10. Remove a date from a participant:
 router.post('/date/participant/remove', dateLogic.removeDateFromParticipant);
+11. Delete a participator of an event
+router.post('/participant/remove/:eventUUID', participantLogic.removeParticipant);
 
 ##############################################
 1. Creating a new loodle event
@@ -209,3 +211,14 @@ Expected data about the date and participant in the post request:
 }
 
 ##############################################
+11. Delete a participator of an event
+router.post('/participant/remove/:eventUUID', participantLogic.removeParticipant);
+
+Expected data in the url:
+/:eventUUID:
+the uuid of the event
+
+Expected data about the participant in the post request:
+{
+    "participantId": string,
+}
