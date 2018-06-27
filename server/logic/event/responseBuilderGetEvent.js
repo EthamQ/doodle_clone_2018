@@ -26,7 +26,7 @@ initResponseData = function(){
         dates: [],
         uuid: "",
         url: "",
-        timestamp: ""
+        timestamp: 0
     }
 }
 

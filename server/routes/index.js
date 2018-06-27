@@ -15,22 +15,22 @@ router.get('/', function(req, res, next) {
 // event routes
 // ########################################################
 /**
- * create a new event
+ * create a new event UPDATED
  */
 router.post('/event/new', eventLogic.saveNewDoodleEvent);
 
 /**
- * delete an event if you are the creator
+ * delete an event if you are the creator UPDATED
  */
 router.post('/event/delete/:creatorUUID', eventLogic.deleteEvent);
 
 /**
- * get an event by its uuid or the creator uuid
+ * get an event by its uuid or the creator uuid UPDATED
  */
-router.get('/event/:uuid', eventLogic.sendEventDataToClient);
+router.get('/event/:uuid', eventLogic.getDoodleEventDataByUUID);
 
 /**
- * update title, description, eventType, location of an event
+ * update title, description, eventType, location of an event UPDATED
  */
 router.post('/event/update/:creatorUUID', eventLogic.updateDoodleEvent);
 
@@ -39,43 +39,43 @@ router.post('/event/update/:creatorUUID', eventLogic.updateDoodleEvent);
 // participant routes
 // ########################################################
 /**
- * add one participant to an event with this uuid
+ * add one participant to an event with this uuid UPDATED
  */
 router.post('/participant/:uuid', participantLogic.addParticipantToEvent);
 
 /**
- * delete a participator of an event
+ * delete a participator of an event UPDATED
  */
-router.post('/participant/remove/:eventUUID', participantLogic.removeParticipant);
+router.post('/participant/remove/:adminUUID', participantLogic.removeParticipants);
 
 
 // ########################################################
 // date routes
 // ########################################################
 /**
- * add dates to an event if you are the creator
+ * add dates to an event if you are the creator UPDATED
  */
-router.post('/date/add/:creatorUUID', dateLogic.addDatesToExistingEvent);
+router.post('/date/add/:adminUUID', dateLogic.addDatesToEvent);
 
 /**
  * update dates of an event if you are the creator
  */
-router.post('/date/update/:creatorUUID', dateLogic.updateExistingDate);
+// router.post('/date/update/:creatorUUID', dateLogic.updateExistingDate);
 
 /**
  * delete dates of an event if you are the creator
  */
-router.post('/date/delete/:creatorUUID', dateLogic.deleteDatesFromEvent);
+// router.post('/date/delete/:creatorUUID', dateLogic.deleteDatesFromEvent);
 
 /**
  * add a date to a participant
  */
-router.post('/date/participant/add', dateLogic.addDateToParticipant);
+// router.post('/date/participant/add', dateLogic.addDateToParticipant);
 
 /**
  * remove a date from a participant
  */
-router.post('/date/participant/remove', dateLogic.removeDateFromParticipant);
+// router.post('/date/participant/remove', dateLogic.removeDateFromParticipant);
 
 
 

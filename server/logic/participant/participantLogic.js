@@ -1,6 +1,7 @@
 var mongodb = require('./../../MongoDB/dbUtils');
 const uuid = require('uuid/v4');
 var DoodleParticipantModel = require('./../../models/participant/doodleParticipantModel');
+var ParticipantModel = require('./../../models/participant/doodleParticipantModel');
 var ResponseBuilder = require('./../responseBuilder');
 
 /**
@@ -47,78 +48,30 @@ getParticipantsByUUID = function (eventUUID, callback) {
     });
 }
 
-
-getNumberOfParticipants = function (uuid, callback) {
-    getDoodleEventByUUID(uuid, data => {
-        callback(data.event.numberParticipants);
-    });
-}
-
-incrementNumberParticipants = function (uuid) {
-    return new Promise((resolve, reject) =>{
- getNumberOfParticipants(uuid, number => {
-        let criteria = { uuid: uuid };
-        let update = { numberParticipants: (number + 1) };
-        mongodb.updateItem(mongodb.doodleEventDBInfo.dbName, mongodb.doodleEventDBInfo.collectionName, criteria, update).then(data => {
-            resolve(data);
-        }).catch(err => {
-            reject(err);
-        });
-    });
-    });
-}
-
-/**
- * look for event with 'eventUUID', add its dates to the participant
- * save the participant with its part_id to the participants collection
- */
-addParticipantToParticipantCollection = function(eventUUID, participant, part_id){
-    return new Promise((resolve,reject)=>{
-    getDatesByEventId(eventUUID, dateArray => {
-        let participantModel = new DoodleParticipantModel();
-        participantModel.setDates(dateArray).then(() => {
-            participantModel.setModelProperty(participant, () => {
-                participantModel.setId(part_id, () => {
-                    participantModel.setUUID(eventUUID, () => {
-                        mongodb.insertIntoCollection(
-                            mongodb.doodleParticipantDBInfo.dbName,
-                            mongodb.doodleParticipantDBInfo.collectionName,
-                            participantModel.getModel()
-                        ).then(data =>{
-                            if(data.success){
-                                resolve({success: true});
-                            }
-                        }).catch(err =>{
-                            reject(err);
-                        });
-                    })
-                })
-            });
-        });
-    });
-    });
-}
-
 /**
  * looks for the event with 'eventUUID' and adds 'part_id'
  * to its participant array
  */
-updateParticipantsInEventCollection = function(eventUUID, part_id){
-    return new Promise((resolve,reject)=>{
-    getDoodleEventByUUID(eventUUID, data => {
-        let participantsOld = data.event.participants;
-        // add the new id to the array
-        participantsOld.push({ participantId: part_id });
-        let criteria = { uuid: eventUUID };
-        let update = { participants: participantsOld };
-        mongodb.updateItem(mongodb.doodleEventDBInfo.dbName, mongodb.doodleEventDBInfo.collectionName, criteria, update).then(data => {
-            if (data.success) {
-                resolve({success: true});
-            }
-        }).catch(err =>{
-            reject(err);
+updateParticipantsInEventCollection = function (eventUUID, participant) {
+    return new Promise((resolve, reject) => {
+        participantModel = new ParticipantModel();
+        participantModel.setModelProperty(participant, () => {
+            getDoodleEventByUUID(eventUUID, eventData => {
+                let participantsOld = eventData.event.participants;
+                participantsOld.push(participantModel.getModel());
+                let criteria = { uuid: eventUUID };
+                let update = { participants: participantsOld };
+                mongodb.updateItem(mongodb.doodleEventDBInfo.dbName, mongodb.doodleEventDBInfo.collectionName, criteria, update).then(data => {
+                    let criteria2 = { uuid: eventUUID };
+                    let update2 = { numberParticipants: (eventData.event.numberParticipants+1) };
+                    mongodb.updateItem(mongodb.doodleEventDBInfo.dbName, mongodb.doodleEventDBInfo.collectionName, criteria2, update2).then(data => {
+                        resolve();
+                    });
+                }).catch(err => {
+                    reject(err);
+                });
+            });
         });
-    });
     });
 }
 
@@ -130,26 +83,13 @@ addParticipantToEvent = function (req, res, next) {
     let responseBuilder = new ResponseBuilder();
     let eventUUID = req.params.uuid;
     let participant = req.body;
-    let dates = [];
-    let part_id = uuid();
-    addParticipantToParticipantCollection(eventUUID, participant, part_id).then(data =>{
-        updateParticipantsInEventCollection(eventUUID, part_id).then(data =>{
-            incrementNumberParticipants(eventUUID).then(data =>{
-                if(data.success){
-                    responseBuilder.setSuccess(true);
-                    responseBuilder.setMessage(responseBuilder.getParticipantAddedSuccessMsg());
-                    res.send(responseBuilder.getResponse());
-                }
-            }).catch(err =>{
-                responseBuilder.setSuccess(false);
+    updateParticipantsInEventCollection(eventUUID, participant).then(data => {
+                responseBuilder.setSuccess(true);
+                responseBuilder.setMessage(responseBuilder.getParticipantAddedSuccessMsg());
                 res.send(responseBuilder.getResponse());
-            });
-        }).catch(err =>{
-            responseBuilder.setSuccess(false);
-            res.send(responseBuilder.getResponse());
-        });
-    }).catch(err =>{
+    }).catch(err => {
         responseBuilder.setSuccess(false);
+        responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
         res.send(responseBuilder.getResponse());
     });
 }
@@ -161,35 +101,65 @@ addParticipantToEvent = function (req, res, next) {
  * participantId from the event collection and the participant
  * collection
  */
-removeParticipant = function(req, res, next){
+removeParticipants = function (req, res, next) {
     let responseBuilder = new ResponseBuilder();
-    let participantId = req.body.participantId;
-    let uuid = req.params.eventUUID;
-    removeFromEventCollection(uuid, participantId).then(()=>{
-        removeFromParticipantCollection(participantId).then(()=>{
-            responseBuilder.setSuccess(true);
-            responseBuilder.setMessage("participant was successfully removed");
-            res.send(responseBuilder.getResponse());
-        });
-    }).catch(err=>{
-        responseBuilder.setSuccess(false);
-        responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
-        res.send(responseBuilder.getResponse());
+    let adminUUID = req.params.adminUUID;
+    let participantsUpdated = req.body.participantsUpdated;
+    getDoodleEventByCreatorUUID(adminUUID, data =>{
+        if(data.success){
+            if(participantsUpdated.length < data.event.participants.length){
+                let criteria = { uuid: data.uuidEvent };
+                let update = { participants: participantsUpdated };
+                mongodb.updateItem(mongodb.doodleEventDBInfo.dbName,
+                    mongodb.doodleEventDBInfo.collectionName,
+                    criteria,
+                    update).then(()=> {
+                        responseBuilder.setSuccess(true);
+                        responseBuilder.setMessage("participants removed updated");
+                        res.send(responseBuilder.getResponse());
+                    }).catch(err => {
+                        responseBuilder.setSuccess(true);
+                        responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
+                        res.send(responseBuilder.getResponse());
+                    });
+            }
+            else{
+                responseBuilder.setSuccess(false);
+                responseBuilder.setMessage("The length of the updatedParticipants has to be lesser than the initial array if you want to remove a participant");
+                res.send(responseBuilder.getResponse());
+                // no delete
+            }
+            
+        }
+        else{
+            //  admin id not found
+        }
     });
+    // removeFromEventCollection(uuid, participantId).then(() => {
+    //     removeFromParticipantCollection(participantId).then(() => {
+    //         responseBuilder.setSuccess(true);
+    //         responseBuilder.setMessage("participant was successfully removed");
+    //         res.send(responseBuilder.getResponse());
+    //     });
+    // }).catch(err => {
+    //     responseBuilder.setSuccess(false);
+    //     responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
+    //     res.send(responseBuilder.getResponse());
+    // });
 }
 
 /**
  * removes participant from participant collection
  */
-removeFromParticipantCollection = function(participantId){
-    return new Promise((resolve, reject) =>{
+removeFromParticipantCollection = function (participantId) {
+    return new Promise((resolve, reject) => {
         mongodb.deleteItemWithId(
             mongodb.doodleParticipantDBInfo.dbName,
             mongodb.doodleParticipantDBInfo.collectionName,
             participantId
-        ).then(data =>{
-                resolve();
-        }).catch(err =>{
+        ).then(data => {
+            resolve();
+        }).catch(err => {
             reject(err);
         });
     });
@@ -198,13 +168,13 @@ removeFromParticipantCollection = function(participantId){
 /**
  * removes participant from event collection
  */
-removeFromEventCollection = function(uuid, participantId){
-     return new Promise((resolve, reject) =>{
-        getDoodleEventByUUID(uuid, data =>{
+removeFromEventCollection = function (uuid, participantId) {
+    return new Promise((resolve, reject) => {
+        getDoodleEventByUUID(uuid, data => {
             let event = data.event;
             let participantsUpdated = event.participants;
-            for(let i = 0; i< participantsUpdated.length; i++){
-                if(participantsUpdated[i].participantId == participantId){
+            for (let i = 0; i < participantsUpdated.length; i++) {
+                if (participantsUpdated[i].participantId == participantId) {
                     participantsUpdated.splice(i, 1);
                 }
                 break;
@@ -215,12 +185,12 @@ removeFromEventCollection = function(uuid, participantId){
                 mongodb.doodleEventDBInfo.collectionName,
                 criteria,
                 update).then(data => {
-                if (data.success) {
-                    resolve();
-                }
-            }).catch(err =>{
-                reject(err);
-            });
+                    if (data.success) {
+                        resolve();
+                    }
+                }).catch(err => {
+                    reject(err);
+                });
         });
     });
 }
@@ -229,8 +199,6 @@ module.exports = {
     getAllParticipatesIntern: getAllParticipatesIntern,
     getParticipantById: getParticipantById,
     getParticipantsByUUID: getParticipantsByUUID,
-    incrementNumberParticipants: incrementNumberParticipants,
-    getNumberOfParticipants: getNumberOfParticipants,
     addParticipantToEvent: addParticipantToEvent,
-    removeParticipant: removeParticipant
+    removeParticipants: removeParticipants
 }

@@ -75,7 +75,7 @@ exports.getItemById = function (dbName, collectionName, id) {
       if (err) reject(err);
       dbo.collection(collectionName).findOne({ _id: id }, function (err, result) {
         if (err) reject(err);
-        resolve({ data: result, success: true });
+        resolve({ data: result });
         db.close();
       });
     });
@@ -115,7 +115,7 @@ exports.updateItem = function (dbName, collectionName, criteria, update) {
       dbo.collection(collectionName).update(criteria, updateInformation, { w: 1 },
         function (err, result) {
           if (err) reject(err);
-          resolve({ success: true });
+          resolve();
         });
     });
   });

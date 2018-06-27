@@ -8,11 +8,9 @@ exports.model = {
 
 exports.getNewModel = function(){
     let model = {
-        _id: null,
         date: null,
         timeFrom: null,
         timeTo: null,
-        uuid: null
     }
     return model; 
 }

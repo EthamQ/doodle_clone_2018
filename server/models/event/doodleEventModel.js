@@ -15,7 +15,6 @@ module.exports = class doodleEventModel extends ModelClass {
             constructorArgs.requiredKeys,
             constructorArgs.dbInfo
         );
-
         this.datesAreValid = true;
     }
 
@@ -23,7 +22,7 @@ module.exports = class doodleEventModel extends ModelClass {
     setChildModelProperties(event, callback) {
         for (let key in event) {
             if (key == 'date') {
-                this.saveDatesInDB(event[key], () =>{
+                this.addDatesToModel(event[key], () =>{
                     // make sure it is finished
                 });
             }
@@ -71,19 +70,12 @@ module.exports = class doodleEventModel extends ModelClass {
      * 
      * @param callback
      */
-    saveDatesInDB(dateArray, callback) {
+    addDatesToModel(dateArray, callback) {
         dateArray.map(date => {
-            let newDateId = uuid();
             let dateModel = new DateModel();
             dateModel.setModelProperty(date, ()=>{
-                dateModel.setId(newDateId, ()=>{
-                    dateModel.setUUID(this.model.uuid, ()=>{
-                        dateModel.saveModelInDatabase();
-                    });
-                });
+                this.model.date.push(dateModel.getModel());
             });
-            // save the id in the event model
-            this.model.date.push({ date_id: newDateId });
         });
         callback();
     }
@@ -92,7 +84,8 @@ module.exports = class doodleEventModel extends ModelClass {
         let creator = {
             name: creatorFromRequest.name,
             email: creatorFromRequest.email,
-            creatorEventUUID: uuid()
+            dates: creatorFromRequest.dates,
+            adminUUID: uuid(),
         }
         callback(creator);
     }

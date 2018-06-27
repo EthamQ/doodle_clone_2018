@@ -1,6 +1,4 @@
 exports.model = {
-    _id: null,
-    eventUUID: null,
     name: null,
     email: null,
     dates: []
@@ -8,8 +6,6 @@ exports.model = {
 
 exports.getNewModel = function(){
     let model = {
-        _id: null,
-        eventUUID: null,
         name: null,
         email: null,
         dates: []
@@ -20,6 +16,7 @@ exports.getNewModel = function(){
 exports.allowedKeys = [
     'name',
     'email',
+    'dates'
 ]
 
 exports.requiredKeys = [
