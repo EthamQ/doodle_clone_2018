@@ -12,5 +12,4 @@ module.exports = class DateModel extends ModelClass{
         this.model.uuid = uuid;
         callback();
     }
-
 }

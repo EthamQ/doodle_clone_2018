@@ -54,7 +54,10 @@ saveNewDoodleEvent = function (req, res, next) {
             });
         }
         else{
-        
+            // model not valid
+            responseBuilder.setSuccess(false);
+            responseBuilder.setMessage("Required values are missing");
+            res.send(responseBuilder.getResponse());
         }
     });
 }

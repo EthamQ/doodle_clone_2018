@@ -19,7 +19,7 @@ module.exports = class doodleEventModel extends ModelClass {
         this.datesAreValid = true;
     }
 
-    // if property is model use setModelProperty of the corresponding model class to assign values
+    // assign values to the properties of this models that are models or objects themselves
     setChildModelProperties(event, callback) {
         for (let key in event) {
             if (key == 'date') {
@@ -61,15 +61,15 @@ module.exports = class doodleEventModel extends ModelClass {
     }
 
     setTimestamp() {
-        this.model.timestamp = new Date();
+        this.model.timestamp = new Date().getTime();
     }
 
     /**
-     * 
+     * create a DateModel() for every date in dateArray and save 
+     * it in the database
      * @param dateArray array of dates sent by the client
      * 
-     * @param callback function that returns an array of date objects
-     * that should all be saved in the date collection in the database
+     * @param callback
      */
     saveDatesInDB(dateArray, callback) {
         dateArray.map(date => {
@@ -82,12 +82,12 @@ module.exports = class doodleEventModel extends ModelClass {
                     });
                 });
             });
+            // save the id in the event model
             this.model.date.push({ date_id: newDateId });
         });
         callback();
     }
 
-    // add one participant with isCreator: true to this model
     returnCreatorObject(creatorFromRequest, callback) {
         let creator = {
             name: creatorFromRequest.name,
