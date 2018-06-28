@@ -6,22 +6,20 @@ Overview:
 router.post('/event/new', logic.createNewDoodleEvent);
 2. Add a participant to an event: UPDATED
 router.post('/participant/:uuid', logic.addParticipantToEvent);
-3. Add a date from an event to a participant:
-router.post('/date/participant/add', dateLogic.addDateToParticipant);
+3. Add a date from an event to a participant: UPDATED
+router.post('/date/participant/add/:adminUUID', dateLogic.addDatesToParticipant);
 4. Get a doodle event by its uuid UPDATED
 router.get('/event/:uuid', logic.getDoodleEventByUUID);
 5. Update title, description, eventType, location of an event if you are the creator of an event UPDATED
 router.post('/event/update/:creatorUUID', logic.updateDoodleEvent);
-6. Add one or multiple dates to an event if you are the creator UPDATED
-router.post('/date/add/:adminUUID', dateLogic.addDatesToEvent);
 7. Add dates to an event if you are the creator UPDATED
 router.post('/date/add/:adminUUID', dateLogic.addDatesToEvent);
-8. Delete dates an event if you are the creator UPDATED
+8. Delete dates of an event if you are the creator UPDATED
 router.post('/date/delete/:adminUUID', dateLogic.removeDatesOfEvent);
 9. delete an event if you are the creator UPDATED
 router.post('/event/delete/:creatorUUID', logic.deleteEvent);
-10. Remove a date from a participant:
-router.post('/date/participant/remove', dateLogic.removeDateFromParticipant);
+10. Remove a date from a participant: UPDATED
+router.post('/date/participant/remove/:adminUUID', dateLogic.removeDatesFromParticipant);
 11. Delete a participator of an event UPDATED
 router.post('/participant/remove/:adminUUID', participantLogic.removeParticipants);
 
@@ -67,11 +65,20 @@ the uuid of the event
 
 ##############################################
 3. Add a date from an event to a participant:
-router.post('/date/participant/add', dateLogic.addDateToParticipant);
-Expected data about the date and participant in the post request:
+router.post('/date/participant/add/:adminUUID', dateLogic.addDatesToParticipant);
+Expected data about the date and participant in the post request,
+send all the indexes of the dates you want to set to true in the dates array
+of the partcipant with the corresponding id
+
+Expected data in the url:
+/:adminUUID:
+the uuid of the creator, so only he can update those values
+
 {
     "participantId": string,
-    "dateId": string
+    "dateIndexToAdd": [
+        number
+    ]
 }
 
 ##############################################
@@ -104,6 +111,7 @@ Response from the server on success:
             },
             "participants": [
                 {
+                    "id": string,
                     "name": string,
                     "email": string,
                     "dates": [
@@ -140,23 +148,6 @@ Expected data in the post request:
     "eventType": string
 }
 
-##############################################
-6. Add one or multiple dates to an event if you are the creator
-router.post('/date/add/:adminUUID', dateLogic.addDatesToEvent);
-Expected data in the url:
-/:adminUUID:
-the uuid of the creator, so only he can update those values
-
-Expected data in the post request:
-{
-	"dates":[
-		{
-			"date": number,
-			"timeFrom": number,
-			"timeTo": number
-        }
-		]
-}
 
 ##############################################
 7. Add dates to an event if you are the creator
@@ -169,9 +160,11 @@ the uuid of the creator, so only he can update those values
 Expected data in the post request:
 {
 	"datesToAdd":[
+        {
         "date": number,
         "timeFrom": number,
         "timeTo": number
+        }
     ]
 }
 
@@ -204,13 +197,21 @@ Expected data in the post request: => empty
 }
 
 ##############################################
-10. Remove a date from a participant:
-router.post('/date/participant/remove', dateLogic.removeDateFromParticipant);
+10. Remove a date from an event to a participant:
+router.post('/date/participant/add/:adminUUID', dateLogic.addDatesToParticipant);
+Expected data about the date and participant in the post request,
+send all the indexes of the dates you want to set to false in the dates array
+of the partcipant with the corresponding id
 
-Expected data about the date and participant in the post request:
+Expected data in the url:
+/:adminUUID:
+the uuid of the creator, so only he can update those values
+
 {
     "participantId": string,
-    "dateId": string
+    "dateIndexToRemove": [
+        number
+    ]
 }
 
 ##############################################

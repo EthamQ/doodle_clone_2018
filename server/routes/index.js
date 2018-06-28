@@ -70,12 +70,12 @@ router.post('/date/delete/:adminUUID', dateLogic.removeDatesOfEvent);
 /**
  * add a date to a participant
  */
-// router.post('/date/participant/add', dateLogic.addDateToParticipant);
+router.post('/date/participant/add/:adminUUID', dateLogic.addDatesToParticipant);
 
 /**
  * remove a date from a participant
  */
-// router.post('/date/participant/remove', dateLogic.removeDateFromParticipant);
+router.post('/date/participant/remove/:adminUUID', dateLogic.removeDatesFromParticipant);
 
 
 

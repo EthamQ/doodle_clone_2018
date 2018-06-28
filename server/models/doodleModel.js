@@ -1,5 +1,6 @@
 var fillModel = require('./fillModels.js');
 let dbUtils = require('./../MongoDB/dbUtils');
+const uuid = require('uuid/v4');
 
 module.exports = class Model {
     constructor(model, allowedKeys, requiredKeys, dbInfo) {
@@ -52,9 +53,8 @@ module.exports = class Model {
         });
     }
 
-    setId(id, callback){
-        this.model._id = id;
-        callback();
+    setId(id){
+        this.model.id = uuid();
     }
 
    

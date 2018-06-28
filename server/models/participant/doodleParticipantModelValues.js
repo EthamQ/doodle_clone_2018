@@ -6,6 +6,7 @@ exports.model = {
 
 exports.getNewModel = function(){
     let model = {
+        id: null,
         name: null,
         email: null,
         dates: []

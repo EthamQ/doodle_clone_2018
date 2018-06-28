@@ -211,9 +211,75 @@ updateItem = function (criteria, update) {
             reject(err);
         });
     });
-
 }
 
+addDatesToParticipant = function(req, res, next){
+    let responseBuilder = new ResponseBuilder();
+    let participantId = req.body.participantId;
+    let dateIndexToAdd = req.body.dateIndexToAdd;
+    let adminUUID = req.params.adminUUID;
+    let shouldAdd = true;
+    addRemoveDatesParticipant(adminUUID, participantId, dateIndexToAdd, shouldAdd).then(()=>{
+        responseBuilder.setMessage("Dates successfully added");
+        responseBuilder.setSuccess(true);
+        res.send(responseBuilder.getResponse());
+    }).catch(err=>{
+        responseBuilder.setMessage(err.toString());
+        responseBuilder.setSuccess(false);
+        res.send(responseBuilder.getResponse());
+    });
+}
+
+removeDatesFromParticipant = function(req, res, next){
+    let responseBuilder = new ResponseBuilder();
+    let participantId = req.body.participantId;
+    let dateIndexToRemove = req.body.dateIndexToRemove;
+    let adminUUID = req.params.adminUUID;
+    let shouldAdd = false;
+    addRemoveDatesParticipant(adminUUID, participantId, dateIndexToRemove, shouldAdd).then(()=>{
+        responseBuilder.setMessage("Dates successfully removed");
+        responseBuilder.setSuccess(true);
+        res.send(responseBuilder.getResponse());
+    }).catch(err=>{
+        responseBuilder.setMessage(err.toString());
+        responseBuilder.setSuccess(false);
+        res.send(responseBuilder.getResponse());
+    });
+}
+
+addRemoveDatesParticipant = function(adminUUID, participantId, indexArray, shouldAdd){
+    return new Promise((resolve, reject)=>{
+        getDoodleEventByCreatorUUID(adminUUID, data => {
+            let participantsUpdated = data.event.participants;
+            let uuid = data.event.uuid;
+            participantsUpdated.map(participant =>{
+                if(participant.id == participantId){
+                    indexArray.map(index =>{
+                        participant.dates[index] = shouldAdd;
+                    });
+                    updateParticipantsWithUUID(uuid, participantsUpdated).then(()=>{
+                        resolve();
+                    }).catch(err =>{
+                        reject(err);
+                    });
+                }
+            });
+        });
+    });
+}
+
+updateParticipantsWithUUID = function(uuid, participantsUpdated){
+    return new Promise((resolve, reject)=>{
+        let criteria = {uuid: uuid};
+        let update = {participants: participantsUpdated};
+        updateItem(criteria, update).then(()=>{
+            resolve();
+        }).catch(err =>{
+            reject(err);
+        });
+    });
+    
+}
 
 
 
@@ -226,4 +292,6 @@ module.exports = {
     getDatesByEventId: getDatesByEventId,
     addDatesToEvent: addDatesToEvent,
     removeDatesOfEvent: removeDatesOfEvent,
+    addDatesToParticipant: addDatesToParticipant,
+    removeDatesFromParticipant: removeDatesFromParticipant,
 }

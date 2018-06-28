@@ -55,6 +55,7 @@ getParticipantsByUUID = function (eventUUID, callback) {
 updateParticipantsInEventCollection = function (eventUUID, participant) {
     return new Promise((resolve, reject) => {
         participantModel = new ParticipantModel();
+        participantModel.setId();
         participantModel.setModelProperty(participant, () => {
             getDoodleEventByUUID(eventUUID, eventData => {
                 let participantsOld = eventData.event.participants;
