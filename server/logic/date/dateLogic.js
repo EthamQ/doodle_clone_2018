@@ -51,22 +51,31 @@ generateDateIds = function (dates, callback) {
 
 
 /**
- * updates the date array of an event in the event collection
- * adds the date ids of the dateIds Array
- * TODO: add dates to participants
+ * called by the router
+ * add dates to the date array of an event
+ * and add a false boolean to every new date
+ * to the dates array of every participant
  */
 addDatesToEvent = function (req, res, next) {
     let responseBuilder = new ResponseBuilder();
     let adminUUID = req.params.adminUUID;
-    let newDates = req.body.newDates;
+    let newDates = req.body.datesToAdd;
     getDoodleEventByCreatorUUID(adminUUID, data => {
         if (data.success) {
             let datesUpdated = data.event.date;
+            let participantsUpdated = data.event.participants;
             newDates.map(newDate => {
                 datesUpdated.push(newDate);
             });
+            participantsUpdated.map(participant =>{
+                let i = newDates.length;
+                while(i>0){
+                    participant.dates.push(false);
+                    i--;
+                }
+            });
             let criteria = { uuid: data.event.uuid };
-            let update = { date: datesUpdated };
+            let update = { date: datesUpdated, participants: participantsUpdated };
             mongodb.updateItem(mongodb.doodleEventDBInfo.dbName,
                 mongodb.doodleEventDBInfo.collectionName,
                 criteria,
@@ -145,18 +154,33 @@ creatorIdValid = function (creatorUUID, callback) {
     });
 }
 
-// TODO remove date from participants
+/**
+ * called by router
+ * removes date from date array in event
+ * and from dates array from participant
+ */
 removeDatesOfEvent = function (req, res, next) {
-    let datesRemoveIndex = req.body.datesRemoveIndex;
+    let responseBuilder = new ResponseBuilder();
+    let indexesToDelete = req.body.datesRemoveIndex;
+    let creatorUUID = req.params.adminUUID;
     getDoodleEventByCreatorUUID(creatorUUID, data => {
         if (data.success) {
             let updatedDates = data.event.date;
-            datesRemoveIndex.map(index => {
+            let updatedParticipants = data.event.participants;
+            // remove dates from dates array
+            indexesToDelete.map(index => {
                 updatedDates.splice(index, 1);
             });
+            // remove dates from every dates Array of every participant
+            updatedParticipants.map(participant =>{
+                indexesToDelete.map(index => {
+                    participant.dates.splice(index, 1);
+                });
+            });
             let criteria = { uuid: data.event.uuid };
-            let update = { date: updatedDates };
+            let update = { date: updatedDates, participants: updatedParticipants };
             updateItem(criteria, update).then(data => {
+                // updateItem().then();
                 responseBuilder.setMessage("Date(s) successfully removed");
                 responseBuilder.setSuccess(true);
                 res.send(responseBuilder.getResponse());
@@ -201,4 +225,5 @@ module.exports = {
     getAllDatesIntern: getAllDatesIntern,
     getDatesByEventId: getDatesByEventId,
     addDatesToEvent: addDatesToEvent,
+    removeDatesOfEvent: removeDatesOfEvent,
 }

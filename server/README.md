@@ -10,14 +10,14 @@ router.post('/participant/:uuid', logic.addParticipantToEvent);
 router.post('/date/participant/add', dateLogic.addDateToParticipant);
 4. Get a doodle event by its uuid UPDATED
 router.get('/event/:uuid', logic.getDoodleEventByUUID);
-5. Update title, description, eventType, location of an event if you are the creator of an event
+5. Update title, description, eventType, location of an event if you are the creator of an event UPDATED
 router.post('/event/update/:creatorUUID', logic.updateDoodleEvent);
 6. Add one or multiple dates to an event if you are the creator UPDATED
 router.post('/date/add/:adminUUID', dateLogic.addDatesToEvent);
-7. Update dates of an event if you are the creator
-router.post('/date/add/:creatorUUID', dateLogic.addDatesToExistingEvent);
-8. Delete a date with its dateId of an event if you are the creator
-router.post('/date/delete/:creatorUUID', dateLogic.deleteDatesFromEvent);
+7. Add dates to an event if you are the creator UPDATED
+router.post('/date/add/:adminUUID', dateLogic.addDatesToEvent);
+8. Delete dates an event if you are the creator UPDATED
+router.post('/date/delete/:adminUUID', dateLogic.removeDatesOfEvent);
 9. delete an event if you are the creator UPDATED
 router.post('/event/delete/:creatorUUID', logic.deleteEvent);
 10. Remove a date from a participant:
@@ -159,34 +159,35 @@ Expected data in the post request:
 }
 
 ##############################################
-7. Update dates of an event if you are the creator
-router.post('/date/update/:creatorUUID', dateLogic.updateExistingDate);
+7. Add dates to an event if you are the creator
+router.post('/date/add/:adminUUID', dateLogic.addDatesToEvent);
 
 Expected data in the url:
-/:creatorUUID:
+/:adminUUID:
 the uuid of the creator, so only he can update those values
 
 Expected data in the post request:
 {
-	"dateId": string,
-	"date":{
-		"date": string,
-		"timeFrom": string,
-		"timeTo": string
-	}
+	"datesToAdd":[
+        "date": number,
+        "timeFrom": number,
+        "timeTo": number
+    ]
 }
 
 ##############################################
-8. Delete a date with its dateId of an event if you are the creator
-router.post('/date/delete/:creatorUUID', dateLogic.deleteDatesFromEvent);
+8. Delete a date of an event if you are the creator
+router.post('/date/delete/:adminUUID', dateLogic.removeDatesOfEvent);
 
 Expected data in the url:
-/:creatorUUID:
+/:adminUUID:
 the uuid of the creator, so only he can update those values
 
-Expected data in the post request:
+Expected data in the post request (the indexes of the dates you want to delete int the date array of an event):
 {
-	"dateId": string
+	"indexesToDelete": [
+        boolean
+    ]
 }
 
 ##############################################
