@@ -8,7 +8,6 @@ exports.getNewModel = function(){
         isActive: true,
         eventType: null,
         location: null,
-        numberParticipants: 0,
         creator: null,
         participants: [], //instanceof participantModel()
         date: [], //instanceof dateModel()

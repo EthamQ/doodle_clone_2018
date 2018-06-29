@@ -32,7 +32,6 @@ module.exports = class doodleEventModel extends ModelClass {
             if (key == 'creator') {
                 this.returnCreatorObject(event[key], creatorObject =>{
                     this.model.creator = creatorObject;
-                    this.model.numberParticipants++;
                 });
             }
         }

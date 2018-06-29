@@ -2,6 +2,7 @@ const mongodb = require('./../../MongoDB/dbUtils');
 const uuid = require('uuid/v4');
 const ParticipantModel = require('./../../models/participant/participantModel');
 const ResponseBuilder = require('./../responseBuilder');
+const dateLogic = require('./../date/dateLogic');
 
 /**
  * called by the router
@@ -22,10 +23,7 @@ addParticipantToEvent = function (req, res, next) {
                     let participantsOld = data.event.participants;
                     participantsOld.push(participantModel.getModel());
                     let criteria = { uuid: eventUUID };
-                    let update = {
-                        participants: participantsOld,
-                        numberParticipants: (data.event.numberParticipants + 1)
-                    };
+                    let update = { participants: participantsOld };
                     mongodb.updateItemInEventCollection(criteria, update).then(data => {
                         responseBuilder.setSuccess(true);
                         responseBuilder.addMessage(responseBuilder.getParticipantAddedSuccessMsg());
@@ -66,30 +64,30 @@ addParticipantToEvent = function (req, res, next) {
 removeParticipants = function (req, res, next) {
     let responseBuilder = new ResponseBuilder();
     let adminUUID = req.params.adminUUID;
-    let participantsUpdated = req.body.participantsUpdated;
+    participantIdArray = req.body.participantIdArray;
     getDoodleEventByCreatorUUID(adminUUID, data => {
         if (data.success) {
-            if (participantsUpdated.length < data.event.participants.length) {
-                let criteria = { uuid: data.uuidEvent };
-                let update = {
-                    participants: participantsUpdated,
-                    numberParticipants: (data.event.numberParticipants - 1)
-                };
-                mongodb.updateItemInEventCollection(criteria, update).then(() => {
+            let participantsUpdated = data.event.participants;
+            let i = 0;
+            let numberRemovedParticipants = 0;
+            participantsUpdated.map(participant =>{
+                participantIdArray.map(id =>{
+                    if(participant.id == id){
+                        participantsUpdated.splice(i, 1);
+                        numberRemovedParticipants++;
+                    }
+                });
+                i++;
+            });
+                updateParticipantsWithUUID(data.event.uuid, participantsUpdated).then(() => {
                     responseBuilder.setSuccess(true);
-                    responseBuilder.addMessage("Participants successfully removed");
+                    responseBuilder.addMessage(numberRemovedParticipants + " participant(s) successfully removed");
                     res.send(responseBuilder.getResponse());
                 }).catch(err => {
                     responseBuilder.setSuccess(true);
                     responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
                     res.send(responseBuilder.getResponse());
                 });
-            }
-            else {
-                responseBuilder.setSuccess(false);
-                responseBuilder.addMessage("The length of the updatedParticipants has to be lesser than the initial array if you want to remove a participant");
-                res.send(responseBuilder.getResponse());
-            }
         }
         else {
             responseBuilder.setSuccess(false);
@@ -99,7 +97,25 @@ removeParticipants = function (req, res, next) {
     });
 }
 
+/**
+ * uuid belongs to the event
+ * helper functions to easily update the participants array in an event
+ */
+updateParticipantsWithUUID = function (uuid, participantsUpdated) {
+    return new Promise((resolve, reject) => {
+        let criteria = { uuid: uuid };
+        let update = { participants: participantsUpdated };
+        mongodb.updateItemInEventCollection(criteria, update).then(() => {
+            resolve();
+        }).catch(err => {
+            reject(err);
+        });
+    });
+
+}
+
 module.exports = {
     addParticipantToEvent: addParticipantToEvent,
-    removeParticipants: removeParticipants
+    removeParticipants: removeParticipants,
+    updateParticipantsWithUUID: updateParticipantsWithUUID
 }

@@ -8,11 +8,11 @@ router.post('/event/new', logic.createNewDoodleEvent);
 router.post('/participant/:uuid', logic.addParticipantToEvent);
 3. Add a date from an event to a participant: WORKED
 router.post('/date/participant/add/:adminUUID', dateLogic.addDatesToParticipant);
-4. Get a doodle event by its uuid UPDATED
+4. Get a doodle event by its uuid WORKED
 router.get('/event/:uuid', logic.getDoodleEventByUUID);
-5. Update title, description, eventType, location of an event if you are the creator of an event UPDATED
-router.post('/event/update/:creatorUUID', logic.updateDoodleEvent);
-7. Add dates to an event if you are the creator UPDATED
+5. Update title, description, eventType, location of an event if you are the creator of an event WORKED
+router.post('/event/update/:adminUUID', logic.updateDoodleEvent);
+7. Add dates to an event if you are the creator WORKED
 router.post('/date/add/:adminUUID', dateLogic.addDatesToEvent);
 8. Delete dates of an event if you are the creator UPDATED
 router.post('/date/delete/:adminUUID', dateLogic.removeDatesOfEvent);
@@ -20,7 +20,7 @@ router.post('/date/delete/:adminUUID', dateLogic.removeDatesOfEvent);
 router.post('/event/delete/:creatorUUID', logic.deleteEvent);
 10. Remove a date from a participant: WORKED
 router.post('/date/participant/remove/:adminUUID', dateLogic.removeDatesFromParticipant);
-11. Delete a participator of an event UPDATED
+11. Delete a participator of an event WORKS
 router.post('/participant/remove/:adminUUID', participantLogic.removeParticipants);
 12. Add dates to the creator
 router.post('/date/creator/add/:adminUUID', dateLogic.addDatesToCreator);
@@ -104,7 +104,6 @@ Response from the server on success:
             "isActive": true,
             "eventType": string,
             "location": string,
-            "numberParticipants": number,
             "creator": {
                 "name": string,
                 "email": string,
@@ -227,18 +226,11 @@ Expected data in the url:
 the adminUuid of the event
 
 Expected data in the post request:
-A array of participants whose length is lesser than the inital participants array.
-Just remove the participant from the array and send it
+A array of participant ids who should be removed
 {
-   "participantsUpdated": [
-                {
-                    "name": string,
-                    "email": string,
-                    "dates": [
-                        boolean //index corresponds to index in date
-                    ]
-                }
-            ]
+  "participantIdArray" :[
+		string
+		]
 }
 
 ##############################################
