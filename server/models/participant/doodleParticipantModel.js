@@ -4,7 +4,11 @@ let constructorArgs = require('./doodleParticipantModelValues');
 module.exports = class Participant extends ModelClass{
 
     constructor() {
-        super(constructorArgs.getNewModel(), constructorArgs.allowedKeys, constructorArgs.requiredKeys, constructorArgs.dbInfo);
+        super(constructorArgs.getNewModel(), 
+        constructorArgs.allowedKeys,
+        constructorArgs.requiredKeys,
+        constructorArgs.dbInfo
+    );
     }
 
     setUUID(uuid, callback){

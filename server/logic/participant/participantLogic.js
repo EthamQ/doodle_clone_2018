@@ -27,12 +27,12 @@ addParticipantToEvent = function (req, res, next) {
             };
             mongodb.updateItemInEventCollection(criteria, update).then(data => {
                 responseBuilder.setSuccess(true);
-                responseBuilder.setMessage(responseBuilder.getParticipantAddedSuccessMsg());
+                responseBuilder.addMessage(responseBuilder.getParticipantAddedSuccessMsg());
                 res.send(responseBuilder.getResponse());
 
             }).catch(err => {
                 responseBuilder.setSuccess(false);
-                responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
+                responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
                 res.send(responseBuilder.getResponse());
             });
         });
@@ -61,23 +61,23 @@ removeParticipants = function (req, res, next) {
                 };
                 mongodb.updateItemInEventCollection(criteria, update).then(() => {
                     responseBuilder.setSuccess(true);
-                    responseBuilder.setMessage("Participants successfully removed");
+                    responseBuilder.addMessage("Participants successfully removed");
                     res.send(responseBuilder.getResponse());
                 }).catch(err => {
                     responseBuilder.setSuccess(true);
-                    responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
+                    responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
                     res.send(responseBuilder.getResponse());
                 });
             }
             else {
                 responseBuilder.setSuccess(false);
-                responseBuilder.setMessage("The length of the updatedParticipants has to be lesser than the initial array if you want to remove a participant");
+                responseBuilder.addMessage("The length of the updatedParticipants has to be lesser than the initial array if you want to remove a participant");
                 res.send(responseBuilder.getResponse());
             }
         }
         else {
             responseBuilder.setSuccess(false);
-            responseBuilder.setMessage(responseBuilder.getDoodleEventByCreatorUUIDFailureMsg());
+            responseBuilder.addMessage(responseBuilder.getDoodleEventByCreatorUUIDFailureMsg());
             res.send(responseBuilder.getResponse());
         }
     });

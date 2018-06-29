@@ -3,23 +3,12 @@ var MongoClient = require('mongodb').MongoClient;
 let databaseName = "mydb";
 var url = "mongodb://localhost:27017/";
 const uuid = require('uuid/v4');
-let dbFunctions = require('./dbUtils');
 
 // info about the different collection
 // to use as input for the database functions
 exports.doodleEventDBInfo = {
   dbName: "doodlePWP",
   collectionName: "doodleEvent"
-}
-
-exports.doodleDateDBInfo = {
-  dbName: "doodlePWP",
-  collectionName: "doodleDate"
-}
-
-exports.doodleParticipantDBInfo = {
-  dbName: "doodlePWP",
-  collectionName: "doodleParticipants"
 }
 
 /**

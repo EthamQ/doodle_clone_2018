@@ -1,10 +1,4 @@
-exports.model = {
-    _id: null,
-    date: null,
-    timeFrom: null,
-    timeTo: null,
-    uuid: null
-}
+const dbUtils = require('./../../MongoDB/dbUtils');
 
 exports.getNewModel = function(){
     let model = {
@@ -25,5 +19,4 @@ exports.requiredKeys = [
     'date'
 ]
 
-const dbUtils = require('./../../MongoDB/dbUtils');
-exports.dbInfo = dbUtils.doodleDateDBInfo;
+exports.dbInfo = null;

@@ -35,20 +35,20 @@ saveNewDoodleEvent = function (req, res, next) {
     prepareNewDoodleEvent(req, res, next).then(doodleEventToSave => {
         if (doodleEventToSave.modelIsValid()) {
             doodleEventToSave.saveModelInDatabase().then(data => {
-                responseBuilder.setMessage(responseBuilder.getNewDoodleEventSuccessMsg());
+                responseBuilder.addMessage(responseBuilder.getNewDoodleEventSuccessMsg());
                 responseBuilder.addData(data.savedItem);
                 responseBuilder.setSuccess(true);
                 res.send(responseBuilder.getResponse());
             }).catch(err => {
                 responseBuilder.setSuccess(false);
-                responseBuilder.setMessage(responseBuilder.getNewDoodleEventFailureMsg());
+                responseBuilder.addMessage(responseBuilder.getNewDoodleEventFailureMsg());
                 res.send(responseBuilder.getResponse());
             });
         }
         else {
             // model not valid
             responseBuilder.setSuccess(false);
-            responseBuilder.setMessage("Required values are missing");
+            responseBuilder.addMessage("Required values are missing");
             res.send(responseBuilder.getResponse());
         }
     });
@@ -73,18 +73,18 @@ updateDoodleEvent = function (req, res, next) {
             }
             mongodb.updateItem(mongodb.doodleEventDBInfo.dbName, mongodb.doodleEventDBInfo.collectionName, criteria, update).then(data => {
                 responseBuilder.setSuccess(true);
-                responseBuilder.setMessage("Event successfully updated");
+                responseBuilder.addMessage("Event successfully updated");
                 res.send(responseBuilder.getResponse());
             }).catch(err => {
                 console.log(err);
                 responseBuilder.setSuccess(false);
-                responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
+                responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
                 res.send(responseBuilder.getResponse());
             });
         }
         else {
             responseBuilder.setSuccess(false);
-            responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDFailureMsg());
+            responseBuilder.addMessage(responseBuilder.getDoodleEventByUUIDFailureMsg());
             res.send(responseBuilder.getResponse());
         }
     });
@@ -106,7 +106,7 @@ getDoodleEventDataByUUID = function (req, res, next) {
             delete data.event.creator.adminUUID;
             delete data.event._id;
             responseBuilder.setSuccess(true);
-            responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDSuccessMsg());
+            responseBuilder.addMessage(responseBuilder.getDoodleEventByUUIDSuccessMsg());
             responseBuilder.addData(data.event);
             res.send(responseBuilder.getResponse());
         }
@@ -119,14 +119,14 @@ getDoodleEventDataByUUID = function (req, res, next) {
                     data.event.adminAccess = true;
                     delete data.event._id;
                     responseBuilder.setSuccess(true);
-                    responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDSuccessMsg() + ", admin access");
+                    responseBuilder.addMessage(responseBuilder.getDoodleEventByUUIDSuccessMsg() + ", admin access");
                     responseBuilder.addData(data.event);
                     res.send(responseBuilder.getResponse());
                 }
                 else {
                     // failure when reading the database
                     responseBuilder.setSuccess(false);
-                    responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
+                    responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
                     res.send(responseBuilder.getResponse());
                 }
             });
@@ -208,19 +208,19 @@ deleteEvent = function (req, res, next) {
                 mongodb.doodleEventDBInfo.collectionName,
                 uuid).then(() => {
                     responseBuilder.setSuccess(true);
-                    responseBuilder.setMessage("Event successfully removed");
+                    responseBuilder.addMessage("Event successfully removed");
                     res.send(responseBuilder.getResponse());
 
                 }).catch(err => {
                     console.log(err);
                     responseBuilder.setSuccess(false);
-                    responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
+                    responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
                     res.send(responseBuilder.getResponse());
                 });
         }
         else {
             responseBuilder.setSuccess(false);
-            responseBuilder.setMessage("Event with this creator uuid not found");
+            responseBuilder.addMessage("Event with this creator uuid not found");
             res.send(responseBuilder.getResponse());
         }
     });

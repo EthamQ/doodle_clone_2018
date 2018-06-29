@@ -1,8 +1,4 @@
-exports.model = {
-    name: null,
-    email: null,
-    dates: []
-}
+const dbUtils = require('./../../MongoDB/dbUtils');
 
 exports.getNewModel = function(){
     let model = {
@@ -20,9 +16,5 @@ exports.allowedKeys = [
     'dates'
 ]
 
-exports.requiredKeys = [
-    'email'
-]
-
-const dbUtils = require('./../../MongoDB/dbUtils');
+exports.requiredKeys = []
 exports.dbInfo = null;

@@ -40,22 +40,24 @@ addDatesToEvent = function (req, res, next) {
                 j--;
             }
             let criteria = { uuid: data.event.uuid };
-            let update = { 
+            let update = {
                 date: datesUpdated,
                 participants: participantsUpdated
             };
             mongodb.updateItemInEventCollection(criteria, update).then(() => {
-                    responseBuilder.setMessage("Dates successfully added");
-                    responseBuilder.setSuccess(true);
-                    res.send(responseBuilder.getResponse());
-                }).catch(err => {
-                    responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
-                    responseBuilder.setSuccess(false);
-                    res.send(responseBuilder.getResponse());
-                });
+                responseBuilder.addMessage("Dates successfully added");
+                responseBuilder.setSuccess(true);
+                res.send(responseBuilder.getResponse());
+            }).catch(err => {
+                responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
+                responseBuilder.addMessage(err.toString());
+                responseBuilder.setSuccess(false);
+                res.send(responseBuilder.getResponse());
+            });
         }
         else {
-            responseBuilder.setMessage(responseBuilder.getDoodleEventByCreatorUUIDFailureMsg());
+            responseBuilder.addMessage(responseBuilder.getDoodleEventByCreatorUUIDFailureMsg());
+            responseBuilder.addMessage(err.toString());
             responseBuilder.setSuccess(false);
             res.send(responseBuilder.getResponse());
         }
@@ -93,23 +95,24 @@ removeDatesOfEvent = function (req, res, next) {
             });
 
             let criteria = { uuid: data.event.uuid };
-            let update = { 
+            let update = {
                 date: updatedDates,
                 participants: updatedParticipants,
                 creator: updatedCreator
-                };
+            };
             mongodb.updateItemInEventCollection(criteria, update).then(data => {
-                responseBuilder.setMessage("Date(s) successfully removed");
+                responseBuilder.addMessage("Date(s) successfully removed");
                 responseBuilder.setSuccess(true);
                 res.send(responseBuilder.getResponse());
             }).catch(err => {
-                responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
+                responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
+                responseBuilder.addMessage(err.toString());
                 responseBuilder.setSuccess(false);
                 res.send(responseBuilder.getResponse());
             });
         }
         else {
-            responseBuilder.setMessage(responseBuilder.getDoodleEventByCreatorUUIDFailureMsg());
+            responseBuilder.addMessage(responseBuilder.getDoodleEventByCreatorUUIDFailureMsg());
             responseBuilder.setSuccess(false);
             res.send(responseBuilder.getResponse());
         }
@@ -123,11 +126,12 @@ addDatesToParticipant = function (req, res, next) {
     let adminUUID = req.params.adminUUID;
     let shouldAdd = true;
     addRemoveDatesParticipant(adminUUID, participantId, dateIndexToAdd, shouldAdd).then(() => {
-        responseBuilder.setMessage("Dates successfully added");
+        responseBuilder.addMessage("Dates successfully added");
         responseBuilder.setSuccess(true);
         res.send(responseBuilder.getResponse());
     }).catch(err => {
-        responseBuilder.setMessage(err.toString());
+        responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
+        responseBuilder.addMessage(err.toString());
         responseBuilder.setSuccess(false);
         res.send(responseBuilder.getResponse());
     });
@@ -140,11 +144,12 @@ removeDatesFromParticipant = function (req, res, next) {
     let adminUUID = req.params.adminUUID;
     let shouldAdd = false;
     addRemoveDatesParticipant(adminUUID, participantId, dateIndexToRemove, shouldAdd).then(() => {
-        responseBuilder.setMessage("Dates successfully removed");
+        responseBuilder.addMessage("Dates successfully removed");
         responseBuilder.setSuccess(true);
         res.send(responseBuilder.getResponse());
     }).catch(err => {
-        responseBuilder.setMessage(err.toString());
+        responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
+        responseBuilder.addMessage(err.toString());
         responseBuilder.setSuccess(false);
         res.send(responseBuilder.getResponse());
     });
@@ -219,11 +224,12 @@ addDatesToCreator = function (req, res, next) {
     let adminUUID = req.params.adminUUID;
     let shouldAdd = true;
     addRemoveDatesCreator(adminUUID, dateIndexToAdd, shouldAdd).then(() => {
-        responseBuilder.setMessage("Dates successfully added to creator");
+        responseBuilder.addMessage("Dates successfully added to creator");
         responseBuilder.setSuccess(true);
         res.send(responseBuilder.getResponse());
     }).catch(err => {
-        responseBuilder.setMessage(err.toString());
+        responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
+        responseBuilder.addMessage(err.toString());
         responseBuilder.setSuccess(false);
         res.send(responseBuilder.getResponse());
     });
@@ -235,11 +241,12 @@ removeDatesFromCreator = function (req, res, next) {
     let adminUUID = req.params.adminUUID;
     let shouldAdd = false;
     addRemoveDatesCreator(adminUUID, dateIndexToRemove, shouldAdd).then(() => {
-        responseBuilder.setMessage("Dates successfully removed from creator");
+        responseBuilder.addMessage("Dates successfully removed from creator");
         responseBuilder.setSuccess(true);
         res.send(responseBuilder.getResponse());
     }).catch(err => {
-        responseBuilder.setMessage(err.toString());
+        responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
+        responseBuilder.addMessage(err.toString());
         responseBuilder.setSuccess(false);
         res.send(responseBuilder.getResponse());
     });

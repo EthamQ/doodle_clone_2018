@@ -7,9 +7,4 @@ module.exports = class DateModel extends ModelClass{
     constructor() {
         super(constructorArgs.getNewModel(), constructorArgs.allowedKeys, constructorArgs.requiredKeys, constructorArgs.dbInfo);
     }
-
-    setUUID(uuid, callback){
-        this.model.uuid = uuid;
-        callback();
-    }
 }
