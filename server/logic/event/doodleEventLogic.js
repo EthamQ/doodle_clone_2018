@@ -4,7 +4,6 @@ var ResponseBuilder = require('./../responseBuilder');
 var mongodb = require('./../../MongoDB/dbUtils');
 var dbInfo = mongodb.doodleEventDBInfo;
 const uuid = require('uuid/v4');
-let responseDataGetEvent = require('./responseBuilderGetEvent');
 const participantLogic = require('./../participant/participantLogic');
 const dateLogic = require('./../date/dateLogic');
 
@@ -27,25 +26,18 @@ prepareNewDoodleEvent = function (req, res, next) {
 
 /**
  * called by the router
+ * POST '/event/new'
  * receives a DoodleEventModel() object, saves it in the database
  * and creates a response for the client
  */
 saveNewDoodleEvent = function (req, res, next) {
     let responseBuilder = new ResponseBuilder();
-    // get DoodleEventModel() with set values
     prepareNewDoodleEvent(req, res, next).then(doodleEventToSave => {
         if (doodleEventToSave.modelIsValid()) {
-            // save it in DB
             doodleEventToSave.saveModelInDatabase().then(data => {
-                // set values for response to client
-                if (data.success) {
-                    responseBuilder.setMessage(responseBuilder.getNewDoodleEventSuccessMsg());
-                    responseBuilder.addData(data.savedItem);
-                }
-                else {
-                    responseBuilder.setMessage(responseBuilder.getNewDoodleEventFailureMsg());
-                }
-                responseBuilder.setSuccess(data.success);
+                responseBuilder.setMessage(responseBuilder.getNewDoodleEventSuccessMsg());
+                responseBuilder.addData(data.savedItem);
+                responseBuilder.setSuccess(true);
                 res.send(responseBuilder.getResponse());
             }).catch(err => {
                 responseBuilder.setSuccess(false);
@@ -62,9 +54,9 @@ saveNewDoodleEvent = function (req, res, next) {
     });
 }
 
-
-
 /**
+ * called by the router
+ * POST '/event/update/:creatorUUID'
  * update title, description, eventType, location of an event
  */
 updateDoodleEvent = function (req, res, next) {
@@ -89,7 +81,6 @@ updateDoodleEvent = function (req, res, next) {
                 responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
                 res.send(responseBuilder.getResponse());
             });
-
         }
         else {
             responseBuilder.setSuccess(false);
@@ -101,6 +92,8 @@ updateDoodleEvent = function (req, res, next) {
 
 /**
  * called by the router
+ * GET '/event/:uuid'
+ * sends the event with the uuid to the client
  */
 getDoodleEventDataByUUID = function (req, res, next) {
     let uuidEvent = req.params.uuid;
@@ -129,13 +122,12 @@ getDoodleEventDataByUUID = function (req, res, next) {
                     responseBuilder.setMessage(responseBuilder.getDoodleEventByUUIDSuccessMsg() + ", admin access");
                     responseBuilder.addData(data.event);
                     res.send(responseBuilder.getResponse());
-
                 }
                 else {
                     // failure when reading the database
                     responseBuilder.setSuccess(false);
                     responseBuilder.setMessage(responseBuilder.getDatabaseFailureMsg());
-                    resolve(responseBuilder);
+                    res.send(responseBuilder.getResponse());
                 }
             });
         }
@@ -179,14 +171,12 @@ getDoodleEventByCreatorUUID = function (uuidCreator, callback) {
                 console.log(arrayAllEvents[i].creator.adminUUID);
                 console.log(uuidCreator);
                 if (arrayAllEvents[i].creator.adminUUID == uuidCreator) {
-                    console.log("creatorid found");
                     callback({ event: arrayAllEvents[i], uuidEvent: arrayAllEvents[i].uuid, success: true });
                     break;
                 }
                 // creator id not found, end of array
                 else {
                     if (i === (arrayAllEvents.length - 1)) {
-                        console.log("creatorid not found");
                         callback({ event: null, uuidEvent: null, success: false });
                     }
                 }
@@ -217,9 +207,9 @@ deleteEvent = function (req, res, next) {
                 mongodb.doodleEventDBInfo.dbName,
                 mongodb.doodleEventDBInfo.collectionName,
                 uuid).then(() => {
-                            responseBuilder.setSuccess(true);
-                            responseBuilder.setMessage("Event successfully removed");
-                            res.send(responseBuilder.getResponse());
+                    responseBuilder.setSuccess(true);
+                    responseBuilder.setMessage("Event successfully removed");
+                    res.send(responseBuilder.getResponse());
 
                 }).catch(err => {
                     console.log(err);
@@ -237,16 +227,11 @@ deleteEvent = function (req, res, next) {
 }
 
 
-
-module.exports.getParticipantsByUUID = getParticipantsByUUID;
-module.exports.getDatesByEventId = getDatesByEventId;
 module.exports.getDoodleEventByUUID = getDoodleEventByUUID;
 module.exports = {
     addParticipantToEvent: addParticipantToEvent,
-    getDatesByEventId: getDatesByEventId,
     saveNewDoodleEvent: saveNewDoodleEvent,
     getDoodleEventByUUID: getDoodleEventByUUID,
-    getAllParticipatesIntern: getAllParticipatesIntern,
     getDoodleEventDataByUUID: getDoodleEventDataByUUID,
     updateDoodleEvent: updateDoodleEvent,
     getDoodleEventByCreatorUUID: getDoodleEventByCreatorUUID,

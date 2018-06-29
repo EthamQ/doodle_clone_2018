@@ -49,6 +49,7 @@ module.exports = class Model {
                 resolve(data);   
             }).catch(err =>{
                 console.log(err);
+                reject(err);
             });
         });
     }
