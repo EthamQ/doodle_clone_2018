@@ -1,13 +1,10 @@
-// if key is in allowed keys then assing value to modelToFill
-// exports.fillModelProperty = function(allowedKeys, modelToFill, key, value,){
-//         if(allowedKeys.indexOf(key) != -1){
-//             console.log("fill " + key + "with the value " + value);
-//             modelToFill[key] = value;
-//         }    
-
-      
-// }
-
+/**
+ * if key is in allowed keys then assing value to modelToFill
+ * @param {*} allowedKeys 
+ * @param {*} modelToFill 
+ * @param {*} object 
+ * @param {*} callback 
+ */
 exports.fillModelProperty = function(allowedKeys, modelToFill, object, callback){
     for (let key in object) {
         if(allowedKeys.indexOf(key) != -1){

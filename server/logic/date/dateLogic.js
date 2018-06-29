@@ -1,10 +1,9 @@
-var mongodb = require('./../../MongoDB/dbUtils');
+const mongodb = require('./../../MongoDB/dbUtils');
 const participantLogic = require('./../participant/participantLogic');
 const eventLogic = require('./../event/doodleEventLogic');
-var ResponseBuilder = require('./../responseBuilder');
-var DateModel = require('./../../models/date/doodleDateModel');
+const ResponseBuilder = require('./../responseBuilder');
+const DateModel = require('./../../models/date/dateModel');
 const uuid = require('uuid/v4');
-var mongodb = require('./../../MongoDB/dbUtils');
 
 /**
  * called by the router
@@ -119,16 +118,28 @@ removeDatesOfEvent = function (req, res, next) {
     });
 }
 
+/**
+ * called by router
+ * POST '/date/participant/add/:adminUUID'
+ */
 addDatesToParticipant = function (req, res, next) {
     let responseBuilder = new ResponseBuilder();
     let participantId = req.body.participantId;
     let dateIndexToAdd = req.body.dateIndexToAdd;
     let adminUUID = req.params.adminUUID;
     let shouldAdd = true;
-    addRemoveDatesParticipant(adminUUID, participantId, dateIndexToAdd, shouldAdd).then(() => {
-        responseBuilder.addMessage("Dates successfully added");
-        responseBuilder.setSuccess(true);
-        res.send(responseBuilder.getResponse());
+    addRemoveDatesParticipant(adminUUID, participantId, dateIndexToAdd, shouldAdd).then(data => {
+        if(data.success){
+            responseBuilder.addMessage("Dates successfully added");
+            responseBuilder.setSuccess(true);
+            res.send(responseBuilder.getResponse());
+        }
+        else{
+            responseBuilder.addMessage(data.errorMsg);
+            responseBuilder.setSuccess(false);
+            res.send(responseBuilder.getResponse());
+        }
+        
     }).catch(err => {
         responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
         responseBuilder.addMessage(err.toString());
@@ -137,16 +148,27 @@ addDatesToParticipant = function (req, res, next) {
     });
 }
 
+/**
+ * called by router
+ * POST '/date/participant/remove/:adminUUID'
+ */
 removeDatesFromParticipant = function (req, res, next) {
     let responseBuilder = new ResponseBuilder();
     let participantId = req.body.participantId;
     let dateIndexToRemove = req.body.dateIndexToRemove;
     let adminUUID = req.params.adminUUID;
     let shouldAdd = false;
-    addRemoveDatesParticipant(adminUUID, participantId, dateIndexToRemove, shouldAdd).then(() => {
-        responseBuilder.addMessage("Dates successfully removed");
-        responseBuilder.setSuccess(true);
-        res.send(responseBuilder.getResponse());
+    addRemoveDatesParticipant(adminUUID, participantId, dateIndexToRemove, shouldAdd).then(data => {
+        if(data.success){
+            responseBuilder.addMessage("Dates successfully removed");
+            responseBuilder.setSuccess(true);
+            res.send(responseBuilder.getResponse());
+        }
+        else{
+            responseBuilder.addMessage(data.errorMsg);
+            responseBuilder.setSuccess(false);
+            res.send(responseBuilder.getResponse());
+        }
     }).catch(err => {
         responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
         responseBuilder.addMessage(err.toString());
@@ -155,27 +177,51 @@ removeDatesFromParticipant = function (req, res, next) {
     });
 }
 
+/**
+ * called by addDatesToParticipant or removeDatesFromParticipant
+ * with different parameters
+ */
 addRemoveDatesParticipant = function (adminUUID, participantId, indexArray, shouldAdd) {
     return new Promise((resolve, reject) => {
         getDoodleEventByCreatorUUID(adminUUID, data => {
             let participantsUpdated = data.event.participants;
             let uuid = data.event.uuid;
+            let maxIndex = data.event.date.length - 1;
+            let i = 0;
+            let partIdFound = false;
+
             participantsUpdated.map(participant => {
                 if (participant.id == participantId) {
+                    partIdFound = true;
                     indexArray.map(index => {
+                        if(index > maxIndex){
+                            resolve({ success: false, errorMsg: "Highest allowed Index is " + maxIndex + "!"});
+                        }
                         participant.dates[index] = shouldAdd;
                     });
                     updateParticipantsWithUUID(uuid, participantsUpdated).then(() => {
-                        resolve();
+                        resolve({ success: true });
                     }).catch(err => {
                         reject(err);
                     });
                 }
+                else if(isLastIteration(i, participantsUpdated) && !partIdFound){
+                    resolve({ success: false, errorMsg: "ParticipantId not found"});
+                }
+                i++;
             });
         });
     });
 }
 
+isLastIteration = function(counter, array){
+    return counter === (array.length - 1);
+}
+
+/**
+ * uuid belongs to the event
+ * helper functions to easily update the participants array in an event
+ */
 updateParticipantsWithUUID = function (uuid, participantsUpdated) {
     return new Promise((resolve, reject) => {
         let criteria = { uuid: uuid };
@@ -189,6 +235,10 @@ updateParticipantsWithUUID = function (uuid, participantsUpdated) {
 
 }
 
+/**
+ * uuid belongs to the event
+ * helper functions to easily update the creator in an event
+ */
 updateCreatorWithUUID = function (uuid, creatorUpdated) {
     return new Promise((resolve, reject) => {
         let criteria = { uuid: uuid };
@@ -201,6 +251,10 @@ updateCreatorWithUUID = function (uuid, creatorUpdated) {
     });
 }
 
+/**
+ * called by addDatesToCreator or removeDatesFromCreator
+ * with different parameters
+ */
 addRemoveDatesCreator = function (adminUUID, indexArray, shouldAdd) {
     return new Promise((resolve, reject) => {
         getDoodleEventByCreatorUUID(adminUUID, data => {

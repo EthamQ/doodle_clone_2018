@@ -1,8 +1,7 @@
-var mongodb = require('./../../MongoDB/dbUtils');
+const mongodb = require('./../../MongoDB/dbUtils');
 const uuid = require('uuid/v4');
-var DoodleParticipantModel = require('./../../models/participant/doodleParticipantModel');
-var ParticipantModel = require('./../../models/participant/doodleParticipantModel');
-var ResponseBuilder = require('./../responseBuilder');
+const ParticipantModel = require('./../../models/participant/participantModel');
+const ResponseBuilder = require('./../responseBuilder');
 
 /**
  * called by the router
@@ -14,27 +13,44 @@ addParticipantToEvent = function (req, res, next) {
     let responseBuilder = new ResponseBuilder();
     let eventUUID = req.params.uuid;
     let participant = req.body;
-    participantModel = new ParticipantModel();
+    let participantModel = new ParticipantModel();
     participantModel.setId();
     participantModel.setModelProperty(participant, () => {
-        getDoodleEventByUUID(eventUUID, eventData => {
-            let participantsOld = eventData.event.participants;
-            participantsOld.push(participantModel.getModel());
-            let criteria = { uuid: eventUUID };
-            let update = {
-                participants: participantsOld,
-                numberParticipants: (eventData.event.numberParticipants + 1)
-            };
-            mongodb.updateItemInEventCollection(criteria, update).then(data => {
-                responseBuilder.setSuccess(true);
-                responseBuilder.addMessage(responseBuilder.getParticipantAddedSuccessMsg());
-                res.send(responseBuilder.getResponse());
-
-            }).catch(err => {
+        getDoodleEventByUUID(eventUUID, data => {
+            if (data.success) {
+                if(participantModel.participantDatesValid(data.event.date)){
+                    let participantsOld = data.event.participants;
+                    participantsOld.push(participantModel.getModel());
+                    let criteria = { uuid: eventUUID };
+                    let update = {
+                        participants: participantsOld,
+                        numberParticipants: (data.event.numberParticipants + 1)
+                    };
+                    mongodb.updateItemInEventCollection(criteria, update).then(data => {
+                        responseBuilder.setSuccess(true);
+                        responseBuilder.addMessage(responseBuilder.getParticipantAddedSuccessMsg());
+                        res.send(responseBuilder.getResponse());
+    
+                    }).catch(err => {
+                        responseBuilder.setSuccess(false);
+                        responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
+                        responseBuilder.addMessage(err.toString());
+                        res.send(responseBuilder.getResponse());
+                    });
+                }
+                else{
+                    responseBuilder.setSuccess(false);
+                    responseBuilder.addMessage("The amount of dates of the participant has to be equal to the amount of dates of the event which is " + data.event.date.length);
+                    res.send(responseBuilder.getResponse());
+                }
+                
+            }
+            else {
                 responseBuilder.setSuccess(false);
-                responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
+                responseBuilder.addMessage(responseBuilder.getDoodleEventByUUIDFailureMsg());
                 res.send(responseBuilder.getResponse());
-            });
+            }
+
         });
     });
 }

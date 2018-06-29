@@ -58,29 +58,20 @@ router.post('/participant/remove/:adminUUID', participantLogic.removeParticipant
 router.post('/date/add/:adminUUID', dateLogic.addDatesToEvent);
 
 /**
- * update dates of an event if you are the creator
- */
-// router.post('/date/update/:creatorUUID', dateLogic.updateExistingDate);
-
-/**
  * delete dates of an event if you are the creator UPDATED
  */
 router.post('/date/delete/:adminUUID', dateLogic.removeDatesOfEvent);
 
 /**
- * add a date to a participant
+ * add dates to a participant
  */
 router.post('/date/participant/add/:adminUUID', dateLogic.addDatesToParticipant);
 
 /**
- * remove a date from a participant
+ * remove dates from a participant
  */
 router.post('/date/participant/remove/:adminUUID', dateLogic.removeDatesFromParticipant);
 
-
-
-
-// TODO
 /**
  * remove dates from the creator
  */
@@ -90,6 +81,8 @@ router.post('/date/creator/remove/:adminUUID', dateLogic.removeDatesFromCreator)
  * add dates to the creator
  */
 router.post('/date/creator/add/:adminUUID', dateLogic.addDatesToCreator);
+
+// TODO
 
 
 

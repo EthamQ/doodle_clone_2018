@@ -29,6 +29,9 @@ module.exports = class Model {
     // implement if child models exist
     setThisAndChildModels(object) { }
 
+    /**
+     * returns false is a value from this.requiredKey is empty
+     */
     modelIsValid(){
         for(let key in this.model){
             if(this.requiredKeys.indexOf(key) != -1 && this.isEmpty(this.model[key])){

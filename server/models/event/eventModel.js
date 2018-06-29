@@ -1,10 +1,13 @@
-const fillModel = require('./../fillModels.js');
+// Models
 const ModelClass = require('./../doodleModel');
-const uuid = require('uuid/v4');
-const DateModel = require('./../date/doodleDateModel');
-const ParticipantModel = require('./../participant/doodleParticipantModel');
-const constructorArgs = require('./doodleEventModelValues');
+const DateModel = require('./../date/dateModel');
+const ParticipantModel = require('./../participant/participantModel');
+const CreatorModel = require('./../creator/creatorModel');
+// Constructor
+const constructorArgs = require('./eventModelValues');
 const dbUtils = require('./../../MongoDB/dbUtils');
+// For extra values
+const uuid = require('uuid/v4');
 
 module.exports = class doodleEventModel extends ModelClass {
 
@@ -18,7 +21,7 @@ module.exports = class doodleEventModel extends ModelClass {
         this.datesAreValid = true;
     }
 
-    // assign values to the properties of this models that are models or objects themselves
+    // assign values to the properties of this models that are models themselves
     setChildModelProperties(event, callback) {
         for (let key in event) {
             if (key == 'date') {
@@ -29,6 +32,7 @@ module.exports = class doodleEventModel extends ModelClass {
             if (key == 'creator') {
                 this.returnCreatorObject(event[key], creatorObject =>{
                     this.model.creator = creatorObject;
+                    this.model.numberParticipants++;
                 });
             }
         }
@@ -75,19 +79,28 @@ module.exports = class doodleEventModel extends ModelClass {
             let dateModel = new DateModel();
             dateModel.setModelProperty(date, ()=>{
                 this.model.date.push(dateModel.getModel());
+                // check if date is valid
+                if(this.datesAreValid){
+                    this.datesAreValid = dateModel.modelIsValid();
+                }
             });
         });
         callback();
     }
 
     returnCreatorObject(creatorFromRequest, callback) {
-        let creator = {
-            name: creatorFromRequest.name,
-            email: creatorFromRequest.email,
-            dates: creatorFromRequest.dates,
-            adminUUID: uuid(),
-        }
-        callback(creator);
+        let creatorModel = new CreatorModel();
+        creatorModel.setAdminUUID();
+        creatorModel.setModelProperty(creatorFromRequest, ()=>{
+            callback(creatorModel.getModel());
+        });
+        // let creator = {
+        //     name: creatorFromRequest.name,
+        //     email: creatorFromRequest.email,
+        //     dates: creatorFromRequest.dates,
+        //     adminUUID: uuid(),
+        // }
+        
     }
 }
 

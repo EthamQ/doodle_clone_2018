@@ -8,10 +8,10 @@ exports.getNewModel = function(){
         isActive: true,
         eventType: null,
         location: null,
-        numberParticipants: 1,
+        numberParticipants: 0,
         creator: null,
-        participants: [], //instanceof doodleParticipantModel()
-        date: [], //instanceof doodleDateModel()
+        participants: [], //instanceof participantModel()
+        date: [], //instanceof dateModel()
         uuid: null,
         url: 'http://doodleEvent/',
         timestamp: null,

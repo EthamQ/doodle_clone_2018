@@ -1,5 +1,5 @@
 const ModelClass = require('./../doodleModel');
-let constructorArgs = require('./doodleParticipantModelValues');
+let constructorArgs = require('./participantModelValues');
 
 module.exports = class Participant extends ModelClass{
 
@@ -16,13 +16,8 @@ module.exports = class Participant extends ModelClass{
         callback();
     }
 
-    setDates(dateArray){
-        return new Promise((resolve, reject)=>{
-            dateArray.map(date => {
-                this.model.dates.push({ dateId: date._id, participates: false });
-            });
-            resolve();
-        });
+    participantDatesValid(dateArray){
+       return this.model.dates.length === dateArray.length;
     }
 
 

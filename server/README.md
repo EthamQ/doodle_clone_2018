@@ -2,11 +2,11 @@ Routes and how to use them:
 ##############################################
 
 Overview:
-1. Creating a new loodle event UPDATED
+1. Creating a new loodle event WORKED
 router.post('/event/new', logic.createNewDoodleEvent);
-2. Add a participant to an event: UPDATED
+2. Add a participant to an event: WORKED
 router.post('/participant/:uuid', logic.addParticipantToEvent);
-3. Add a date from an event to a participant: UPDATED
+3. Add a date from an event to a participant: WORKED
 router.post('/date/participant/add/:adminUUID', dateLogic.addDatesToParticipant);
 4. Get a doodle event by its uuid UPDATED
 router.get('/event/:uuid', logic.getDoodleEventByUUID);
@@ -16,9 +16,9 @@ router.post('/event/update/:creatorUUID', logic.updateDoodleEvent);
 router.post('/date/add/:adminUUID', dateLogic.addDatesToEvent);
 8. Delete dates of an event if you are the creator UPDATED
 router.post('/date/delete/:adminUUID', dateLogic.removeDatesOfEvent);
-9. delete an event if you are the creator UPDATED
+9. delete an event if you are the creator WORKED
 router.post('/event/delete/:creatorUUID', logic.deleteEvent);
-10. Remove a date from a participant: UPDATED
+10. Remove a date from a participant: WORKED
 router.post('/date/participant/remove/:adminUUID', dateLogic.removeDatesFromParticipant);
 11. Delete a participator of an event UPDATED
 router.post('/participant/remove/:adminUUID', participantLogic.removeParticipants);

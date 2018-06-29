@@ -3,7 +3,7 @@ module.exports = class Response {
     constructor() {
         this.response = {
             success: false,
-            message: [],
+            messages: [],
             data: []
         }
         this.messages = {
@@ -58,7 +58,7 @@ module.exports = class Response {
         return this.messages.NEW_DOODLE_EVENT_SUCCESS;
     }
     getDoodleEventByUUIDFailureMsg() {
-        return this.messages.NEW_DOODLE_EVENT_FAILURE;
+        return this.messages.GET_DOODLE_EVENT_BY_UUID_FAILURE;
     }
     getDoodleEventByUUIDSuccessMsg() {
         return this.messages.GET_DOODLE_EVENT_BY_UUID_SUCCESS;
