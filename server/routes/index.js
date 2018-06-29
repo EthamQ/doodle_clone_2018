@@ -81,7 +81,15 @@ router.post('/date/participant/remove/:adminUUID', dateLogic.removeDatesFromPart
 
 
 // TODO
+/**
+ * remove dates from the creator
+ */
+router.post('/date/creator/remove/:adminUUID', dateLogic.removeDatesFromCreator);
 
+ /**
+ * add dates to the creator
+ */
+router.post('/date/creator/add/:adminUUID', dateLogic.addDatesToCreator);
 
 
 

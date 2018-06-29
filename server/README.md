@@ -22,6 +22,10 @@ router.post('/event/delete/:creatorUUID', logic.deleteEvent);
 router.post('/date/participant/remove/:adminUUID', dateLogic.removeDatesFromParticipant);
 11. Delete a participator of an event UPDATED
 router.post('/participant/remove/:adminUUID', participantLogic.removeParticipants);
+12. Add dates to the creator
+router.post('/date/creator/add/:adminUUID', dateLogic.addDatesToCreator);
+13. Remove dates from the creator
+router.post('/date/creator/remove/:adminUUID', dateLogic.removeDatesFromCreator);
 
 ##############################################
 1. Creating a new loodle event
@@ -64,7 +68,7 @@ Expected data in the url:
 the uuid of the event
 
 ##############################################
-3. Add a date from an event to a participant:
+3. Add dates from an event to a participant:
 router.post('/date/participant/add/:adminUUID', dateLogic.addDatesToParticipant);
 Expected data about the date and participant in the post request,
 send all the indexes of the dates you want to set to true in the dates array
@@ -236,3 +240,44 @@ Just remove the participant from the array and send it
                 }
             ]
 }
+
+##############################################
+12. Add dates to the creator
+router.post('/date/creator/add/:adminUUID', dateLogic.addDatesToCreator);
+
+Expected data about the date and participant in the post request,
+send all the indexes of the dates you want to set to true in the dates array
+of the creator
+
+Expected data in the url:
+/:adminUUID:
+the uuid of the creator, so only he can update those values
+
+{
+    "dateIndexToAdd": [
+        number
+    ]
+}
+
+##############################################
+13. Remove dates from the creator
+router.post('/date/creator/remove/:adminUUID', dateLogic.removeDatesFromCreator);
+
+Expected data about the date and participant in the post request,
+send all the indexes of the dates you want to set to false in the dates array
+of the creator
+
+Expected data in the url:
+/:adminUUID:
+the uuid of the creator, so only he can update those values
+
+{
+    "dateIndexToRemove": [
+        number
+    ]
+}
+
+
+##############################################
+
+

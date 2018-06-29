@@ -64,16 +64,24 @@ addDatesToEvent = function (req, res, next) {
         if (data.success) {
             let datesUpdated = data.event.date;
             let participantsUpdated = data.event.participants;
+            let updatedCreator = data.event.creator;
             newDates.map(newDate => {
                 datesUpdated.push(newDate);
             });
-            participantsUpdated.map(participant =>{
+            // add a false boolean to the dates array of every participant for every new date
+            participantsUpdated.map(participant => {
                 let i = newDates.length;
-                while(i>0){
+                while (i > 0) {
                     participant.dates.push(false);
                     i--;
                 }
             });
+            // add a false boolean to the dates array of the creator for every new date
+            let j = newDates.length;
+            while (j > 0) {
+                updatedCreator.dates.push(false);
+                j--;
+            }
             let criteria = { uuid: data.event.uuid };
             let update = { date: datesUpdated, participants: participantsUpdated };
             mongodb.updateItem(mongodb.doodleEventDBInfo.dbName,
@@ -167,18 +175,24 @@ removeDatesOfEvent = function (req, res, next) {
         if (data.success) {
             let updatedDates = data.event.date;
             let updatedParticipants = data.event.participants;
+            let updatedCreator = data.event.creator;
             // remove dates from dates array
             indexesToDelete.map(index => {
                 updatedDates.splice(index, 1);
             });
             // remove dates from every dates Array of every participant
-            updatedParticipants.map(participant =>{
+            updatedParticipants.map(participant => {
                 indexesToDelete.map(index => {
                     participant.dates.splice(index, 1);
                 });
             });
+            // remove dates from the dates Array of the creator
+            indexesToDelete.map(index => {
+                updatedCreator.dates.splice(index, 1);
+            });
+
             let criteria = { uuid: data.event.uuid };
-            let update = { date: updatedDates, participants: updatedParticipants };
+            let update = { date: updatedDates, participants: updatedParticipants, creator: updatedCreator };
             updateItem(criteria, update).then(data => {
                 // updateItem().then();
                 responseBuilder.setMessage("Date(s) successfully removed");
@@ -213,53 +227,53 @@ updateItem = function (criteria, update) {
     });
 }
 
-addDatesToParticipant = function(req, res, next){
+addDatesToParticipant = function (req, res, next) {
     let responseBuilder = new ResponseBuilder();
     let participantId = req.body.participantId;
     let dateIndexToAdd = req.body.dateIndexToAdd;
     let adminUUID = req.params.adminUUID;
     let shouldAdd = true;
-    addRemoveDatesParticipant(adminUUID, participantId, dateIndexToAdd, shouldAdd).then(()=>{
+    addRemoveDatesParticipant(adminUUID, participantId, dateIndexToAdd, shouldAdd).then(() => {
         responseBuilder.setMessage("Dates successfully added");
         responseBuilder.setSuccess(true);
         res.send(responseBuilder.getResponse());
-    }).catch(err=>{
+    }).catch(err => {
         responseBuilder.setMessage(err.toString());
         responseBuilder.setSuccess(false);
         res.send(responseBuilder.getResponse());
     });
 }
 
-removeDatesFromParticipant = function(req, res, next){
+removeDatesFromParticipant = function (req, res, next) {
     let responseBuilder = new ResponseBuilder();
     let participantId = req.body.participantId;
     let dateIndexToRemove = req.body.dateIndexToRemove;
     let adminUUID = req.params.adminUUID;
     let shouldAdd = false;
-    addRemoveDatesParticipant(adminUUID, participantId, dateIndexToRemove, shouldAdd).then(()=>{
+    addRemoveDatesParticipant(adminUUID, participantId, dateIndexToRemove, shouldAdd).then(() => {
         responseBuilder.setMessage("Dates successfully removed");
         responseBuilder.setSuccess(true);
         res.send(responseBuilder.getResponse());
-    }).catch(err=>{
+    }).catch(err => {
         responseBuilder.setMessage(err.toString());
         responseBuilder.setSuccess(false);
         res.send(responseBuilder.getResponse());
     });
 }
 
-addRemoveDatesParticipant = function(adminUUID, participantId, indexArray, shouldAdd){
-    return new Promise((resolve, reject)=>{
+addRemoveDatesParticipant = function (adminUUID, participantId, indexArray, shouldAdd) {
+    return new Promise((resolve, reject) => {
         getDoodleEventByCreatorUUID(adminUUID, data => {
             let participantsUpdated = data.event.participants;
             let uuid = data.event.uuid;
-            participantsUpdated.map(participant =>{
-                if(participant.id == participantId){
-                    indexArray.map(index =>{
+            participantsUpdated.map(participant => {
+                if (participant.id == participantId) {
+                    indexArray.map(index => {
                         participant.dates[index] = shouldAdd;
                     });
-                    updateParticipantsWithUUID(uuid, participantsUpdated).then(()=>{
+                    updateParticipantsWithUUID(uuid, participantsUpdated).then(() => {
                         resolve();
-                    }).catch(err =>{
+                    }).catch(err => {
                         reject(err);
                     });
                 }
@@ -268,19 +282,79 @@ addRemoveDatesParticipant = function(adminUUID, participantId, indexArray, shoul
     });
 }
 
-updateParticipantsWithUUID = function(uuid, participantsUpdated){
-    return new Promise((resolve, reject)=>{
-        let criteria = {uuid: uuid};
-        let update = {participants: participantsUpdated};
-        updateItem(criteria, update).then(()=>{
+updateParticipantsWithUUID = function (uuid, participantsUpdated) {
+    return new Promise((resolve, reject) => {
+        let criteria = { uuid: uuid };
+        let update = { participants: participantsUpdated };
+        updateItem(criteria, update).then(() => {
             resolve();
-        }).catch(err =>{
+        }).catch(err => {
             reject(err);
         });
     });
-    
+
 }
 
+updateCreatorWithUUID = function (uuid, creatorUpdated) {
+    return new Promise((resolve, reject) => {
+        let criteria = { uuid: uuid };
+        let update = { creator: creatorUpdated };
+        updateItem(criteria, update).then(() => {
+            resolve();
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+addRemoveDatesCreator = function (adminUUID, indexArray, shouldAdd) {
+    return new Promise((resolve, reject) => {
+        getDoodleEventByCreatorUUID(adminUUID, data => {
+            let creatorUpdated = data.event.creator;
+            let uuid = data.event.uuid;
+            indexArray.map(index => {
+                creatorUpdated.dates[index] = shouldAdd;
+            });
+            updateCreatorWithUUID(uuid, creatorUpdated).then(() => {
+                resolve();
+            }).catch(err => {
+                reject(err);
+            });
+        });
+    });
+}
+
+addDatesToCreator = function (req, res, next) {
+    let responseBuilder = new ResponseBuilder();
+    let dateIndexToAdd = req.body.dateIndexToAdd;
+    let adminUUID = req.params.adminUUID;
+    let shouldAdd = true;
+    addRemoveDatesCreator(adminUUID, dateIndexToAdd, shouldAdd).then(() => {
+        responseBuilder.setMessage("Dates successfully added to creator");
+        responseBuilder.setSuccess(true);
+        res.send(responseBuilder.getResponse());
+    }).catch(err => {
+        responseBuilder.setMessage(err.toString());
+        responseBuilder.setSuccess(false);
+        res.send(responseBuilder.getResponse());
+    });
+}
+
+removeDatesFromCreator = function (req, res, next) {
+    let responseBuilder = new ResponseBuilder();
+    let dateIndexToRemove = req.body.dateIndexToRemove;
+    let adminUUID = req.params.adminUUID;
+    let shouldAdd = false;
+    addRemoveDatesCreator(adminUUID, dateIndexToRemove, shouldAdd).then(() => {
+        responseBuilder.setMessage("Dates successfully removed from creator");
+        responseBuilder.setSuccess(true);
+        res.send(responseBuilder.getResponse());
+    }).catch(err => {
+        responseBuilder.setMessage(err.toString());
+        responseBuilder.setSuccess(false);
+        res.send(responseBuilder.getResponse());
+    });
+}
 
 
 
@@ -294,4 +368,6 @@ module.exports = {
     removeDatesOfEvent: removeDatesOfEvent,
     addDatesToParticipant: addDatesToParticipant,
     removeDatesFromParticipant: removeDatesFromParticipant,
+    removeDatesFromCreator: removeDatesFromCreator,
+    addDatesToCreator: addDatesToCreator,
 }
