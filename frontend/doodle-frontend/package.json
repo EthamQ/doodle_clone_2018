@@ -27,6 +27,7 @@
     "angular-font-awesome": "^3.1.2",
     "angular2-moment": "^1.9.0",
     "bootstrap": "^4.1.1",
+    "clipboard": "^2.0.1",
     "core-js": "^2.5.4",
     "date-fns": "^1.29.0",
     "email-validator": "^2.0.4",
