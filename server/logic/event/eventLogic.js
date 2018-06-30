@@ -31,7 +31,6 @@ prepareNewDoodleEvent = function (req, res, next) {
  */
 getDoodleEventByUUID = function (uuidEvent, callback) {
     mongodb.getItemById(dbInfo.dbName, dbInfo.collectionName, uuidEvent).then(data => {
-        console.log(data);
         if (data.data != null) {
             callback({ event: data.data, success: true });
         }
@@ -50,15 +49,12 @@ getDoodleEventByUUID = function (uuidEvent, callback) {
  * on failure: returns { event: null, uuidEvent: null, success: false } in a callback
  */
 getDoodleEventByCreatorUUID = function (uuidCreator, callback) {
-    console.log("inside getDoodleEventByCreatorUUID");
     mongodb.getAllItems(dbInfo.dbName, dbInfo.collectionName).then(data => {
         let arrayAllEvents = data.data;
         // console.log(data.data[0].creator);
         if (arrayAllEvents.length != 0) {
             // look for creator uuid in event
             for (let i = 0; i < arrayAllEvents.length; i++) {
-                console.log(arrayAllEvents[i].creator.adminUUID);
-                console.log(uuidCreator);
                 if (arrayAllEvents[i].creator.adminUUID == uuidCreator) {
                     callback({ event: arrayAllEvents[i], uuidEvent: arrayAllEvents[i].uuid, success: true });
                     break;

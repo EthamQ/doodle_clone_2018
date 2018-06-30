@@ -11,6 +11,12 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+/* GET home page. */
+router.get('/example', function(req, res, next) {
+  console.log("hello world!");
+  res.send({a:"hello world!"});
+});
+
 // ########################################################
 // event routes
 // ########################################################
