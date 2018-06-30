@@ -1,15 +1,15 @@
-var express = require('express');
-var router = express.Router();
-var dbUtils = require('./../MongoDB/dbUtils');
-var eventLogic = require('./../logic/doodleEventLogic.js');
-var dateLogic = require('./../logic/dateLogic');
-var participantLogic = require('./../logic/participantLogic');
+const express = require('express');
+const router = express.Router();
+const dbUtils = require('./../MongoDB/dbUtils');
+const eventRouteLogic = require('./../logic/event/eventRouteLogic.js');
+const dateRouteLogic = require('./../logic/date/dateRouteLogic');
+const participantRouteLogic = require('./../logic/participant/participantRouteLogic');
+const creatorLogic = require('./../logic/creator/creatorRouteLogic');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
-
 
 // ########################################################
 // event routes
@@ -17,22 +17,22 @@ router.get('/', function(req, res, next) {
 /**
  * create a new event
  */
-router.post('/event/new', eventLogic.saveNewDoodleEvent);
+router.post('/event/new', eventRouteLogic.saveNewDoodleEvent);
 
 /**
  * delete an event if you are the creator
  */
-router.post('/event/delete/:creatorUUID', eventLogic.deleteEvent);
+router.post('/event/delete/:creatorUUID', eventRouteLogic.deleteEvent);
 
 /**
  * get an event by its uuid or the creator uuid
  */
-router.get('/event/:uuid', eventLogic.sendEventDataToClient);
+router.get('/event/:uuid', eventRouteLogic.getDoodleEventDataByUUID);
 
 /**
  * update title, description, eventType, location of an event
  */
-router.post('/event/update/:creatorUUID', eventLogic.updateDoodleEvent);
+router.post('/event/update/:creatorUUID', eventRouteLogic.updateDoodleEvent);
 
 
 // ########################################################
@@ -41,8 +41,22 @@ router.post('/event/update/:creatorUUID', eventLogic.updateDoodleEvent);
 /**
  * add one participant to an event with this uuid
  */
-router.post('/participant/:uuid', participantLogic.addParticipantToEvent);
+router.post('/participant/:uuid', participantRouteLogic.addParticipantToEvent);
 
+/**
+ * delete a participator of an event
+ */
+router.post('/participant/remove/:adminUUID', participantRouteLogic.removeParticipants);
+
+/**
+ * add dates to a participant
+ */
+router.post('/date/participant/add/:adminUUID', participantRouteLogic.addDatesToParticipant);
+
+/**
+ * remove dates from a participant
+ */
+router.post('/date/participant/remove/:adminUUID', participantRouteLogic.removeDatesFromParticipant);
 
 // ########################################################
 // date routes
@@ -50,40 +64,24 @@ router.post('/participant/:uuid', participantLogic.addParticipantToEvent);
 /**
  * add dates to an event if you are the creator
  */
-router.post('/date/add/:creatorUUID', dateLogic.addDatesToExistingEvent);
-
-/**
- * update dates of an event if you are the creator
- */
-router.post('/date/update/:creatorUUID', dateLogic.updateExistingDate);
+router.post('/date/add/:adminUUID', dateRouteLogic.addDatesToEvent);
 
 /**
  * delete dates of an event if you are the creator
  */
-router.post('/date/delete/:creatorUUID', dateLogic.deleteDatesFromEvent);
+router.post('/date/delete/:adminUUID', dateRouteLogic.removeDatesOfEvent);
 
+// ########################################################
+// creator routes
+// ########################################################
 /**
- * add a date to a participant
+ * remove dates from the creator
  */
-router.post('/date/participant/add', dateLogic.addDateToParticipant);
+router.post('creator/date/remove/:adminUUID', creatorLogic.removeDatesFromCreator);
 
-/**
- * remove a date from a participant
+ /**
+ * add dates to the creator
  */
-router.post('/date/participant/remove', dateLogic.removeDateFromParticipant);
-
-
-
-
-// TODO
-/**
- * delete a participator of an event
- */
-router.post('/participant/delete/:eventUUID');
-
-
-
-// TEST
-
+router.post('creator/date/add/:adminUUID', creatorLogic.addDatesToCreator);
 
 module.exports = router;

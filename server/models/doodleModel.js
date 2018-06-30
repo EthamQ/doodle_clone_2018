@@ -1,5 +1,6 @@
 var fillModel = require('./fillModels.js');
 let dbUtils = require('./../MongoDB/dbUtils');
+const uuid = require('uuid/v4');
 
 module.exports = class Model {
     constructor(model, allowedKeys, requiredKeys, dbInfo) {
@@ -28,6 +29,9 @@ module.exports = class Model {
     // implement if child models exist
     setThisAndChildModels(object) { }
 
+    /**
+     * returns false is a value from this.requiredKey is empty
+     */
     modelIsValid(){
         for(let key in this.model){
             if(this.requiredKeys.indexOf(key) != -1 && this.isEmpty(this.model[key])){
@@ -48,13 +52,13 @@ module.exports = class Model {
                 resolve(data);   
             }).catch(err =>{
                 console.log(err);
+                reject(err);
             });
         });
     }
 
-    setId(id, callback){
-        this.model._id = id;
-        callback();
+    setId(id){
+        this.model.id = uuid();
     }
 
    

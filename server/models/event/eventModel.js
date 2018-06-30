@@ -1,10 +1,13 @@
-const fillModel = require('./../fillModels.js');
+// Models
 const ModelClass = require('./../doodleModel');
-const uuid = require('uuid/v4');
-const DateModel = require('./../date/doodleDateModel');
-const ParticipantModel = require('./../participant/doodleParticipantModel');
-const constructorArgs = require('./doodleEventModelValues');
+const DateModel = require('./../date/dateModel');
+const ParticipantModel = require('./../participant/participantModel');
+const CreatorModel = require('./../creator/creatorModel');
+// Constructor
+const constructorArgs = require('./eventModelValues');
 const dbUtils = require('./../../MongoDB/dbUtils');
+// For extra values
+const uuid = require('uuid/v4');
 
 module.exports = class doodleEventModel extends ModelClass {
 
@@ -15,15 +18,14 @@ module.exports = class doodleEventModel extends ModelClass {
             constructorArgs.requiredKeys,
             constructorArgs.dbInfo
         );
-
         this.datesAreValid = true;
     }
 
-    // if property is model use setModelProperty of the corresponding model class to assign values
+    // assign values to the properties of this models that are models themselves
     setChildModelProperties(event, callback) {
         for (let key in event) {
             if (key == 'date') {
-                this.saveDatesInDB(event[key], () =>{
+                this.addDatesToModel(event[key], () =>{
                     // make sure it is finished
                 });
             }
@@ -61,40 +63,43 @@ module.exports = class doodleEventModel extends ModelClass {
     }
 
     setTimestamp() {
-        this.model.timestamp = new Date();
+        this.model.timestamp = new Date().getTime();
     }
 
     /**
-     * 
+     * create a DateModel() for every date in dateArray and save 
+     * it in the database
      * @param dateArray array of dates sent by the client
      * 
-     * @param callback function that returns an array of date objects
-     * that should all be saved in the date collection in the database
+     * @param callback
      */
-    saveDatesInDB(dateArray, callback) {
+    addDatesToModel(dateArray, callback) {
         dateArray.map(date => {
-            let newDateId = uuid();
             let dateModel = new DateModel();
             dateModel.setModelProperty(date, ()=>{
-                dateModel.setId(newDateId, ()=>{
-                    dateModel.setUUID(this.model.uuid, ()=>{
-                        dateModel.saveModelInDatabase();
-                    });
-                });
+                this.model.date.push(dateModel.getModel());
+                // check if date is valid
+                if(this.datesAreValid){
+                    this.datesAreValid = dateModel.modelIsValid();
+                }
             });
-            this.model.date.push({ date_id: newDateId });
         });
         callback();
     }
 
-    // add one participant with isCreator: true to this model
     returnCreatorObject(creatorFromRequest, callback) {
-        let creator = {
-            name: creatorFromRequest.name,
-            email: creatorFromRequest.email,
-            creatorEventUUID: uuid()
-        }
-        callback(creator);
+        let creatorModel = new CreatorModel();
+        creatorModel.setAdminUUID();
+        creatorModel.setModelProperty(creatorFromRequest, ()=>{
+            callback(creatorModel.getModel());
+        });
+        // let creator = {
+        //     name: creatorFromRequest.name,
+        //     email: creatorFromRequest.email,
+        //     dates: creatorFromRequest.dates,
+        //     adminUUID: uuid(),
+        // }
+        
     }
 }
 
