@@ -1,19 +1,39 @@
-
-<header class="landing-header">
-
-  <div class="container-fluid">
-    <div class="row-fluid text-center">
-      <h1 style="font-family: Streetbrush; color: cadetblue; font-size: 200%">LOODLE</h1>
-      <div class="centering">
-        <div class="col-4 centering">
-
-          <button mat-raised-button style="background-color: cadetblue; color: white">
-            <mat-icon aria-label="Example icon-button with a heart icon">create</mat-icon>
-            create event
-          </button>
-        </div>
-
+<div class="outer-div">
+  <div class="title">
+    LOODLE
+  </div>
+  <div class="grid-container">
+    <div class="grid-item" [routerLink]="['create']">
+      <div class="module">
+        <h1>Create</h1>
+        <i class="material-icons">
+          fiber_new
+        </i>
+      </div>
+    </div>
+    <div class="grid-item"[routerLink]="['join']">
+      <div class="module">
+        <h1>Join</h1>
+        <i class="material-icons">
+          fiber_new
+        </i>
+      </div>
+    </div>
+    <div class="grid-item" [routerLink]="['admin']">
+      <div class="module">
+        <h1>Edit</h1>
+        <i class="material-icons">
+          fiber_new
+        </i>
+      </div>
+    </div>
+    <div class="grid-item" [routerLink]="['view']">
+      <div class="module">
+        <h1>View</h1>
+        <i class="material-icons">
+          fiber_new
+        </i>
       </div>
     </div>
   </div>
-</header>
+</div>

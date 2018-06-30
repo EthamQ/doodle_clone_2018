@@ -1,3 +1,21 @@
-<p>
-  create-summary works!
-</p>
+<div class="background">
+  <button type="button" class="close" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <div class="outerdiv">
+    <div class="input-group mb-3">
+      <input id="admin" type="text" class="form-control" [value]='adminid'>
+
+      <button (click)="copyMessage(adminid)" >Copy this</button>
+
+    </div>
+    <div class="input-group mb-3">
+      <input id="event" type="text" class="form-control" [value]='eventid'>
+
+      <button (click)="copyMessage(eventid)" >Copy this</button>
+
+    </div>
+  </div>
+
+</div>
+

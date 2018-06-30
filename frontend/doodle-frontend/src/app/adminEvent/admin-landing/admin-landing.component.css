@@ -1,0 +1,31 @@
+.outerdiv {
+  margin:0 auto;
+  width: 100vw;
+  height: 100vh;
+  padding: 20%;
+}
+
+.background{
+  width: 100vw;
+  height: 100vh;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url("./../../../assets/images/background.jpg");
+}
+
+.close {
+  color: #fff;
+  float: right;
+  padding: 12px
+
+}
+
+.header{
+  color: whitesmoke;
+  padding-bottom: 3%;
+  padding-left: 5px;
+}
+
+.button{
+  padding-top: 10px;
+}

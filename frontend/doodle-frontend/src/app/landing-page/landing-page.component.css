@@ -1,24 +1,38 @@
-.landing-header{
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+.grid-item {
+  text-align: center;
+}
+
+
+.outer-div{
   height: 100vh;
+  width: 100vw;
+  background-color: darkred;
+  float: none;
+  padding-left: 10%;
+  padding-right: 10%;
+  padding-bottom: 8%;
+  padding-top: 8%;
+}
+.title{
+  text-align: center;
+  padding-bottom: 10px;
+  color: white;
+  font-size: x-large;
+
+}
+.module:hover{
+  background-color: whitesmoke;
+}
+.module{
+  color: #515151;
+  padding: 10%;
   width: 100%;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-image: url('./../../assets/images/landing-background.jpg');
+  height: 100%;
+  background-color: white;
 }
-
-.container-fluid{
-  height:100%;
-  display:table;
-  width: 100%;
-  padding: 0;
-}
-
-.row-fluid {height: 100%; display:table-cell; vertical-align: middle;}
-
-
-
-.centering {
-  float:none;
-  margin:0 auto;
-}
-

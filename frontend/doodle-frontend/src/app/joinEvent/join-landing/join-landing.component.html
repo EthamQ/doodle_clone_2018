@@ -1,3 +1,18 @@
-<p>
-  join-landing works!
-</p>
+<div class="background">
+  <button type="button" class="close" aria-label="Close">
+   <span [routerLink]="['']" aria-hidden="true">&times;</span>
+  </button>
+  <div class="outerdiv">
+    <h2 class="header">Event ID</h2>
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" placeholder="Please enter your ID." aria-label="Please enter your ID." aria-describedby="basic-addon2">
+      <div class="input-group-append">
+        <button class="btn btn-primary" type="button">Send</button>
+      </div>
+    </div>
+  </div>
+  <div class="outerdiv" *ngIf="true">
+    <app-join-calendar></app-join-calendar>
+  </div>
+
+</div>
