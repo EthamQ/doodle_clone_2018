@@ -99,7 +99,7 @@ import { JoinCalendarComponent } from './joinEvent/join-calendar/join-calendar.c
     MatToolbarModule,
     MatTooltipModule,
   ],
-  declarations: [AdminLandingComponent, AdminEditComponent, CreatePersonalComponent, CreateCalendarComponent, CreateSummaryComponent, JoinLandingComponent, JoinCalendarComponent],
+  declarations: [],
   imports: []
 })
 export class MaterialModule {}
@@ -112,7 +112,14 @@ export class MaterialModule {}
     PersonalInformationComponent,
     LandingPageComponent,
     JoinPageComponent,
+    CreateSummaryComponent,
+    JoinLandingComponent,
+    JoinCalendarComponent,
     FinishPageComponent,
+    AdminLandingComponent,
+    AdminEditComponent,
+    CreatePersonalComponent,
+    CreateCalendarComponent,
     AppComponent
   ],
   imports: [
