@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
+import {JoinService} from '../../services/join.service';
 
 @Component({
   selector: 'app-join-calendar',
@@ -7,7 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class JoinCalendarComponent implements OnInit {
 
-  constructor() { }
+  joinService: JoinService;
+  constructor(@Inject(JoinService) joinService: JoinService) {
+    this.joinService = joinService;
+  }
 
   ngOnInit() {
   }

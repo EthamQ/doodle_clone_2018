@@ -1,3 +1,46 @@
-<p>
-  join-calendar works!
-</p>
+<!-- Editable table -->
+<div class="card">
+  <div class="card-body">
+    <div id="table" class="table">
+      <table class="table table-bordered table-responsive-md text-center">
+        <tr>
+          <th class="text-center"></th>
+          <th class="text-center" *ngFor="let element of joinService.event.dates">
+            <div class="d-dateGroup">
+              <div class="d-month">{{element.timeFrom}}</div>
+              <div class="d-date">{{element.timeTo}}</div>
+              <div class="d-day">{{element.timeFrom}}</div>
+            </div>
+          </th>
+        </tr>
+        <tr>
+          <td class="pt-3-half" contenteditable="false">
+            <div class="participantCountHeader">{{joinService.event.participants.length}} Teilnehmer</div>
+          </td>
+          <td class="pt-3-half" contenteditable="false" *ngFor="let count of joinService.event.dates">
+            <div class="summary-participants">
+              <i class="material-icons">done</i>2
+            </div>
+          </td>
+        </tr>
+        <!-- This is our clonable table line -->
+        <tr>
+          <td class="pt-3-half" contenteditable="false">
+            <input type="name" class="form-control" id='name' [value]="joinService.joiner.name" (input)="joinService.joiner.name = $event.target.value">
+          </td>
+          <td class="pt-3-half" contenteditable="false" *ngFor="let num of joinService.joiner.selection"><mat-checkbox></mat-checkbox></td>
+
+
+
+        </tr>
+        <tr *ngFor="let participant of joinService.event.participants">
+          <td class="pt-3-half" contenteditable="false">{{participant.name}}</td>
+          <td class="pt-3-half" contenteditable="false" *ngFor="let selection of participant.selection; let i = index;">
+            <input type="checkbox" [(ngModel)]="participant.selection[i]" disabled/>
+          </td>
+        </tr>
+
+      </table>
+    </div>
+  </div>
+</div>
