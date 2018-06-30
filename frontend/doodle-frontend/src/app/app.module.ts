@@ -5,6 +5,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CalendarModule } from 'angular-calendar';
 import {ScrollDispatchModule} from '@angular/cdk/scrolling';
 import { MomentModule } from 'angular2-moment';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
+
+
 import {
   MatFormFieldModule,
   MatAutocompleteModule,
@@ -48,7 +51,7 @@ import {CommonModule} from "@angular/common";
 import { ResultComponent } from './createEvent/04-result/result.component';
 import {DateService} from "./services/date.service";
 import { PersonalInformationComponent } from './createEvent/02-personal-information/personal-information.component';
-import { LandingPageComponent } from './createEvent/01-landing-page/landing-page.component';
+import { LandingPageComponent } from './landing-page/landing-page.component';
 import { JoinPageComponent } from './joinEvent/01-join-page/join-page.component';
 import { FinishPageComponent } from './createEvent/05-finish-page/finish-page.component';
 import { AppRoutingModule } from './/app-routing.module';
@@ -62,6 +65,7 @@ import { CreateCalendarComponent } from './createEvent/create-calendar/create-ca
 import { CreateSummaryComponent } from './createEvent/create-summary/create-summary.component';
 import { JoinLandingComponent } from './joinEvent/join-landing/join-landing.component';
 import { JoinCalendarComponent } from './joinEvent/join-calendar/join-calendar.component';
+import { CreateLandingComponent } from './createEvent/create-landing/create-landing.component';
 
 @NgModule({
   exports: [
@@ -118,6 +122,7 @@ export class MaterialModule {}
     FinishPageComponent,
     AdminLandingComponent,
     AdminEditComponent,
+    CreateLandingComponent,
     CreatePersonalComponent,
     CreateCalendarComponent,
     AppComponent
@@ -134,6 +139,7 @@ export class MaterialModule {}
     MaterialModule,
     MatNativeDateModule,
     ReactiveFormsModule,
+    AngularFontAwesomeModule,
     NgbModule.forRoot()
   ],
   providers: [DateService, CreateService, JoinService],
