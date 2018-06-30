@@ -55,6 +55,13 @@ import { AppRoutingModule } from './/app-routing.module';
 import {RouterModule} from "@angular/router";
 import {CreateService} from "./services/create.service";
 import {JoinService} from "./services/join.service";
+import { AdminLandingComponent } from './adminEvent/admin-landing/admin-landing.component';
+import { AdminEditComponent } from './adminEvent/admin-edit/admin-edit.component';
+import { CreatePersonalComponent } from './createEvent/create-personal/create-personal.component';
+import { CreateCalendarComponent } from './createEvent/create-calendar/create-calendar.component';
+import { CreateSummaryComponent } from './createEvent/create-summary/create-summary.component';
+import { JoinLandingComponent } from './joinEvent/join-landing/join-landing.component';
+import { JoinCalendarComponent } from './joinEvent/join-calendar/join-calendar.component';
 
 @NgModule({
   exports: [
@@ -92,7 +99,7 @@ import {JoinService} from "./services/join.service";
     MatToolbarModule,
     MatTooltipModule,
   ],
-  declarations: [],
+  declarations: [AdminLandingComponent, AdminEditComponent, CreatePersonalComponent, CreateCalendarComponent, CreateSummaryComponent, JoinLandingComponent, JoinCalendarComponent],
   imports: []
 })
 export class MaterialModule {}

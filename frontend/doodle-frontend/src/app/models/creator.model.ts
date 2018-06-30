@@ -1,12 +1,16 @@
 export class CreatorModel{
   name: string;
   email: string;
-  title: string;
-  description: string;
-  constructor() {
-    this.title = '';
-    this.description = '';
-    this.name = '';
-    this.email = '';
+  selection: boolean[];
+  constructor(name: string, mail:string) {
+    this.name = name;
+    this.email = mail;
+  }
+  setDefaultSelection(numDates){
+    let i = 0;
+    while(i > numDates){
+      this.selection.push(false);
+      i = i+1;
+    }
   }
 }
