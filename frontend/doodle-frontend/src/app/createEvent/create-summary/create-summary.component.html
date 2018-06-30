@@ -4,10 +4,16 @@
   </button>
   <div class="outerdiv">
     <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="Please enter your ID." aria-label="Please enter your ID." aria-describedby="basic-addon2">
-      <div class="input-group-append">
-        <button class="btn btn-primary" type="button">Send</button>
-      </div>
+      <input id="admin" type="text" class="form-control" [value]='adminid'>
+
+      <button (click)="copyMessage(adminid)" >Copy this</button>
+
+    </div>
+    <div class="input-group mb-3">
+      <input id="event" type="text" class="form-control" [value]='eventid'>
+
+      <button (click)="copyMessage(eventid)" >Copy this</button>
+
     </div>
   </div>
 
