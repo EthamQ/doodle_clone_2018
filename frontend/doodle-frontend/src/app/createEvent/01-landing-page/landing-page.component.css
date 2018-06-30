@@ -1,16 +1,15 @@
 .card-viewer{
-
   position: absolute;
   width: auto;
   z-index: 15;
   top: 40%;
-  left: 40%;
   padding: 5px;
   margin-left: auto;
   margin-right: auto;
   border: 1px solid rgba(0,0,0,.03);
   box-shadow: 0 2px 2px rgba(255,255,255,.24), 0 0 2px rgba(255,255,255,.12);
   background-color: #fafafa;
+  border-radius: 11px;
 }
 .card-viewer-header{
   min-height: 50px;
