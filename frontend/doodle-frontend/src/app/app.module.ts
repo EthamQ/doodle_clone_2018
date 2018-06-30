@@ -66,6 +66,8 @@ import { CreateSummaryComponent } from './createEvent/create-summary/create-summ
 import { JoinLandingComponent } from './joinEvent/join-landing/join-landing.component';
 import { JoinCalendarComponent } from './joinEvent/join-calendar/join-calendar.component';
 import { CreateLandingComponent } from './createEvent/create-landing/create-landing.component';
+import { ViewLandingComponent } from './viewEvent/view-landing/view-landing.component';
+import { ViewSummaryComponent } from './viewEvent/view-summary/view-summary.component';
 
 @NgModule({
   exports: [
@@ -123,6 +125,8 @@ export class MaterialModule {}
     AdminLandingComponent,
     AdminEditComponent,
     CreateLandingComponent,
+    ViewLandingComponent,
+    ViewSummaryComponent,
     CreatePersonalComponent,
     CreateCalendarComponent,
     AppComponent

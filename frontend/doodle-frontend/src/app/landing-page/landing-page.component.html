@@ -3,15 +3,7 @@
     LOODLE
   </div>
   <div class="grid-container">
-    <div class="grid-item">
-      <div class="module" (click)="routerLink=['/new']">
-        <h1>New</h1>
-        <i class="material-icons">
-          fiber_new
-        </i>
-      </div>
-    </div>
-    <div class="grid-item">
+    <div class="grid-item" [routerLink]="['create']">
       <div class="module">
         <h1>Create</h1>
         <i class="material-icons">
@@ -19,7 +11,15 @@
         </i>
       </div>
     </div>
-    <div class="grid-item">
+    <div class="grid-item"[routerLink]="['join']">
+      <div class="module">
+        <h1>Join</h1>
+        <i class="material-icons">
+          fiber_new
+        </i>
+      </div>
+    </div>
+    <div class="grid-item" [routerLink]="['admin']">
       <div class="module">
         <h1>Edit</h1>
         <i class="material-icons">
@@ -27,7 +27,7 @@
         </i>
       </div>
     </div>
-    <div class="grid-item">
+    <div class="grid-item" [routerLink]="['view']">
       <div class="module">
         <h1>View</h1>
         <i class="material-icons">
