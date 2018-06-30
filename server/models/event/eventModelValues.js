@@ -2,16 +2,16 @@ const dbUtils = require('./../../MongoDB/dbUtils');
 
 exports.getNewModel = function(){
     let model = {
-        _id: null,
-        title: null,
-        description: null,
+        _id: "",
+        title: "",
+        description: "",
         isActive: true,
-        eventType: null,
-        location: null,
+        eventType: "",
+        location: "",
         creator: null,
         participants: [], //instanceof participantModel()
         date: [], //instanceof dateModel()
-        uuid: null,
+        uuid: "",
         url: 'http://doodleEvent/',
         timestamp: null,
     };
@@ -19,6 +19,7 @@ exports.getNewModel = function(){
 }
 
 // all keys the user is allowed to set directly with a request
+// with the fillModelProperty function
 exports.allowedKeys = [
     'title',
     'description',

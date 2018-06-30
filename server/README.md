@@ -1,31 +1,31 @@
 Routes and how to use them:
-##############################################
 
+##############################################
 Overview:
-1. Creating a new loodle event WORKED
+1. Creating a new loodle event
 router.post('/event/new', logic.createNewDoodleEvent);
-2. Add a participant to an event: WORKED
+2. Add a participant to an event:
 router.post('/participant/:uuid', logic.addParticipantToEvent);
-3. Add a date from an event to a participant: WORKED
+3. Add a date from an event to a participant:
 router.post('/date/participant/add/:adminUUID', dateLogic.addDatesToParticipant);
-4. Get a doodle event by its uuid WORKED
+4. Get a doodle event by its uuid
 router.get('/event/:uuid', logic.getDoodleEventByUUID);
-5. Update title, description, eventType, location of an event if you are the creator of an event WORKED
+5. Update title, description, eventType, location of an event if you are the creator of an event
 router.post('/event/update/:adminUUID', logic.updateDoodleEvent);
-7. Add dates to an event if you are the creator WORKED
-router.post('/date/add/:adminUUID', dateLogic.addDatesToEvent);
-8. Delete dates of an event if you are the creator UPDATED
-router.post('/date/delete/:adminUUID', dateLogic.removeDatesOfEvent);
-9. delete an event if you are the creator WORKED
-router.post('/event/delete/:creatorUUID', logic.deleteEvent);
-10. Remove a date from a participant: WORKED
-router.post('/date/participant/remove/:adminUUID', dateLogic.removeDatesFromParticipant);
-11. Delete a participator of an event WORKS
+6. Delete a participator of an event
 router.post('/participant/remove/:adminUUID', participantLogic.removeParticipants);
+7. Add dates to an event if you are the creator
+router.post('/date/add/:adminUUID', dateLogic.addDatesToEvent);
+8. Delete dates of an event if you are the creator
+router.post('/date/delete/:adminUUID', dateLogic.removeDatesOfEvent);
+9. delete an event if you are the creator
+router.post('/event/delete/:creatorUUID', logic.deleteEvent);
+10. Remove a date from a participant:
+router.post('/date/participant/remove/:adminUUID', dateLogic.removeDatesFromParticipant);
+11. Remove dates from the creator
+router.post('creator/date/remove/:adminUUID', dateLogic.removeDatesFromCreator);
 12. Add dates to the creator
-router.post('/date/creator/add/:adminUUID', dateLogic.addDatesToCreator);
-13. Remove dates from the creator
-router.post('/date/creator/remove/:adminUUID', dateLogic.removeDatesFromCreator);
+router.post('creator/date/add/:adminUUID', dateLogic.addDatesToCreator);
 
 ##############################################
 1. Creating a new loodle event
@@ -151,7 +151,21 @@ Expected data in the post request:
     "eventType": string
 }
 
+##############################################
+6. Delete a participator of an event
+router.post('/participant/remove/:adminUUID', participantLogic.removeParticipants);
 
+Expected data in the url:
+/:adminUUID:
+the adminUuid of the event
+
+Expected data in the post request:
+A array of participant ids who should be removed
+{
+  "participantIdArray" :[
+		string
+		]
+}
 ##############################################
 7. Add dates to an event if you are the creator
 router.post('/date/add/:adminUUID', dateLogic.addDatesToEvent);
@@ -218,24 +232,26 @@ the uuid of the creator, so only he can update those values
 }
 
 ##############################################
-11. Delete a participator of an event
-router.post('/participant/remove/:adminUUID', participantLogic.removeParticipants);
+11. Remove dates from the creator
+router.post('creator/date/remove/:adminUUID', dateLogic.removeDatesFromCreator);
+
+Expected data about the date and participant in the post request,
+send all the indexes of the dates you want to set to false in the dates array
+of the creator
 
 Expected data in the url:
 /:adminUUID:
-the adminUuid of the event
+the uuid of the creator, so only he can update those values
 
-Expected data in the post request:
-A array of participant ids who should be removed
 {
-  "participantIdArray" :[
-		string
-		]
+    "dateIndexToRemove": [
+        number
+    ]
 }
 
 ##############################################
 12. Add dates to the creator
-router.post('/date/creator/add/:adminUUID', dateLogic.addDatesToCreator);
+router.post('creator/date/add/:adminUUID', dateLogic.addDatesToCreator);
 
 Expected data about the date and participant in the post request,
 send all the indexes of the dates you want to set to true in the dates array
@@ -252,24 +268,9 @@ the uuid of the creator, so only he can update those values
 }
 
 ##############################################
-13. Remove dates from the creator
-router.post('/date/creator/remove/:adminUUID', dateLogic.removeDatesFromCreator);
-
-Expected data about the date and participant in the post request,
-send all the indexes of the dates you want to set to false in the dates array
-of the creator
-
-Expected data in the url:
-/:adminUUID:
-the uuid of the creator, so only he can update those values
-
-{
-    "dateIndexToRemove": [
-        number
-    ]
-}
-
-
 ##############################################
+
+
+
 
 

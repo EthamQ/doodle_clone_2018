@@ -16,9 +16,12 @@ module.exports = class Participant extends ModelClass{
         callback();
     }
 
+    /**
+     * When adding a new participant his boolean arra of dates has to have
+     * have the same length like the existing date array
+     * @param {*} dateArray 
+     */
     participantDatesValid(dateArray){
        return this.model.dates.length === dateArray.length;
     }
-
-
 }
