@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
+import {CreateService} from '../../services/create.service';
 
 @Component({
   selector: 'app-create-summary',
@@ -6,12 +7,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./create-summary.component.css']
 })
 export class CreateSummaryComponent implements OnInit {
-adminid: string;
-  eventid: string;
 
-  constructor() {
-    this.adminid = 'admin';
-    this.eventid = 'event';
+  createService: CreateService;
+  constructor(@Inject(CreateService) createservice: CreateService) {
+    this.createService = createservice;
   }
 
   ngOnInit() {}
