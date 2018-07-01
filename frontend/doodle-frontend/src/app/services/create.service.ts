@@ -10,7 +10,7 @@ import * as moment from 'moment';
 @Injectable()
 
 export class CreateService {
-  postURL = 'localhost:3000/event/new';
+  postURL = 'http://10.150.133.137:3000/event/new';
   creator: CreatorModel;
   timeSelection: Array<TimeselectionModel> = [];
   event: EventModel;
