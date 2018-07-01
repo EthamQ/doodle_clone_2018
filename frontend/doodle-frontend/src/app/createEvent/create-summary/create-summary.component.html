@@ -4,16 +4,17 @@
   </button>
   <div class="outerdiv">
     <div class="input-group mb-3">
+      <h4 class="header"> Admin ID </h4>
       <input id="admin" type="text" class="form-control" [value]='adminid'>
-
-      <button (click)="copyMessage(adminid)" >Copy this</button>
-
+      <button (click)="copyMessage(adminid)" >Copy</button>
     </div>
+
     <div class="input-group mb-3">
+      <h4 class="header"> Event ID </h4>
       <input id="event" type="text" class="form-control" [value]='eventid'>
 
-      <button (click)="copyMessage(eventid)" >Copy this</button>
 
+      <button (click)="copyMessage(eventid)" >Copy</button>
     </div>
   </div>
 

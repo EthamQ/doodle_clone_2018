@@ -1,26 +1,26 @@
-export class DatesModel{
-  date: number;
-  timeFrom: number;
-  timeTo: number;
-  constructor(uDate: number, uTimeFrom: number, uTimeTo: number) {
-    this.date = uDate;
-    this.timeFrom = uTimeFrom;
-    this.timeTo = uTimeTo;
+import * as moment from 'moment';
+export class DatesModel {
+  year: string;
+  day: string;
+  stopTime: string;
+  startTime: string;
+  constructor(timeFrom, timeTo) {
+    moment.locale('en');
+    this.year = this.getYearMonth(timeFrom);
+    this.startTime = this.getStartTime(timeFrom);
+    this.stopTime = this.getStopTime(timeTo);
+    this.day = this.getWeekDay(timeFrom);
   }
-  getYear(){
-    const year = 2018;
-    return year;
+  getStartTime(timestamp) {
+    return moment.unix(timestamp).format('LT');
   }
-  getMonath(){
-    const monat = 'Januar';
-    return monat;
+  getStopTime(timestamp) {
+    return moment.unix(timestamp).format('LT');
   }
-  getWeekDay(){
-    const wochentag = 'Mi';
-    return wochentag;
+  getWeekDay(timestamp) {
+    return moment.unix(timestamp).format('dd');
   }
-  getDay(){
-    const tag = 12;
-    return tag;
+  getYearMonth(timestamp) {
+    return moment.unix(timestamp).format('ll');
   }
 }

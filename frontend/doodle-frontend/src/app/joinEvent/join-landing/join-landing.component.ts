@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
+import {CreateService} from '../../services/create.service';
+import {JoinService} from '../../services/join.service';
 
 @Component({
   selector: 'app-join-landing',
@@ -7,9 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class JoinLandingComponent implements OnInit {
 
-  constructor() { }
+  joinId: string;
+  joinService: JoinService;
+  constructor(@Inject(JoinService) joinService: JoinService) {
+    this.joinService = joinService;
+  }
+
 
   ngOnInit() {
+  }
+  sendToServer() {
+    this.joinService.loadData();
   }
 
 }

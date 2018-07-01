@@ -1,3 +1,71 @@
-<p>
-  join-calendar works!
-</p>
+<!-- Editable table -->
+<div class="card">
+  <div class="card-body">
+    <div id="table" class="table">
+      <table class="table table-bordered table-responsive-md text-center">
+        <tr>
+          <th class="text-center"></th>
+          <th class="text-center" *ngFor="let element of joinService.event.dates">
+            <div class="d-dateGroup">
+              <div class="d-month">{{element.year}}</div>
+              <div class="d-date">{{element.day}}</div>
+              <div class="d-day">{{element.startTime}} - {{element.stopTime}}</div>
+            </div>
+          </th>
+        </tr>
+        <tr>
+          <td class="pt-3-half" contenteditable="false">
+            <div class="participantCountHeader">{{joinService.event.participants.length + 1}} Participants</div>
+          </td>
+          <td class="pt-3-half" contenteditable="false" *ngFor="let count of joinService.votes">
+            <div class="summary-participants"><i class="material-icons">done</i>{{count}}</div>
+          </td>
+        </tr>
+        <!-- This is our clonable table line -->
+        <tr>
+          <td class="pt-3-half" contenteditable="false">
+            <input type="name" class="form-control" id='name' [value]="joinService.joiner.name" (input)="joinService.joiner.name = $event.target.value">
+          </td>
+          <ng-container *ngFor="let sel of joinService.joiner.selection; let i = index;">
+            <td class="pt-3-half" contenteditable="false">
+              <div class="custom-checker-green custom-click" *ngIf="sel === true"
+                   (click)="joinService.joiner.selection[i] = (!joinService.joiner.selection[i]); joinService.votes[i] = joinService.votes[i] - 1 ">
+                <i class="material-icons">
+                  check_box
+                </i>
+              </div>
+              <div class="custom-checker-red custom-click" *ngIf="sel === false"
+                   (click)="joinService.joiner.selection[i] = (!joinService.joiner.selection[i]); joinService.votes[i] = joinService.votes[i] + 1 ">
+                <i class="material-icons">
+                  indeterminate_check_box
+                </i>
+              </div>
+            </td>
+          </ng-container>
+
+
+
+
+        </tr>
+        <tr *ngFor="let participant of joinService.event.participants" style="background-color: whitesmoke">
+          <td class="pt-3-half" contenteditable="false">{{participant.name}}</td>
+          <td class="pt-3-half" contenteditable="false" *ngFor="let selection of participant.selection; let i = index;">
+            <div class="custom-checker-green" *ngIf="selection === true">
+              <i class="material-icons">
+                check_box
+              </i>
+            </div>
+            <div class="custom-checker-red" *ngIf="selection === false">
+              <i class="material-icons">
+                indeterminate_check_box
+              </i>
+            </div>
+          </td>
+        </tr>
+
+      </table>
+    </div>
+
+  </div>
+
+</div>
