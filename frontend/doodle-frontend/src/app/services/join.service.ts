@@ -8,9 +8,9 @@ import {HttpClient} from '@angular/common/http';
 import {ServerModel} from '../models/server.model';
 @Injectable()
 export class JoinService {
-  getURl = 'http://10.150.133.137:3000/event/';
+  getURl = 'http://localhost:3000/event/';
   UUID: string;
-  postURL = 'http://10.150.133.137:3000/participant/';
+  postURL = 'http://localhost:3000/participant/';
   votes = [];
   serverData: ServerModel;
   joiner = new ParticipantModel('Your Name');
