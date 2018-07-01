@@ -1,79 +1,155 @@
-let mongoose = require("mongoose");
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let server = require('./../app');
-let should = chai.should();
-var expect = chai.expect;
 
+// chai
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const server = require('./../app');
+const should = chai.should();
+const expect = chai.expect;
 chai.use(chaiHttp);
 
-// describe('/GET example', () => {
-//     it('it should get hello world!', (done) => {
-//       chai.request(server)
-//           .get('/example')
-//           .end((err, res) => {
-//               res.should.have.status(200);
-//               res.body.a.should.be.equal("hello world!");
-//             done();
-//           });
-//     });
-// });
+// Custom test data and functions
+const eventMock = require('./../testUtils/mockData/event');
+const partMock = require('./../testUtils/mockData/participant');
+const ValueTracker = require('./../testUtils/valueTracker');
+const helperFct = require('./../testUtils/helperFunctions/event');
+helperFct.initChai(chai, should, expect);
+let valueTracker = new ValueTracker();
 
-
-describe('/GET event/:uuid', () => {
-  let response;
-  let event;
-  it('should return an event with all properties', (done) => {
+// ############################################
+// Create event
+// ############################################
+console.log('============================================================');
+describe('Create a new event', () => {
+  it('should successfully return the object that was saved in the event collection', (done) => {
     chai.request(server)
-      .get('/event/1a050bf5-c920-4be5-b7e8-26158aca1e2c')
+      .post('/event/new')
+      .send(eventMock.newEvent)
       .end((err, res) => {
-        response = res;
-        // general
-        response.should.have.status(200);
-        res.body.should.be.a('object');
-        event = res.body.data[0];
-        
-        event.should.not.have.property('_id');
-        // boolean properties
-        // adminAccess
-        event.should.have.property('adminAccess');
-        event.adminAccess.should.be.a('boolean');
-        // isActive
-        event.should.have.property('isActive');
-        event.isActive.should.be.a('boolean');
-        
-        // string properties
-        // title
-        event.should.have.property('title');
-        let title = event.title;
-        title.should.be.a('string');
-        // location
-        event.should.have.property('location');
-        let location = event.location;
-        location.should.be.a('string');
-        // description
-        event.should.have.property('description');
-
-        event.should.have.property('eventType');
-        event.should.have.property('creator');
-        event.should.have.property('uuid');
-        event.should.have.property('url');
-        event.should.have.property('timestamp');
-        // array properties
-        // participants
-        event.should.have.property('participants');
-        event.participants.should.be.a('array');
-        event.should.have.property('date');
-        event.date.should.be.a('array');
-
-        // object properties
+        expect(res.body.success).to.be.true;
+        expect(res.body.messages[0]).to.be.equal('New doodle Event successfully created');
+        expect(res.body.data.length).to.be.greaterThan(0);
+        let event = res.body.data[0];
+        valueTracker.setUUID(event.uuid);
+        valueTracker.setAdminUUID(event.creator.adminUUID);
         done();
       });
   });
+});
 
-  it("should have the correct values for normal access", done=>{
-        expect(event.adminAccess).to.be.false;
-        event.creator.should.not.have.property('adminUUID');
+// ############################################
+// Get event normal
+// ############################################
+describe('Get an event with the event uuid', () => {
+  it('should successfully return an event with all properties', (done) => {
+    chai.request(server)
+      .get('/event/' + valueTracker.getUUID())
+      .end((err, res) => {
+        valueTracker.setEvent(res.body.data[0]);
+        checkSuccess(res, () => {
+          checkEventProperties(valueTracker.getEvent(), () => {
+            done();
+          })
+        });
+      });
+  });
+  it("should have the correct values for normal access", done => {
+    expect(valueTracker.getEvent().adminAccess).to.be.false;
+    valueTracker.getCreator().should.not.have.property('adminUUID');
     done();
   })
+});
+
+// ############################################
+// Get event admin
+// ############################################
+describe('Get an event with the admin uuid', () => {
+  it('should successfully return an event with all properties', (done) => {
+    chai.request(server)
+      .get('/event/' + valueTracker.getAdminUUID())
+      .end((err, res) => {
+        valueTracker.setAdminEvent(res.body.data[0]);
+        checkSuccess(res, () => {
+          checkEventProperties(valueTracker.getAdminEvent(), () => {
+            done();
+          })
+        });
+      });
+  });
+  it("should have the correct values for admin access", done => {
+    expect(valueTracker.getAdminEvent().adminAccess).to.be.true;
+    valueTracker.getAdminCreator().should.have.property('adminUUID');
+    done();
+  })
+});
+
+
+
+// ############################################
+// Add participant to event
+// ############################################
+let numberParticipants = 0;
+
+describe("Add one participant to an event", ()=>{
+  it("Event should have the participant", done=>{
+      chai.request(server)
+      .post('/participant/' + valueTracker.getUUID())
+      .send(partMock.newParticipant)
+      .end((err, res)=>{
+        checkSuccess(res, () => {
+          numberParticipants++;
+          GET_eventByUUID(server, valueTracker.getUUID(), response =>{
+            checkSuccess(res, () => {
+              let participants = response.body.data[0].participants;
+              let indexNewPart = numberParticipants - 1;
+              expect(participants.length).to.be.equal(numberParticipants);
+              compareParticipants(partMock.newParticipant, participants, indexNewPart, ()=>{
+                done();
+              }) 
+            });
+          });
+            
+        });
+      });
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ############################################
+// Delete event
+// ############################################
+describe('Delete an event', () => {
+  it('should successfully delete the event', (done) => {
+    chai.request(server)
+      .post('/event/delete/' + valueTracker.getAdminUUID())
+      .send({})
+      .end((err, res) => {
+        checkSuccess(res, () => {
+            done();
+        });
+      });
+  });
+  it('should not find the event anymore', done => {
+    chai.request(server)
+      .get('/event/' + valueTracker.getUUID())
+      .end((err, res) => {
+        expectFailure(res, ()=>{
+          done();
+        })
+      });
+  });
 });
