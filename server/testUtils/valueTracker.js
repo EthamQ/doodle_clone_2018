@@ -42,6 +42,12 @@ module.exports = class EventValueTracker{
     getAdminCreator(){
         return this.adminEvent.creator;
     }
+    setDate(date){
+        this.event.date = date;
+    }
+    getDate(){
+        return this.event.date;
+    }
    
     
 }
