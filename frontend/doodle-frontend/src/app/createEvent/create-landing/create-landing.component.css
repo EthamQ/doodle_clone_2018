@@ -1,0 +1,11 @@
+.navigation-container{
+  padding: 10px;
+}
+.navigation-item{
+  text-align: center;
+
+}
+.navigation-item-disabled{
+ text-align: center;
+  color: #888888;
+}

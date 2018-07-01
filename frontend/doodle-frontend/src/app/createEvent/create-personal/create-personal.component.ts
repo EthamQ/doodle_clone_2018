@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
+import {CreateService} from '../../services/create.service';
 
 @Component({
   selector: 'app-create-personal',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreatePersonalComponent implements OnInit {
 
-  constructor() { }
+  createService: CreateService;
+  constructor(@Inject(CreateService) createservice: CreateService) {
+    this.createService = createservice;
+  }
 
   ngOnInit() {
+  }
+  setDetails() {
+    this.createService.setDetails();
   }
 
 }

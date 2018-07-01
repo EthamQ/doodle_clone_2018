@@ -40,7 +40,10 @@
   vertical-align: baseline;
   color:darkgreen;
 }
-
+.myTableMax{
+  overflow: scroll;
+  max-height: 80vh;
+}
 .time-selection-add:hover{
   cursor: pointer;
   background-color: whitesmoke;

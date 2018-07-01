@@ -1,15 +1,13 @@
 import * as moment from 'moment';
 export class DatesModel {
-  year: string;
-  day: string;
-  stopTime: string;
-  startTime: string;
+  date: string;
+  timeFrom: number;
+  timeTo: number;
   constructor(timeFrom, timeTo) {
     moment.locale('en');
-    this.year = this.getYearMonth(timeFrom);
-    this.startTime = this.getStartTime(timeFrom);
-    this.stopTime = this.getStopTime(timeTo);
-    this.day = this.getWeekDay(timeFrom);
+    this.timeFrom = timeFrom;
+    this.timeTo = timeTo;
+    this.date = moment.unix(timeFrom).format('llll');
   }
   getStartTime(timestamp) {
     return moment.unix(timestamp).format('LT');
