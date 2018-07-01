@@ -1,0 +1,6 @@
+#!/bin/bash
+curl --header "Content-Type: application/json"  --request POST  --data '{"title":"Hausparty","location":"Adalbertstraße 31, 73733 Esslingen", "description": "Wir feieren 100 Jahre Loodle", "eventType":"EventType?", "creator": { "name": "Sinksar", "email": "sinksar_g@yahoo.de" }, "date": [ { "date": "12.Juli 2018", "timeFrom": "8 Uhr", "timeTo": "12Uhr"}]}'  http://localhost:3000/event/new
+
+curl --header "Content-Type: application/json"  --request POST  --data '{ "name": "Jonas", "email": "jonas_g@yahoo.de" }'  http://localhost:3000/participant/aa1483e5-288b-41ed-84b0-478137378f7c
+
+
