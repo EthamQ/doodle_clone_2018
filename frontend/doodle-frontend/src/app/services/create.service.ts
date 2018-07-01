@@ -37,6 +37,7 @@ export class CreateService {
 
   }
   setDetails() {
+
     this.detailsBool = true;
     this.progress += 30;
 
@@ -45,6 +46,7 @@ export class CreateService {
     for (let i = 0; i < this.timeSelection.length; i++) {
       this.event.date.push(this.timeSelection[i].parseToTimeStamp());
     }
+    this.event.creator = this.creator;
     this.calendarBool = true;
     this.progress += 30;
     this.postData();

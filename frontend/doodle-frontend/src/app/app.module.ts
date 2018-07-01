@@ -63,6 +63,11 @@ import { JoinCalendarComponent } from './joinEvent/join-calendar/join-calendar.c
 import { CreateLandingComponent } from './createEvent/create-landing/create-landing.component';
 import { ViewLandingComponent } from './viewEvent/view-landing/view-landing.component';
 import { ViewSummaryComponent } from './viewEvent/view-summary/view-summary.component';
+import { YearPipe } from './pipes/year.pipe';
+import { WeekdayPipe } from './pipes/weekday.pipe';
+import { DayPipe } from './pipes/day.pipe';
+import {MonthPipe} from './pipes/month.pipe';
+import { TimeHourPipe } from './pipes/time-hour.pipe';
 
 @NgModule({
   exports: [
@@ -100,8 +105,10 @@ import { ViewSummaryComponent } from './viewEvent/view-summary/view-summary.comp
     MatToolbarModule,
     MatTooltipModule,
   ],
-  declarations: [],
-  imports: []
+
+  imports: [],
+
+  declarations: []
 })
 export class MaterialModule {}
 
@@ -118,7 +125,8 @@ export class MaterialModule {}
     ViewSummaryComponent,
     CreatePersonalComponent,
     CreateCalendarComponent,
-    AppComponent
+    AppComponent,
+    YearPipe, WeekdayPipe, DayPipe, MonthPipe,TimeHourPipe
   ],
   imports: [
     AppRoutingModule,

@@ -1,9 +1,11 @@
 export class ParticipantModel {
   name: string;
-  selection: boolean[];
+  email: string;
+  dates: boolean[];
   constructor(name) {
     this.name = name;
-    this.selection = [];
+    this.dates = [];
+    this.email = 'undefined@gmail.com';
   }
 }
 

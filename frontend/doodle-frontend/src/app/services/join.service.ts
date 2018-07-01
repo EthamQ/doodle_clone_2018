@@ -4,39 +4,45 @@ import {DatesModel} from '../models/dates.model';
 import {ParticipantModel} from '../models/participant.model';
 import * as moment from 'moment';
 import {CreatorModel} from '../models/creator.model';
+import {HttpClient} from '@angular/common/http';
+import {ServerModel} from '../models/server.model';
 @Injectable()
 export class JoinService {
-  getURl = '';
-  postURL = '';
+  getURl = 'http://10.150.133.137:3000/event/';
+  UUID: string;
+  postURL = 'http://10.150.133.137:3000/participant/';
   votes = [];
+  serverData: ServerModel;
   joiner = new ParticipantModel('Your Name');
-  event = new EventModel();
   dataLoaded: boolean;
-  constructor() {
+  constructor(private http: HttpClient) {
     moment.locale('en');
     this.dataLoaded = false;
   }
   postData() {
-    // this.http.post(this.postURL, this.event).subscribe(res => console.log(res));
+    console.log(this.joiner);
+    this.http.post(this.postURL + this.UUID, this.joiner).subscribe(res => console.log(res));
 
   }
-  loadData() {
-
-    // this.http.get(this.getURL, this.event).subscribe(res => {console.log(res));
-    for (let i = 0; i < this.event.date.length; i++) {
-      let votes = 0;
-      for (let j = 0; j < this.event.participants.length; j++) {
-        if (this.event.participants[j].selection[i] === true) {
-          votes = votes + 1;
+  getData() {
+    console.log(this.serverData);
+    this.http.get(this.getURl + this.UUID).subscribe(
+      (data: any) => {
+        const serverData = data.data[0];
+        this.serverData = new ServerModel(serverData);
+        this.joiner.dates = [];
+        for (let i = 0; i < this.serverData.date.length; i++) {
+          let votes = 0;
+          for (let j = 0; j < this.serverData.participants.length; j++) {
+            if (this.serverData.participants[j].dates[i] === true) {
+              votes = votes + 1;
+            }
+          }
+          this.votes.push(votes);
         }
-      }
-      this.votes.push(votes);
-    }
-    this.dataLoaded = true;
-    for (let i = 0; i < this.event.date.length; i++) {
-      this.joiner.selection.push(false);
-    }
-
-    console.log(this.votes);
+        for (let i = 0; i < this.serverData.date.length; i++) {
+          this.joiner.dates.push(false);
+        }
+      });
   }
 }

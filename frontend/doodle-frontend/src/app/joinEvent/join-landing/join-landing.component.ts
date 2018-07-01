@@ -9,7 +9,6 @@ import {JoinService} from '../../services/join.service';
 })
 export class JoinLandingComponent implements OnInit {
 
-  joinId: string;
   joinService: JoinService;
   constructor(@Inject(JoinService) joinService: JoinService) {
     this.joinService = joinService;
@@ -19,6 +18,7 @@ export class JoinLandingComponent implements OnInit {
   ngOnInit() {
   }
   sendToServer() {
+    this.joinService.getData();
   }
 
 }

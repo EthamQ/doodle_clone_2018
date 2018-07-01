@@ -9,10 +9,16 @@ import {ViewLandingComponent} from './viewEvent/view-landing/view-landing.compon
 import {CreatePersonalComponent} from './createEvent/create-personal/create-personal.component';
 import {CreateCalendarComponent} from './createEvent/create-calendar/create-calendar.component';
 import {CreateSummaryComponent} from './createEvent/create-summary/create-summary.component';
+import {JoinCalendarComponent} from './joinEvent/join-calendar/join-calendar.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent},
-  { path: 'join', component: JoinLandingComponent},
+  { path: 'join',
+    component: JoinLandingComponent,
+  children: [
+    {path: ':id', component: JoinCalendarComponent},
+    {path: 'finish', component: LandingPageComponent},
+  ]},
   { path: 'admin', component: AdminLandingComponent },
   { path: 'view', component: ViewLandingComponent },
   { path: 'create',

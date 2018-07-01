@@ -9,16 +9,22 @@ export class DatesModel {
     this.timeTo = timeTo;
     this.date = moment.unix(timeFrom).format('llll');
   }
-  getStartTime(timestamp) {
-    return moment.unix(timestamp).format('LT');
+  getYear() {
+    return moment.unix(this.timeFrom).format('YYYY');
   }
-  getStopTime(timestamp) {
-    return moment.unix(timestamp).format('LT');
+  getDay() {
+    return moment.unix(this.timeFrom).format('DD');
   }
-  getWeekDay(timestamp) {
-    return moment.unix(timestamp).format('dd');
+  getWeekDay() {
+    return moment.unix(this.timeFrom).format('dd');
   }
-  getYearMonth(timestamp) {
-    return moment.unix(timestamp).format('ll');
+  getStopHour() {
+    return moment.unix(this.timeTo).format('LT');
+  }
+  getStartHour() {
+    return moment.unix(this.timeFrom).format('LT');
+  }
+  getMonth() {
+    return moment.unix(this.timeFrom).format('mm');
   }
 }

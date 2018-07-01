@@ -1,17 +1,14 @@
-<div class="background">
+<div class="background" *ngIf="!joinService.serverData">
   <button type="button" class="close" aria-label="Close">
   </button>
   <div class="outerdiv">
     <h2 class="header">Event ID</h2>
     <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="Please enter your ID." aria-label="Please enter your ID." aria-describedby="basic-addon2">
+      <input type="text" class="form-control" aria-label="Please enter your ID." [value]="joinService.UUID" (input)="joinService.UUID = $event.target.value">
       <div class="input-group-append">
-        <button class="btn btn-primary" type="button" (click)="sendToServer()">Send</button>
+        <button class="btn btn-primary" type="button" (click)="sendToServer()" [routerLink]="joinService.UUID">Send</button>
       </div>
     </div>
   </div>
-  <div class="outerdiv" *ngIf="joinService.dataLoaded">
-    <app-join-calendar></app-join-calendar>
-  </div>
-
 </div>
+<router-outlet></router-outlet>
