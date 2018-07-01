@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
+import {JoinService} from '../../services/join.service';
+import {CreateService} from '../../services/create.service';
 
 @Component({
   selector: 'app-create-landing',
@@ -6,8 +8,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./create-landing.component.css']
 })
 export class CreateLandingComponent implements OnInit {
-
-  constructor() { }
+  createService: CreateService;
+  constructor(@Inject(CreateService) createservice: CreateService) {
+    this.createService = createservice;
+  }
 
   ngOnInit() {
   }

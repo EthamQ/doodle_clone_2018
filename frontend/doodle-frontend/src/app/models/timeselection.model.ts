@@ -4,6 +4,7 @@ export class TimeselectionModel {
   day: string;
   weekDay: string;
   month: string;
+  year: string;
   startHour: number;
   stopHour: number;
   startMinute: number;
@@ -22,6 +23,7 @@ export class TimeselectionModel {
     this.month = moment.unix(time).format('MMM');
     this.startHour = parseFloat(moment.unix(time).format('hh'));
     this.startMinute = parseFloat(moment.unix(time).format('mm'));
+    this.year = moment.unix(time).format('YYYY');
     this.startAMPM = 'AM';
     this.timeFrom = time;
   }
@@ -86,7 +88,8 @@ export class TimeselectionModel {
   }
 
   parseToTimeStamp() {
-    // Do parsing with date, min, hour & am/pm
+    this.timeFrom = moment(this.year + '-' + this.month + '-' + this.day + ' ' + this.startHour + ':' + this.getStartMinute() + ':' + this.startAMPM).unix();
+    this.timeTo = moment(this.year + '-' + this.month + '-' + this.day + ' ' + this.stopHour + ':' + this.getStopMinute() + ':' + this.stopAMPM).unix();
     return new DatesModel(this.timeFrom, this.timeTo);
   }
 }

@@ -2,8 +2,8 @@ export class CreatorModel {
   name: string;
   email: string;
   selection: boolean[];
-  constructor(name: string, mail: string) {
-    this.name = name;
+  constructor(mail: string) {
     this.email = mail;
+    this.selection = [];
   }
 }

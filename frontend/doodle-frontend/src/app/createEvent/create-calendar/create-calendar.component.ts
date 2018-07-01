@@ -12,18 +12,24 @@ import {isUndefined} from 'util';
   styleUrls: ['./create-calendar.component.css']
 })
 export class CreateCalendarComponent implements OnInit {
-  timeSelection: Array<TimeselectionModel> = [];
-  constructor() {}
+  createService: CreateService;
+  constructor(@Inject(CreateService) createservice: CreateService) {
+    this.createService = createservice;
+  }
   ngOnInit() {}
   handleEvent(event: any) {
     const newDate = new TimeselectionModel();
     newDate.setTimeFrom(moment(event.value).unix());
     newDate.setTimeTo(moment(event.value).unix());
-    if (isUndefined(this.timeSelection.find(e => e.timeTo === newDate.timeTo))) {
-      this.timeSelection.push(newDate);
+    console.log(newDate);
+    if (isUndefined(this.createService.timeSelection.find(e => e.timeTo === newDate.timeTo))) {
+      this.createService.timeSelection.push(newDate);
     } else {
-      this.timeSelection.splice(this.timeSelection.findIndex(e => e.timeTo === newDate.timeTo), 1);
+      this.createService.timeSelection.splice(this.createService.timeSelection.findIndex(e => e.timeTo === newDate.timeTo), 1);
     }
   }
 
+  setCalendar() {
+    this.createService.setCalendar();
+  }
 }
