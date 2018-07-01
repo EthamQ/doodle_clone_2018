@@ -26,10 +26,10 @@ export class CreateService {
     this.creator = new CreatorModel('dummy@web.de');
   }
   postData() {
-    this.http.post(this.postURL, this.event).subscribe(res => {
-      console.log(res);
-      this.adminID = '';
-      this.joinID = '';
+    this.http.post(this.postURL, this.event).subscribe(data => {
+      console.log(data);
+      this.adminID = data.data[0].creator.adminUUID;
+      this.joinID = '10.150.133.137:4200/join/' + data.data[0].uuid;
     });
 
   }
