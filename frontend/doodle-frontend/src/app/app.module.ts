@@ -7,6 +7,7 @@ import {ScrollDispatchModule} from '@angular/cdk/scrolling';
 import { MomentModule } from 'angular2-moment';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { DlDateTimePickerDateModule } from 'angular-bootstrap-datetimepicker';
+import { NgDatepickerModule } from 'ng2-datepicker';
 
 import {
   MatFormFieldModule,
@@ -131,6 +132,7 @@ export class MaterialModule {}
     HttpClientModule,
     MaterialModule,
     MatNativeDateModule,
+    NgDatepickerModule,
     ReactiveFormsModule,
     AngularFontAwesomeModule,
     NgbModule.forRoot()
