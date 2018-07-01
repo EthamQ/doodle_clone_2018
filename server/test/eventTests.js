@@ -8,9 +8,10 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 
 // Custom test data and functions
-const createEvent = require('./../testUtils/event/mockData');
-const ValueTracker = require('./../testUtils/event/valueTracker');
-const helperFct = require('./../testUtils/helperFunctions/event/propertiesTest');
+const eventMock = require('./../testUtils/mockData/event');
+const partMock = require('./../testUtils/mockData/participant');
+const ValueTracker = require('./../testUtils/valueTracker');
+const helperFct = require('./../testUtils/helperFunctions/event');
 helperFct.initChai(chai, should, expect);
 let valueTracker = new ValueTracker();
 
@@ -22,7 +23,7 @@ describe('Create a new event', () => {
   it('should successfully return the object that was saved in the event collection', (done) => {
     chai.request(server)
       .post('/event/new')
-      .send(createEvent.newEvent)
+      .send(eventMock.newEvent)
       .end((err, res) => {
         expect(res.body.success).to.be.true;
         expect(res.body.messages[0]).to.be.equal('New doodle Event successfully created');
@@ -80,6 +81,53 @@ describe('Get an event with the admin uuid', () => {
     done();
   })
 });
+
+
+
+// ############################################
+// Add participant to event
+// ############################################
+let numberParticipants = 0;
+
+describe("Add one participant to an event", ()=>{
+  it("Event should have the participant", done=>{
+      chai.request(server)
+      .post('/participant/' + valueTracker.getUUID())
+      .send(partMock.newParticipant)
+      .end((err, res)=>{
+        checkSuccess(res, () => {
+          numberParticipants++;
+          GET_eventByUUID(server, valueTracker.getUUID(), response =>{
+            checkSuccess(res, () => {
+              let participants = response.body.data[0].participants;
+              let indexNewPart = numberParticipants - 1;
+              expect(participants.length).to.be.equal(numberParticipants);
+              compareParticipants(partMock.newParticipant, participants, indexNewPart, ()=>{
+                done();
+              }) 
+            });
+          });
+            
+        });
+      });
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // ############################################
 // Delete event

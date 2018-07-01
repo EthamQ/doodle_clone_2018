@@ -1,5 +1,6 @@
 
-const successHelper = require('./../general/successTest');
+const successHelper = require('./general');
+const participantHelper = require('./participant');
 let chai;
 let should;
 let expect;
@@ -9,6 +10,7 @@ initChai = function(chaiToPass, shouldToPass, expectToPass){
     should = shouldToPass;
     expect = expectToPass;
     successHelper.initChai(chaiToPass, shouldToPass, expectToPass);
+    participantHelper.initChai(chaiToPass, shouldToPass, expectToPass);
 }
  
   checkEventProperties = function (event, done) {
@@ -48,8 +50,18 @@ initChai = function(chaiToPass, shouldToPass, expectToPass){
     done();
   }
 
+  GET_eventByUUID = function(server, uuid, callback){
+    chai.request(server)
+      .get('/event/' + uuid)
+      .end((err, res) => {
+        callback(res);
+      });
+  }
+
   module.exports = {
     initChai: initChai,
     checkEventProperties: checkEventProperties,
-    successHelper: successHelper
+    successHelper: successHelper,
+    participantHelper,
+    GET_eventByUUID: GET_eventByUUID
   }
