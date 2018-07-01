@@ -10,6 +10,7 @@ chai.use(chaiHttp);
 // Custom test data and functions
 const eventMock = require('./../testUtils/mockData/event');
 const partMock = require('./../testUtils/mockData/participant');
+const dateMock = require('./../testUtils/mockData/date');
 const ValueTracker = require('./../testUtils/valueTracker');
 const helperFct = require('./../testUtils/helperFunctions/event');
 helperFct.initChai(chai, should, expect);
@@ -20,7 +21,7 @@ let valueTracker = new ValueTracker();
 // ############################################
 console.log('============================================================');
 describe('Create a new event', () => {
-  it('should successfully return the object that was saved in the event collection', (done) => {
+  it('Success true and should return the object that was saved in the event collection', (done) => {
     chai.request(server)
       .post('/event/new')
       .send(eventMock.newEvent)
@@ -31,6 +32,7 @@ describe('Create a new event', () => {
         let event = res.body.data[0];
         valueTracker.setUUID(event.uuid);
         valueTracker.setAdminUUID(event.creator.adminUUID);
+        valueTracker.initNumberParticipants();
         done();
       });
   });
@@ -40,7 +42,7 @@ describe('Create a new event', () => {
 // Get event normal
 // ############################################
 describe('Get an event with the event uuid', () => {
-  it('should successfully return an event with all properties', (done) => {
+  it('Success true and should return an event with all properties', (done) => {
     chai.request(server)
       .get('/event/' + valueTracker.getUUID())
       .end((err, res) => {
@@ -63,7 +65,7 @@ describe('Get an event with the event uuid', () => {
 // Get event admin
 // ############################################
 describe('Get an event with the admin uuid', () => {
-  it('should successfully return an event with all properties', (done) => {
+  it('Success true and should successfully return an event with all properties', (done) => {
     chai.request(server)
       .get('/event/' + valueTracker.getAdminUUID())
       .end((err, res) => {
@@ -87,33 +89,94 @@ describe('Get an event with the admin uuid', () => {
 // ############################################
 // Add participant to event
 // ############################################
-let numberParticipants = 0;
-
-describe("Add one participant to an event", ()=>{
-  it("Event should have the participant", done=>{
-      chai.request(server)
+describe("Add one participant to an event", () => {
+  it("Success true and event should now have the participant", done => {
+    chai.request(server)
       .post('/participant/' + valueTracker.getUUID())
       .send(partMock.newParticipant)
-      .end((err, res)=>{
+      .end((err, res) => {
         checkSuccess(res, () => {
-          numberParticipants++;
-          GET_eventByUUID(server, valueTracker.getUUID(), response =>{
+          valueTracker.incrementParticipants();
+          GET_eventByUUID(server, valueTracker.getUUID(), response => {
             checkSuccess(res, () => {
-              let participants = response.body.data[0].participants;
-              let indexNewPart = numberParticipants - 1;
-              expect(participants.length).to.be.equal(numberParticipants);
-              compareParticipants(partMock.newParticipant, participants, indexNewPart, ()=>{
+              let mockParticipant = partMock.newParticipant;
+              let participantsFromEvent = extractParticipants(response);
+              let indexNewParticipant = valueTracker.getIndexNewParticipant();
+              expect(participantsFromEvent.length).to.be.equal(valueTracker.getNumberParticipants());
+              compareParticipants(mockParticipant, participantsFromEvent, indexNewParticipant, () => {
                 done();
-              }) 
+              })
             });
           });
-            
+        });
+      });
+  });
+});
+
+// ############################################
+// Add date to event
+// ############################################
+describe("Add dates to an event", () => {
+  it("Success true and the event should now have the dates", done => {
+    chai.request(server)
+      .post("/date/add/" + valueTracker.getAdminUUID())
+      .send(dateMock.newDates)
+      .end((err, res) => {
+        checkSuccess(res, () => {
+          GET_eventByUUID(server, valueTracker.getUUID(), response => {
+            checkSuccess(response, () => {
+              let previousDates = valueTracker.getDate().slice();
+              let datesAdded = dateMock.newDates.datesToAdd;
+              let updatedDates = extractDates(response);
+              updatedDatesAsExpected(previousDates, datesAdded, updatedDates, () => {
+                done();
+              });
+            })
+          });
         });
       });
   });
 });
 
 
+
+// ############################################
+// Add dates to a participant
+// ############################################
+
+// index of the participant in event.participants you want to update
+let indexParticipantToUpdate = 0;
+let urlAddDateToPart = "/date/participant/add/";
+describe("Add dates from an event to a participant", ()=>{
+  it("Should get success true from the server", done=>{
+    GET_eventByUUID(server, valueTracker.getUUID(), response => {
+      checkSuccess(response, () => {
+        let partToAddTo = extractParticipants(response)[indexParticipantToUpdate];
+        chai.request(server)
+        .post(urlAddDateToPart + valueTracker.getAdminUUID())
+        .send(partMock.getAddDatesMockWithPartId(partToAddTo.id))
+        .end((err, res)=>{
+          checkSuccess(response, () => {
+            valueTracker.setMockDatesForPart(getAddDatesMockWithPartId(partToAddTo.id));
+            done();
+          });
+        });
+      });
+    });
+  });
+  it("Boolean array of the participant should be updated correctly", done=>{
+    GET_eventByUUID(server, valueTracker.getUUID(), response => {
+      checkSuccess(response, () => {
+        let updatedParticipant = extractParticipants(response)[indexParticipantToUpdate];
+        let indexesToBeTrue = valueTracker.getMockDatesForPart().dateIndexToAdd;
+        indexesToBeTrue.map(index =>{
+          expect(updatedParticipant.dates[index]).to.be.true;
+        });
+        done();
+      });
+    });
+  });
+});
 
 
 
@@ -139,7 +202,7 @@ describe('Delete an event', () => {
       .send({})
       .end((err, res) => {
         checkSuccess(res, () => {
-            done();
+          done();
         });
       });
   });
@@ -147,7 +210,7 @@ describe('Delete an event', () => {
     chai.request(server)
       .get('/event/' + valueTracker.getUUID())
       .end((err, res) => {
-        expectFailure(res, ()=>{
+        expectFailure(res, () => {
           done();
         })
       });
