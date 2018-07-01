@@ -6,7 +6,7 @@ let newParticipant = {
 
 
 
-getAddDatesMockWithPartId = function(participantId){
+getReqMockData_DatesToAdd = function(participantId){
     let addDatesBody = {
         "participantId": participantId,
         "dateIndexToAdd": [1]
@@ -14,7 +14,16 @@ getAddDatesMockWithPartId = function(participantId){
     return addDatesBody;
 }
 
+getReqMockData_DatesToRemove = function(participantId){
+    let addDatesBody = {
+        "participantId": participantId,
+        "dateIndexToRemove": [1]
+    }
+    return addDatesBody;
+}
+
 module.exports = {
     newParticipant: newParticipant,
-    getAddDatesMockWithPartId: getAddDatesMockWithPartId
+    getReqMockData_DatesToAdd: getReqMockData_DatesToAdd,
+    getReqMockData_DatesToRemove: getReqMockData_DatesToRemove
 }

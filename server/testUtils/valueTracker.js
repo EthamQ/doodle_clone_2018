@@ -73,10 +73,23 @@ module.exports = class EventValueTracker{
         
     }
     
-    setMockDatesForPart(datesBoolMock){
-        this.datesBoolMock = datesBoolMock;
+    MOCK_setDatesToAddToParticipant(mockdata){
+        this.datesToAddToParticipant = mockdata;
     }
-    getMockDatesForPart(){
-        return this.datesBoolMock;
+    MOCK_getDatesToAddToParticipant(){
+        return this.datesToAddToParticipant;
+    }
+    MOCK_setDatesToRemoveFromParticipant(mockdata){
+        this.datesToRemoveFromParticipant = mockdata;
+    }
+    MOCK_getDatesToRemoveFromParticipant(){
+        return this.datesToRemoveFromParticipant;
+    }
+
+    MOCK_setUpdatedEventValues(mockdata){
+        this.updatedEventValues = mockdata;
+    }
+    MOCK_getUpdatedEventValues(){
+        return this.updatedEventValues;
     }
 }

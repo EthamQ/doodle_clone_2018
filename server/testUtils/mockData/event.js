@@ -24,6 +24,14 @@ let newEvent = {
     ]
 }
 
+let updatedEventValues = {
+	"title": "updated1",
+    "location": "updated2",
+    "description": "updated3",
+    "eventType": "updated4"
+}
+
 module.exports = {
-    newEvent: newEvent
+    newEvent: newEvent,
+    updatedEventValues: updatedEventValues,
 }
