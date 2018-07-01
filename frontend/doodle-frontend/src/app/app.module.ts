@@ -6,7 +6,7 @@ import { CalendarModule } from 'angular-calendar';
 import {ScrollDispatchModule} from '@angular/cdk/scrolling';
 import { MomentModule } from 'angular2-moment';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
-
+import { DlDateTimePickerDateModule } from 'angular-bootstrap-datetimepicker';
 
 import {
   MatFormFieldModule,
@@ -45,19 +45,13 @@ import {
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
-import { StepperComponent } from './createEvent/00-stepper/stepper.component';
-import { CalendarComponent } from './createEvent/03-calendar/calendar.component';
-import {CommonModule} from "@angular/common";
-import { ResultComponent } from './createEvent/04-result/result.component';
-import {DateService} from "./services/date.service";
-import { PersonalInformationComponent } from './createEvent/02-personal-information/personal-information.component';
+import {CommonModule} from '@angular/common';
+import {DateService} from './services/date.service';
 import { LandingPageComponent } from './landing-page/landing-page.component';
-import { JoinPageComponent } from './joinEvent/01-join-page/join-page.component';
-import { FinishPageComponent } from './createEvent/05-finish-page/finish-page.component';
-import { AppRoutingModule } from './/app-routing.module';
-import {RouterModule} from "@angular/router";
-import {CreateService} from "./services/create.service";
-import {JoinService} from "./services/join.service";
+import { AppRoutingModule } from './app-routing.module';
+import {RouterModule} from '@angular/router';
+import {CreateService} from './services/create.service';
+import {JoinService} from './services/join.service';
 import { AdminLandingComponent } from './adminEvent/admin-landing/admin-landing.component';
 import { AdminEditComponent } from './adminEvent/admin-edit/admin-edit.component';
 import { CreatePersonalComponent } from './createEvent/create-personal/create-personal.component';
@@ -112,16 +106,10 @@ export class MaterialModule {}
 
 @NgModule({
   declarations: [
-    StepperComponent,
-    ResultComponent,
-    CalendarComponent,
-    PersonalInformationComponent,
     LandingPageComponent,
-    JoinPageComponent,
     CreateSummaryComponent,
     JoinLandingComponent,
     JoinCalendarComponent,
-    FinishPageComponent,
     AdminLandingComponent,
     AdminEditComponent,
     CreateLandingComponent,
@@ -136,6 +124,7 @@ export class MaterialModule {}
     MomentModule,
     CommonModule,
     BrowserModule,
+    DlDateTimePickerDateModule,
     BrowserAnimationsModule,
     CalendarModule.forRoot(),
     FormsModule,

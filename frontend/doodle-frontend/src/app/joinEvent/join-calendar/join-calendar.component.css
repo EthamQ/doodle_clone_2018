@@ -21,7 +21,7 @@
 .d-day{
   color: #5d6e79;
   text-transform: uppercase;
-  font-weight: 500;
+  font-weight: 200;
   font-style: normal;
   font-family: "Fira Sans","Trebuchet MS","Helvetica Neue","Arial",sans-serif;
   font-smooth: always;
@@ -53,4 +53,15 @@
   /* Adjust these values accordingly */
   top: 5px;
   left: 5px;
+}
+.custom-checker-red{
+ color:darkred;
+}
+
+
+.custom-checker-green{
+  color:darkgreen;
+}
+.custom-click:hover{
+  cursor: pointer;
 }

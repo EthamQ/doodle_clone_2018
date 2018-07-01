@@ -16,4 +16,8 @@ export class JoinCalendarComponent implements OnInit {
   ngOnInit() {
   }
 
+  changeVal(input) {
+    console.log(input);
+    input = !input;
+  }
 }
