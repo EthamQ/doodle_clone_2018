@@ -9,3 +9,10 @@
  text-align: center;
   color: #888888;
 }
+.next-step {
+  border: none;
+  height: 3px;
+  /* Set the hr color */
+  color:darkgreen; /* old IE */
+  background-color: darkgreen ; /* Modern Browsers */
+}

@@ -1,43 +1,53 @@
 <div class="container">
   <div class="row navigation-container">
-    <div class="col-2">
-      <div class="navigation-item" [routerLink]="['details']">
-        <h4>1. Details</h4>
-
+      <div class="col-2" *ngIf="!createService.detailsBool">
+        <div class="navigation-item" class="navigation-item" [routerLink]="['details']">
+          <h4>1. Details</h4>
+        </div>
       </div>
-    </div>
-    <div class="col-3">
-      <hr>
-    </div>
-    <div class="col-2" *ngIf="createService.detailsBool">
-      <div class="navigation-item" [routerLink]="['calendar']">
-        <h4>2. Calendar</h4>
+      <div class="col-2" *ngIf="createService.detailsBool">
+        <div class="navigation-item-disabled">
+          <h4>1. Details</h4>
+        </div>
       </div>
-    </div>
-    <div class="col-2" *ngIf="!createService.detailsBool">
-      <div class="navigation-item-disabled">
-        <h4>2. Calendar</h4>
+      <div class="col-3">
+        <hr class="next-step" *ngIf="createService.detailsBool">
+        <hr *ngIf="!createService.detailsBool">
       </div>
-    </div>
-    <div class="col-3">
-      <hr>
-    </div>
-    <div class="col-2" *ngIf="createService.calendarBool">
-      <div class="navigation-item" [routerLink]="['summary']">
-        <h4>3. Summary</h4>
+      <div class="col-2" *ngIf="!createService.detailsBool">
+        <div class="navigation-item" [routerLink]="['calendar']">
+          <h4>2. Calendar</h4>
+        </div>
       </div>
-    </div>
-    <div class="col-2" *ngIf="!createService.calendarBool">
-      <div class="navigation-item-disabled">
-        <h4>3. Summary</h4>
+      <div class="col-2" *ngIf="createService.detailsBool">
+        <div class="navigation-item-disabled">
+          <h4>2. Calendar</h4>
+        </div>
       </div>
-    </div>
+      <div class="col-3">
+        <hr class="next-step" *ngIf="createService.calendarBool">
+        <hr *ngIf="!createService.calendarBool">
+      </div>
+      <div class="col-2" *ngIf="createService.calendarBool">
+        <div class="navigation-item" [routerLink]="['summary']">
+          <h4>3. Summary</h4>
+        </div>
+      </div>
+      <div class="col-2" *ngIf="!createService.calendarBool">
+        <div class="navigation-item-disabled">
+          <h4>3. Summary</h4>
+        </div>
+      </div>
   </div>
     <router-outlet></router-outlet>
     <button class="button" type="submit" class="btn btn-primary"
             [disabled]="(isUndefined(createService.event.creator.name) && isUndefined(createService.event.description) && isUndefined(createService.event.title))"
-            (click)="setDetails()"
+            (click)="createService.setDetails()"
             routerLink="calendar"
-            *ngIf="!createService.detailsBool && !createService.calendarBool">Next</button>
-
+            *ngIf="!createService.detailsBool && !createService.calendarBool">Choice your dates</button>
+    <button class="button" type="submit" class="btn btn-primary"
+          [disabled]="(createService.timeSelection.length === 0)"
+          (click)="createService.setCalendar()"
+          routerLink="summary"
+          *ngIf="createService.detailsBool && !createService.calendarBool">Submit</button>
 </div>

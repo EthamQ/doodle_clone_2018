@@ -35,6 +35,7 @@ const routes: Routes = [
   { path: 'create',
     component: CreateLandingComponent,
     children: [
+      { path: '',   redirectTo: 'details', pathMatch: 'full' },
       {path: 'details', component: CreatePersonalComponent},
       {path: 'calendar', component: CreateCalendarComponent},
       {path: 'summary', component: CreateSummaryComponent}
