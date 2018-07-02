@@ -10,23 +10,34 @@ import {CreatePersonalComponent} from './createEvent/create-personal/create-pers
 import {CreateCalendarComponent} from './createEvent/create-calendar/create-calendar.component';
 import {CreateSummaryComponent} from './createEvent/create-summary/create-summary.component';
 import {JoinCalendarComponent} from './joinEvent/join-calendar/join-calendar.component';
+import {ViewSummaryComponent} from './viewEvent/view-summary/view-summary.component';
+import {AdminEditComponent} from './adminEvent/admin-edit/admin-edit.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent},
   { path: 'join',
     component: JoinLandingComponent,
-  children: [
-    {path: ':id', component: JoinCalendarComponent},
-    {path: 'finish', component: LandingPageComponent},
+    children: [
+      {path: ':id', component: JoinCalendarComponent},
+      {path: 'finish', component: LandingPageComponent}
+    ]},
+  { path: 'admin',
+    component: AdminLandingComponent,
+    children: [
+      {path: ':id', component: AdminEditComponent}
+    ]
+  },
+  { path: 'view',
+    component: ViewLandingComponent,
+    children: [
+      {path: ':id', component: ViewSummaryComponent}
   ]},
-  { path: 'admin', component: AdminLandingComponent },
-  { path: 'view', component: ViewLandingComponent },
   { path: 'create',
     component: CreateLandingComponent,
     children: [
       {path: 'details', component: CreatePersonalComponent},
       {path: 'calendar', component: CreateCalendarComponent},
-      {path: 'summary', component: CreateSummaryComponent},
+      {path: 'summary', component: CreateSummaryComponent}
     ]},
 
 ];

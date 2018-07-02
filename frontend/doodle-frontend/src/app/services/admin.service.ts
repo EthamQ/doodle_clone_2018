@@ -9,7 +9,7 @@ import * as moment from 'moment';
 
 @Injectable()
 
-export class CreateService {
+export class AdminService {
   postURL = 'http://10.150.133.137:3000/event/new';
   adminID: string;
   joinID: string;
@@ -34,6 +34,7 @@ export class CreateService {
 
   }
   setDetails() {
+
     this.detailsBool = true;
     this.progress += 30;
 

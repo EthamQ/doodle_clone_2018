@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {JoinService} from '../../services/join.service';
+import {ViewService} from '../../services/view.service';
 
 @Component({
   selector: 'app-view-summary',
@@ -7,9 +10,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ViewSummaryComponent implements OnInit {
 
-  constructor() { }
+  viewService: ViewService;
+  constructor(@Inject(ViewService) viewService: ViewService, private route: ActivatedRoute) {
+    this.viewService = viewService;
+    this.route.params.subscribe(params => {
+      this.viewService.UUID = params.id;
+      this.viewService.getData();
+    });
+  }
 
   ngOnInit() {
+    console.log(this.viewService.serverData);
   }
 
 }

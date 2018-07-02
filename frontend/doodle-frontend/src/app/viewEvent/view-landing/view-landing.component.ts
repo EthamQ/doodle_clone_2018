@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
+import {ViewService} from '../../services/view.service';
 
 @Component({
   selector: 'app-view-landing',
@@ -7,8 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ViewLandingComponent implements OnInit {
 
-  constructor() { }
 
+  viewService: ViewService;
+  constructor(@Inject(ViewService) viewService: ViewService) {
+    this.viewService = viewService;
+  }
   ngOnInit() {
   }
 

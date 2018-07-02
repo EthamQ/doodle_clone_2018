@@ -1,3 +1,15 @@
-<p>
-  view-landing works!
-</p>
+<div class="background" *ngIf="!(viewService.serverData)">
+  <button type="button" class="close" aria-label="Close">
+  </button>
+  <div class="outerdiv">
+    <h2 class="header">Event ID</h2>
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" aria-label="Please enter your ID." [value]="viewService.UUID" (input)="viewService.UUID = $event.target.value">
+      <div class="input-group-append">
+        <button class="btn btn-primary" type="button" (click)="viewService.getData()" [routerLink]="viewService.UUID">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+<router-outlet></router-outlet>
+
