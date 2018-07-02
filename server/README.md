@@ -12,7 +12,7 @@ router.post('/date/participant/add/:adminUUID', dateLogic.addDatesToParticipant)
 router.get('/event/:uuid', logic.getDoodleEventByUUID);
 5. Update title, description, eventType, location of an event if you are the creator of an event
 router.post('/event/update/:adminUUID', logic.updateDoodleEvent);
-6. Delete a participator of an event
+6. Delete a participant of an event
 router.post('/participant/remove/:adminUUID', participantLogic.removeParticipants);
 7. Add dates to an event if you are the creator
 router.post('/date/add/:adminUUID', dateLogic.addDatesToEvent);
@@ -214,7 +214,7 @@ Expected data in the post request: => empty
 }
 
 ##############################################
-10. Remove a date from an event to a participant:
+10. Remove an event date from a participant:
 router.post('/date/participant/add/:adminUUID', dateLogic.addDatesToParticipant);
 Expected data about the date and participant in the post request,
 send all the indexes of the dates you want to set to false in the dates array

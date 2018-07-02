@@ -51,6 +51,9 @@ module.exports = class EventValueTracker{
         return this.event.date;
     }
    
+    addParticipantId(participantId){
+        this.decreaseParticipants.push(participantId);
+    }
     initNumberParticipants(){
         this.numberParticipants = 0;
     }

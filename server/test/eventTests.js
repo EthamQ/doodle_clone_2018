@@ -265,14 +265,38 @@ describe("Update title, description, eventType, location", () => {
   });
 });
 
-
-
-
-
-
-
-
-
+// ############################################
+// Delete participant
+// ############################################
+let url_deleteParticipant = '/participant/remove/';
+describe("Delete participants", ()=>{
+  it("Should get success true from the server", done => {
+    GET_eventByUUID(server, valueTracker.getUUID(), response => {
+      checkSuccess(response, () => {
+        let participantToDelete = extractParticipants(response)[indexParticipantToUpdate];
+        let participantIdsToDelete = [];
+        participantIdsToDelete.push(participantToDelete.id);
+        let mockRequestData = getReqMockData_ParticipantRemove(participantIdsToDelete);
+        chai.request(server)
+        .post(url_deleteParticipant + valueTracker.getAdminUUID())
+        .send(mockRequestData)
+        .end((err, res) => {
+          checkSuccess(res, () => {
+            valueTracker.decreaseParticipants();
+            done();
+          });
+        });
+      });
+    });
+  });
+  it("Should not find the participant in the updated event anymore", done =>{
+    GET_eventByUUID(server, valueTracker.getUUID(), response => {
+      checkSuccess(response, () => {
+            done();
+      });
+    });
+  });
+});
 
 
 
