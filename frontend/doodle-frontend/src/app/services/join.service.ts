@@ -25,7 +25,6 @@ export class JoinService {
 
   }
   getData() {
-    console.log(this.serverData);
     this.http.get(this.getURl + this.UUID).subscribe(
       (data: any) => {
         const serverData = data.data[0];

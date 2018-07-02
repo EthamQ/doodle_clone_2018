@@ -22,11 +22,7 @@ export class CreateCalendarComponent implements OnInit {
     newDate.setTimeFrom(moment(event.value).unix());
     newDate.setTimeTo(moment(event.value).unix());
     console.log(newDate);
-    if (isUndefined(this.createService.timeSelection.find(e => e.timeTo === newDate.timeTo))) {
-      this.createService.timeSelection.push(newDate);
-    } else {
-      this.createService.timeSelection.splice(this.createService.timeSelection.findIndex(e => e.timeTo === newDate.timeTo), 1);
-    }
+    this.createService.timeSelection.push(newDate);
   }
 
   setCalendar() {

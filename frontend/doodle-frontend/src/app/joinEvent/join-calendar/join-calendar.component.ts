@@ -12,7 +12,6 @@ export class JoinCalendarComponent implements OnInit {
   constructor(@Inject(JoinService) joinService: JoinService, private route: ActivatedRoute) {
     this.joinService = joinService;
     this.route.params.subscribe(params => {
-      console.log(params);
       this.joinService.UUID = params.id;
       this.joinService.getData();
     });
@@ -21,8 +20,4 @@ export class JoinCalendarComponent implements OnInit {
   ngOnInit() {
   }
 
-  changeVal(input) {
-    console.log(input);
-    input = !input;
-  }
 }
