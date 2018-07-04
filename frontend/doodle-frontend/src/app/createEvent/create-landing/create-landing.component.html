@@ -43,7 +43,7 @@
   </div>
     <router-outlet></router-outlet>
     <button class="button" type="submit" class="btn btn-primary"
-            [disabled]="(isUndefined(createService.event.creator.name) && isUndefined(createService.event.description) && isUndefined(createService.event.title))"
+    [disabled]="chooseDatesButtonIsDisabled()"
             (click)="createService.setDetails()"
             routerLink="calendar"
             *ngIf="!createService.detailsBool && !createService.calendarBool">Choice your dates</button>

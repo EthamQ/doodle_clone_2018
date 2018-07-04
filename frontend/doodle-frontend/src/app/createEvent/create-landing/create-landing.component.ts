@@ -1,6 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {JoinService} from '../../services/join.service';
 import {CreateService} from '../../services/create.service';
+import { isUndefined } from 'util';
 
 @Component({
   selector: 'app-create-landing',
@@ -15,5 +16,11 @@ export class CreateLandingComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  chooseDatesButtonIsDisabled(){
+    return (isUndefined(this.createService.event.creator.name) && isUndefined(this.createService.event.description) && isUndefined(this.createService.event.title));
+  }
+
+
 
 }
