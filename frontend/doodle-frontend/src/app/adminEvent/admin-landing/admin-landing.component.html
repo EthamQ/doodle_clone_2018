@@ -6,9 +6,9 @@
   <div class="outerdiv">
     <h2 class="header">Admin ID</h2>
     <div class="input-group mb-3">
-    <input type="text" class="form-control" placeholder="Please enter your ID." aria-label="Please enter your ID." aria-describedby="basic-addon2">
+    <input type="text" class="form-control" placeholder="Please enter your ID." aria-label="Please enter your ID." aria-describedby="basic-addon2" (input)="setAdminId($event.target.value)">
     <div class="input-group-append">
-      <button class="btn btn-primary" type="button">Send</button>
+      <button class="btn btn-primary" (click)="navigeToAdminEdit()" type="button">Send</button>
     </div>
   </div>
   </div>

@@ -8,6 +8,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 })
 export class JoinCalendarComponent implements OnInit {
 
+  componentActive = true;
   joinService: JoinService;
   constructor(@Inject(JoinService) joinService: JoinService, private route: ActivatedRoute, private router: Router) {
     this.joinService = joinService;
@@ -18,6 +19,7 @@ export class JoinCalendarComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.componentActive = true;
   }
 
   /**
@@ -25,6 +27,7 @@ export class JoinCalendarComponent implements OnInit {
    * then it navigates to the view summary component
    */
   navigateToViewSummary(){
+    this.componentActive = false;
     this.joinService.postDataAndWait(()=>{
       this.router.navigate([this.joinService.viewNav]);
     });

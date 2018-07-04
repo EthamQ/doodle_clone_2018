@@ -12,6 +12,7 @@ import {CreateSummaryComponent} from './createEvent/create-summary/create-summar
 import {JoinCalendarComponent} from './joinEvent/join-calendar/join-calendar.component';
 import {ViewSummaryComponent} from './viewEvent/view-summary/view-summary.component';
 import {AdminEditComponent} from './adminEvent/admin-edit/admin-edit.component';
+import { AdminViewComponent } from './adminEvent/adminView/admin-view.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent},
@@ -22,7 +23,7 @@ const routes: Routes = [
       {path: 'finish', component: LandingPageComponent}
     ]},
   { path: 'admin',
-    component: AdminLandingComponent,
+    component: AdminViewComponent,
     children: [
       {path: ':id', component: AdminEditComponent}
     ]

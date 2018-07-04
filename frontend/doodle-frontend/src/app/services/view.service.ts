@@ -17,7 +17,6 @@ export class ViewService {
     this.getURl = this.URLService.getServerURL() + this.getURl;
   }
   getData() {
-    setTimeout(()=>{
       console.log('getView');
       this.http.get(this.getURl + this.UUID).subscribe(
         (data: any) => {
@@ -38,7 +37,6 @@ export class ViewService {
           }
           console.log(this.serverData);
         });
-    },5000);
 
   }
 }

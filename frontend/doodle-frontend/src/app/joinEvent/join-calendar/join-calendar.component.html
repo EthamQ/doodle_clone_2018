@@ -1,8 +1,8 @@
 <!-- Editable table -->
-<div class="container">
+<div *ngIf="componentActive" class="container">
+  <app-logo-header [isCreate]="true"></app-logo-header>
   <ng-template [ngIf]="joinService.serverData != undefined">
   <div class="card" *ngIf="!(joinService.serverData.date.length==0)">
-
     <div class="card-body">
       <div id="table" class="table">
         <table class="table table-bordered table-responsive-md text-center">
@@ -27,7 +27,7 @@
           <!-- This is our clonable table line -->
           <tr>
             <td class="pt-3-half" contenteditable="false">
-              <input type="name" class="form-control" id='name' [value]="joinService.joiner.name" (input)="joinService.joiner.name = $event.target.value">
+              <input type="name" class="form-control" id='name' placeholder="Your name" (input)="joinService.joiner.name = $event.target.value">
             </td>
             <ng-container *ngFor="let sel of joinService.joiner.dates; let i = index;">
               <td class="pt-3-half" contenteditable="false">

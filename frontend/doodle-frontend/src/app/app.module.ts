@@ -71,6 +71,8 @@ import {ViewService} from './services/view.service';
 import {AdminService} from './services/admin.service';
 import { URLService } from './services/url-service';
 import { LogoHeaderComponent } from './header/logo.component';
+import { AdminViewComponent } from './adminEvent/adminView/admin-view.component';
+import { EventService } from './services/event.service';
 
 @NgModule({
   exports: [
@@ -130,7 +132,8 @@ export class MaterialModule {}
     CreateCalendarComponent,
     AppComponent,
     YearPipe, WeekdayPipe, DayPipe, MonthPipe, TimeHourPipe,
-    LogoHeaderComponent
+    LogoHeaderComponent,
+    AdminViewComponent
   ],
   imports: [
     AppRoutingModule,
@@ -149,7 +152,7 @@ export class MaterialModule {}
     AngularFontAwesomeModule,
     NgbModule.forRoot()
   ],
-  providers: [ViewService, AdminService, CreateService, JoinService, URLService],
+  providers: [ViewService, AdminService, CreateService, JoinService, URLService, EventService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
