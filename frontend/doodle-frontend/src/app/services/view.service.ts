@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import {HttpClient} from '@angular/common/http';
 import {ServerModel} from '../models/server.model';
-import { ServerDataService } from './serverDataService';
+import { URLService } from './url-service';
 @Injectable()
 export class ViewService {
   getURl = '/event/';
@@ -11,10 +11,10 @@ export class ViewService {
   serverData: ServerModel;
   constructor(
     private http: HttpClient,
-    private serverDataService: ServerDataService
+    private URLService: URLService
   ) {
     moment.locale('en');
-    this.getURl = this.serverDataService.getServerURL() + this.getURl;
+    this.getURl = this.URLService.getServerURL() + this.getURl;
   }
   getData() {
     console.log('getView');

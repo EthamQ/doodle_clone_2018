@@ -5,7 +5,7 @@ import {CreatorModel} from '../models/creator.model';
 import {DatesModel} from '../models/dates.model';
 import {TimeselectionModel} from '../models/timeselection.model';
 import * as moment from 'moment';
-import { ServerDataService } from './serverDataService';
+import { URLService } from './url-service';
 
 
 @Injectable()
@@ -24,18 +24,18 @@ export class CreateService {
   progress = 10;
   constructor(
     private http: HttpClient,
-    private serverDataService: ServerDataService
+    private URLService: URLService
   ) {
     this.event = new EventModel();
     this.creator = new CreatorModel('dummy@web.de');
-    this.postURL = this.serverDataService.getServerURL() + this.postURL;
+    this.postURL = this.URLService.getServerURL() + this.postURL;
   }
   postData() {
     console.log(this.postURL);
     this.http.post(this.postURL, this.event).subscribe((data: any) => {
       console.log(data);
       this.adminID = data.data[0].creator.adminUUID;
-      this.joinID = '10.150.133.137:4200/join/' + data.data[0].uuid;
+      this.joinID = this.URLService.getFrontendURL() + '/join/' + data.data[0].uuid;
     });
 
   }

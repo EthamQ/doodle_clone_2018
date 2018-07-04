@@ -1,5 +1,6 @@
 <!-- Editable table -->
 <div class="container">
+  <ng-template [ngIf]="joinService.serverData != undefined">
   <div class="card" *ngIf="!(joinService.serverData.date.length==0)">
 
     <div class="card-body">
@@ -44,10 +45,6 @@
                 </div>
               </td>
             </ng-container>
-
-
-
-
           </tr>
           <tr *ngFor="let participant of joinService.serverData.participants" style="background-color: whitesmoke">
             <td class="pt-3-half" contenteditable="false">{{participant.name}}</td>
@@ -64,13 +61,11 @@
               </div>
             </td>
           </tr>
-
         </table>
       </div>
-
     </div>
-
   </div>
+</ng-template>
   <button class="button" type="submit" class="btn btn-primary" (click)="joinService.postData()" [disabled]="(joinService.joiner.name === 'Your Name')" [routerLink]="joinService.viewNav">Data</button>
 
 </div>

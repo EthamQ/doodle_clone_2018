@@ -6,7 +6,7 @@ import * as moment from 'moment';
 import { CreatorModel } from '../models/creator.model';
 import { HttpClient } from '@angular/common/http';
 import { ServerModel } from '../models/server.model';
-import { ServerDataService } from './serverDataService';
+import { URLService } from './url-service';
 @Injectable()
 export class JoinService {
 
@@ -20,12 +20,12 @@ export class JoinService {
   dataLoaded: boolean;
   constructor(
     private http: HttpClient,
-    private serverDataService: ServerDataService
+    private URLService: URLService
   ) {
     moment.locale('en');
     this.dataLoaded = false;
-    this.getURl = this.serverDataService.getServerURL() + this.getURl;
-    this.postURL = this.serverDataService.getServerURL() + this.postURL;
+    this.getURl = this.URLService.getServerURL() + this.getURl;
+    this.postURL = this.URLService.getServerURL() + this.postURL;
   }
   postData() {
     console.log("in postData: ");
