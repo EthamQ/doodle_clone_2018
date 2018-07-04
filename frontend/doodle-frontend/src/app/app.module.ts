@@ -69,6 +69,7 @@ import {MonthPipe} from './pipes/month.pipe';
 import { TimeHourPipe } from './pipes/time-hour.pipe';
 import {ViewService} from './services/view.service';
 import {AdminService} from './services/admin.service';
+import { ServerDataService } from './services/serverDataService';
 
 @NgModule({
   exports: [
@@ -146,7 +147,7 @@ export class MaterialModule {}
     AngularFontAwesomeModule,
     NgbModule.forRoot()
   ],
-  providers: [ViewService, AdminService, CreateService, JoinService],
+  providers: [ViewService, AdminService, CreateService, JoinService, ServerDataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

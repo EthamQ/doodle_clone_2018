@@ -1,26 +1,34 @@
 import { Injectable } from '@angular/core';
-import {EventModel} from '../models/event.model';
-import {DatesModel} from '../models/dates.model';
-import {ParticipantModel} from '../models/participant.model';
+import { EventModel } from '../models/event.model';
+import { DatesModel } from '../models/dates.model';
+import { ParticipantModel } from '../models/participant.model';
 import * as moment from 'moment';
-import {CreatorModel} from '../models/creator.model';
-import {HttpClient} from '@angular/common/http';
-import {ServerModel} from '../models/server.model';
+import { CreatorModel } from '../models/creator.model';
+import { HttpClient } from '@angular/common/http';
+import { ServerModel } from '../models/server.model';
+import { ServerDataService } from './serverDataService';
 @Injectable()
 export class JoinService {
-  getURl = 'http://10.150.133.137:3000/event/';
+
+  getURl = '/event/';
   UUID: string;
-  postURL = 'http://10.150.133.137:3000/participant/';
+  postURL = '/participant/';
   votes = [];
   viewNav: string;
   serverData: ServerModel;
   joiner = new ParticipantModel('Your Name');
   dataLoaded: boolean;
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private serverDataService: ServerDataService
+  ) {
     moment.locale('en');
     this.dataLoaded = false;
+    this.getURl = this.serverDataService.getServerURL() + this.getURl;
+    this.postURL = this.serverDataService.getServerURL() + this.postURL;
   }
   postData() {
+    console.log("in postData: ");
     console.log(this.joiner);
     this.http.post(this.postURL + this.UUID, this.joiner).subscribe(res => console.log(res));
 

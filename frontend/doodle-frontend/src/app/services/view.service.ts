@@ -2,14 +2,19 @@ import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import {HttpClient} from '@angular/common/http';
 import {ServerModel} from '../models/server.model';
+import { ServerDataService } from './serverDataService';
 @Injectable()
 export class ViewService {
-  getURl = 'http://10.150.133.137:3000/event/';
+  getURl = '/event/';
   UUID = '';
   votes = [];
   serverData: ServerModel;
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private serverDataService: ServerDataService
+  ) {
     moment.locale('en');
+    this.getURl = this.serverDataService.getServerURL() + this.getURl;
   }
   getData() {
     console.log('getView');
