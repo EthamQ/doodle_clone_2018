@@ -266,6 +266,49 @@ describe("Update title, description, eventType, location", () => {
 });
 
 // ############################################
+// Delete a date
+// ############################################
+let url_deleteDate = '/date/delete/';
+describe('Delete a date', ()=>{
+  it("Should get success true from the server", done => {
+    GET_eventByUUID(server, valueTracker.getUUID(), response => {
+      let indexesToDelete = [];
+      indexesToDelete.push(0);
+      let mockRequestData = {indexesToDelete};
+      checkSuccess(response, () => {
+        chai.request(server)
+        .post(url_deleteDate + valueTracker.getAdminUUID())
+        .send(mockRequestData)
+        .end((err, res) => {
+          console.log(res.body);
+          checkSuccess(res, () => {
+            done();
+          });
+        });
+      });
+    });
+  });
+  it("The date array of the creator and the participants should have the correct decreased length", done => {
+    GET_eventByUUID(server, valueTracker.getUUID(), response => {
+      let indexesToDelete = [];
+      indexesToDelete.push(0);
+      let mockRequestData = {indexesToDelete};
+      checkSuccess(response, () => {
+        chai.request(server)
+        .post(url_deleteDate + valueTracker.getAdminUUID())
+        .send(mockRequestData)
+        .end((err, res) => {
+          checkSuccess(res, () => {
+            done();
+          });
+        });
+      });
+    });
+  });
+});
+
+
+// ############################################
 // Delete participant
 // ############################################
 let url_deleteParticipant = '/participant/remove/';
@@ -283,6 +326,7 @@ describe("Delete participants", ()=>{
         .end((err, res) => {
           checkSuccess(res, () => {
             valueTracker.decreaseParticipants();
+            valueTracker.addDeletedParticipantId(participantToDelete.id);
             done();
           });
         });
@@ -292,10 +336,22 @@ describe("Delete participants", ()=>{
   it("Should not find the participant in the updated event anymore", done =>{
     GET_eventByUUID(server, valueTracker.getUUID(), response => {
       checkSuccess(response, () => {
-            done();
+        let updatedParticipants = extractParticipants(response);
+        let deletedParticipants = valueTracker.getDeletedParticipantId();
+        let participantIsGone = true;
+        for(let i; i<updatedParticipants.length; i++){
+          deletedParticipants.map(deletedPart =>{
+            if(updatedParticipants[i].id == deletedPart.id){
+              participantIsGone = false;
+            }
+          });
+        }
+        expect(participantIsGone).to.be.true;
+        done();
       });
     });
   });
+  
 });
 
 

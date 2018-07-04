@@ -152,7 +152,7 @@ Expected data in the post request:
 }
 
 ##############################################
-6. Delete a participator of an event
+6. Delete a participant of an event
 router.post('/participant/remove/:adminUUID', participantLogic.removeParticipants);
 
 Expected data in the url:
@@ -196,7 +196,7 @@ the uuid of the creator, so only he can update those values
 Expected data in the post request (the indexes of the dates you want to delete int the date array of an event):
 {
 	"indexesToDelete": [
-        boolean
+        number
     ]
 }
 

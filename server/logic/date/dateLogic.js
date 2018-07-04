@@ -11,6 +11,7 @@ const uuid = require('uuid/v4');
  * and in every participant.dates array
  */
 getResponseForRemovingDates = function (indexesToDelete, creatorUUID) {
+    let responseBuilder = new ResponseBuilder();
     return new Promise((resolve, reject)=>{
         getDoodleEventByCreatorUUID(creatorUUID, data => {
            if (data.success) {

@@ -2,7 +2,9 @@ let partMock = require('./mockData/participant');
 
 module.exports = class EventValueTracker{
 
-    constructor() { }
+    constructor() {
+        this.participantIdsDelete = [];
+     }
 
     setUUID(uuid){
         this.uuid = uuid;
@@ -50,10 +52,22 @@ module.exports = class EventValueTracker{
     getDate(){
         return this.event.date;
     }
-   
-    addParticipantId(participantId){
-        this.decreaseParticipants.push(participantId);
+    
+    addDeletedParticipantId(participantId){
+        this.participantIdsDelete.push(participantId);
     }
+    addAddedParticipantId(participantId){
+        this.participantIdsAdd.push(participantId);
+    }
+    getDeletedParticipantId(){
+        return this.participantIdsDelete;
+    }
+    getAddedParticipantId(){
+     return  this.participantIdsAdd;
+    }
+
+
+
     initNumberParticipants(){
         this.numberParticipants = 0;
     }
