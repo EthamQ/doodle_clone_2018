@@ -70,6 +70,7 @@ import { TimeHourPipe } from './pipes/time-hour.pipe';
 import {ViewService} from './services/view.service';
 import {AdminService} from './services/admin.service';
 import { URLService } from './services/url-service';
+import { LogoHeaderComponent } from './header/logo.component';
 
 @NgModule({
   exports: [
@@ -128,7 +129,8 @@ export class MaterialModule {}
     CreatePersonalComponent,
     CreateCalendarComponent,
     AppComponent,
-    YearPipe, WeekdayPipe, DayPipe, MonthPipe, TimeHourPipe
+    YearPipe, WeekdayPipe, DayPipe, MonthPipe, TimeHourPipe,
+    LogoHeaderComponent
   ],
   imports: [
     AppRoutingModule,

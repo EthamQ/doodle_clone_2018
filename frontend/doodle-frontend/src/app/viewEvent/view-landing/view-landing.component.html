@@ -1,7 +1,9 @@
 <div class="background" *ngIf="!(viewService.serverData)">
+    
   <button type="button" class="close" aria-label="Close">
   </button>
   <div class="outerdiv">
+      <app-logo-header [isLanding]="true"></app-logo-header>
     <h2 class="header">Event ID</h2>
     <div class="input-group mb-3">
       <input type="text" class="form-control" aria-label="Please enter your ID." [value]="viewService.UUID" (input)="viewService.UUID = $event.target.value">
