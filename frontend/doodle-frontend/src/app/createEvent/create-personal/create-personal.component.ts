@@ -34,14 +34,14 @@ private adminService: AdminService) {
    */
   returnInputValue(inputType){
    if(this.stepperService.isCreate){
-      return this.returnCreateInput(inputType);
+      return this.returnCreateInputValue(inputType);
    }
    else{
-     return this.returnEditInput(inputType);
+     return this.returnEditInputValue(inputType);
    }
   }
 
-  returnCreateInput(inputType){
+  returnCreateInputValue(inputType){
     let inputValue = "";
     switch(inputType){
       case this.TITLE: inputValue = this.createService.event.title;
@@ -50,21 +50,23 @@ private adminService: AdminService) {
       break;
       case this.DESCRIPTION: inputValue = this.createService.event.description;
       break;
+      case this.LOCATION: inputValue = this.createService.event.location;
+      break;
     }
     return (inputValue == undefined)? "" : inputValue;
   }
 
-  returnEditInput(inputType){
+  returnEditInputValue(inputType){
     let inputValue = "";
     switch(inputType){
       case this.TITLE: inputValue = this.adminService.stateTracker.getEventData().title;
       break;
-      case this.NAME: inputValue = "Remove this field";
-      break;
       case this.DESCRIPTION: inputValue = this.adminService.stateTracker.getEventData().description;
       break;
+      case this.LOCATION: inputValue = this.adminService.stateTracker.getEventData().location;
+      break;
     }
-    return inputValue;
+    return (inputValue == undefined)? "" : inputValue;
   }
 
   handleNewInput(input, type){
@@ -84,6 +86,8 @@ private adminService: AdminService) {
       case this.NAME: this.createService.event.creator.name = input;
       break;
       case this.DESCRIPTION: this.createService.event.description = input;
+      break;
+      case this.LOCATION: this.createService.event.location = input;
       break;
     }
   }

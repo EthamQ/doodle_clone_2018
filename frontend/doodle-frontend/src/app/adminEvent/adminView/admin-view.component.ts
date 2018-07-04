@@ -26,6 +26,9 @@ export class AdminViewComponent implements OnInit {
                 this.stateTracker.setAdminId(adminId);
                 this.stateTracker.setEventData(response.data[0]);
                 this.adminService.stateTracker = this.stateTracker;
+                this.adminService.updatedValues.title = this.stateTracker.getEventData().title;
+                this.adminService.updatedValues.description = this.stateTracker.getEventData().description;
+                this.adminService.updatedValues.location = this.stateTracker.getEventData().location;
             }
             else {
                 console.log("not a valid adminId -> error message");
