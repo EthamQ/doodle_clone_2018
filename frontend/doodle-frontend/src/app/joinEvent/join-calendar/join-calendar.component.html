@@ -1,5 +1,5 @@
 <!-- Editable table -->
-<div *ngIf="componentActive" class="container">
+<div class="container">
   <app-logo-header [isCreate]="true"></app-logo-header>
   <ng-template [ngIf]="joinService.serverData != undefined">
   <div class="card" *ngIf="!(joinService.serverData.date.length==0)">

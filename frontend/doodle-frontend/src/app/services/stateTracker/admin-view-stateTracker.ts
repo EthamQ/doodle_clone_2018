@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class AdminViewStateTracker{
-    private editViewActive = true;
+    private editViewActive = false;
     private adminId: string;
     private eventData: any;
 
@@ -36,7 +36,7 @@ export class AdminViewStateTracker{
         this.eventData = eventData;
     }
 
-    getEventData(eventData){
+    getEventData(){
         return this.eventData;
     }
 }

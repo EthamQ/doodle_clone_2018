@@ -19,7 +19,7 @@ export class JoinCalendarComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.componentActive = true;
+
   }
 
   /**

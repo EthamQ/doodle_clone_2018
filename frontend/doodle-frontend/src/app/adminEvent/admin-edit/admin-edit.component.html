@@ -4,7 +4,16 @@
       <app-logo-header [isCreate]="true"></app-logo-header>
       <app-stepper-nav></app-stepper-nav>
       <router-outlet></router-outlet>
-      <app-stepper-nav-button></app-stepper-nav-button>
+      <button class="button" type="submit" class="btn btn-primary"
+    [disabled]="chooseDatesButtonIsDisabled()"
+            (click)="adminService.updateMainEventValues()"
+            routerLink="calendar"
+            *ngIf="!adminService.detailsBool && !adminService.calendarBool">Save, go to calendar</button>
+    <button class="button" type="submit" class="btn btn-primary"
+          [disabled]="(createService.timeSelection.length === 0)"
+          (click)="adminService.setCalendar()"
+          routerLink="summary"
+          *ngIf="adminService.detailsBool && !adminService.calendarBool">Submit and update values</button>
   </div>
   </div>
   </div>

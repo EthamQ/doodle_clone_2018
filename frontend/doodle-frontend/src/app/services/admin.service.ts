@@ -6,17 +6,20 @@ import {DatesModel} from '../models/dates.model';
 import {TimeselectionModel} from '../models/timeselection.model';
 import * as moment from 'moment';
 import { URLService } from './url-service';
+import { AdminViewStateTracker } from './stateTracker/admin-view-stateTracker';
 
 
 @Injectable()
 
 export class AdminService {
   postURL = '/event/new';
+  postURL_update = '/event/update/';
   adminID: string;
   joinID: string;
   creator: CreatorModel;
   timeSelection: Array<TimeselectionModel> = [];
   event: EventModel;
+  stateTracker: AdminViewStateTracker;
   detailsBool = false;
   calendarBool = false;
   summaryBool = false;
@@ -29,6 +32,7 @@ export class AdminService {
     this.event = new EventModel();
     this.creator = new CreatorModel('dummy@web.de');
     this.postURL = this.URLService.getServerURL() + this.postURL;
+    this.postURL_update = this.URLService.getServerURL() + this.postURL_update;
   }
   postData() {
     this.http.post(this.postURL, this.event).subscribe((data: any) => {
@@ -52,5 +56,24 @@ export class AdminService {
     this.calendarBool = true;
     this.progress += 30;
     this.postData();
+  }
+
+  updatedValues = {
+    title: "",
+    location: "",
+    description: "",
+    eventType: ""
+}
+  
+  updateMainEventValues(){
+    this.setDetails();
+    this.http.post(this.postURL_update + this.stateTracker.getAdminId(), this.updatedValues).subscribe((data: any) => {
+      console.log(data);
+    });
+  }
+
+
+  RemoveDates(){
+
   }
 }

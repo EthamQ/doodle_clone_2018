@@ -1,6 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {CreateService} from '../../services/create.service';
 import { StepperService } from '../../services/stepper-info.service';
+import { AdminService } from '../../services/admin.service';
 
 @Component({
   selector: 'app-create-personal',
@@ -10,13 +11,15 @@ import { StepperService } from '../../services/stepper-info.service';
 export class CreatePersonalComponent implements OnInit {
 
   createService: CreateService;
-  constructor(@Inject(CreateService) createservice: CreateService, public stepperService: StepperService) {
+  constructor(@Inject(CreateService) createservice: CreateService, public stepperService: StepperService,
+private adminService: AdminService) {
     this.createService = createservice;
   }
 
   readonly TITLE = 0;
   readonly NAME = 1
   readonly DESCRIPTION = 2;
+  readonly LOCATION = 3;
 
   ngOnInit() {
     console.log("is create personal " + this.stepperService.isCreate);
@@ -54,11 +57,11 @@ export class CreatePersonalComponent implements OnInit {
   returnEditInput(inputType){
     let inputValue = "";
     switch(inputType){
-      case this.TITLE: inputValue = "Edit title";
+      case this.TITLE: inputValue = this.adminService.stateTracker.getEventData().title;
       break;
-      case this.NAME: inputValue = "Edit name";
+      case this.NAME: inputValue = "Remove this field";
       break;
-      case this.DESCRIPTION: inputValue = "Edit description";
+      case this.DESCRIPTION: inputValue = this.adminService.stateTracker.getEventData().description;
       break;
     }
     return inputValue;
@@ -69,7 +72,7 @@ export class CreatePersonalComponent implements OnInit {
       this.handleNewInputCreate(input, type);
     }
     else{
-
+      this.handleNewInputEdit(input, type);
     }
 
   }
@@ -85,8 +88,15 @@ export class CreatePersonalComponent implements OnInit {
     }
   }
 
-  handleNewInputEdit(input){
-    
+  handleNewInputEdit(input, type){
+    switch(type){
+      case this.TITLE: this.adminService.updatedValues.title = input;
+      break;
+      case this.DESCRIPTION: this.adminService.updatedValues.description = input;
+      break;
+      case this.LOCATION: this.adminService.updatedValues.location = input;
+      break;
+    }
   }
 
 
