@@ -26,10 +26,14 @@ export class ViewService {
           let votes = 0;
           for (let j = 0; j < this.serverData.participants.length; j++) {
             if (this.serverData.participants[j].dates[i] === true) {
-              votes = votes + 1;
+              votes++;
             }
           }
-          this.votes.push(votes);
+          // so votes don't get pushed twice
+          if(votes == this.votes.length){
+            this.votes.push(votes);
+          }
+          
         }
         console.log(this.serverData);
       });

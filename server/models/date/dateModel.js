@@ -9,4 +9,6 @@ module.exports = class DateModel extends ModelClass{
         constructorArgs.dbInfo
     );
     }
+
+    
 }

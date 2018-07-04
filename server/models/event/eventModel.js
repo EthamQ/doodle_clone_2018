@@ -47,7 +47,7 @@ module.exports = class doodleEventModel extends ModelClass {
     }
 
     childModelsAreValid() {
-        return this.datesAreValid;
+        return this.model.date.length > 0;
     }
 
     // generate uuid and add it to url

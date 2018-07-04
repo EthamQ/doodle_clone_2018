@@ -17,7 +17,7 @@ const dateLogic = require('./../date/dateLogic');
 saveNewDoodleEvent = function (req, res, next) {
     let responseBuilder = new ResponseBuilder();
     prepareNewDoodleEvent(req, res, next).then(doodleEventToSave => {
-        if (doodleEventToSave.modelIsValid()) {
+        if (doodleEventToSave.modelIsValid() && doodleEventToSave.childModelsAreValid()) {
             doodleEventToSave.saveModelInDatabase().then(data => {
                 responseBuilder.addMessage(responseBuilder.getNewDoodleEventSuccessMsg());
                 responseBuilder.addData(data.savedItem);
@@ -31,8 +31,12 @@ saveNewDoodleEvent = function (req, res, next) {
         }
         else {
             // model not valid
+            let errMsg = "Required values are missing";
+            if(!doodleEventToSave.childModelsAreValid()){
+                errMsg = "You have to add at least one date";
+            }
             responseBuilder.setSuccess(false);
-            responseBuilder.addMessage("Required values are missing");
+            responseBuilder.addMessage(errMsg);
             res.send(responseBuilder.getResponse());
         }
     });
