@@ -6,14 +6,14 @@
       <br>
       <br>
       <hr>
-
     </div>
     <div class="col-6 myTableMax">
       <div id="table" class="table">
         <table class="table table-responsive-md text-center">
-
-
-          <tr *ngFor="let timeslot of createService.timeSelection">
+          <tr *ngFor="let timeslot of createService.timeSelection; let i = index">
+              <i class="material-icons" (click)="removeDate(i)" title="Remove date" style="cursor: pointer">
+                  remove_circle
+                  </i>
             <td class="pt-3-half" contenteditable="false">
               <div class="d-dateGroup">
                 <div class="d-day">{{timeslot.weekDay}}</div>
