@@ -6,7 +6,7 @@
     <div class="input-group mb-3">
       <input type="text" class="form-control" aria-label="Please enter your ID." [value]="joinService.UUID" (input)="joinService.UUID = $event.target.value">
       <div class="input-group-append">
-        <button class="btn btn-primary" type="button" (click)="sendToServer()" [routerLink]="joinService.UUID">Send</button>
+        <button class="btn btn-primary" type="button" [routerLink]="joinService.UUID">Send</button>
       </div>
     </div>
   </div>

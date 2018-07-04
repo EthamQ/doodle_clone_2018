@@ -1,5 +1,6 @@
 .navigation-container{
-  padding: 10px;
+  padding: 30px;
+  float: none;
 }
 .navigation-item{
   text-align: center;
@@ -9,3 +10,20 @@
  text-align: center;
   color: #888888;
 }
+.next-step {
+  border: none;
+  height: 3px;
+  /* Set the hr color */
+  color:darkgreen; /* old IE */
+  background-color: darkgreen ; /* Modern Browsers */
+}
+
+
+.container{
+  float: none;
+  border-bottom: 20px solid white;
+  border-top: 50px solid transparent;
+  border-top-style: hidden;
+  background-color:white;
+}
+

@@ -3,6 +3,7 @@
   width: 100vw;
   height: 100vh;
   padding: 20%;
+  float:none
 }
 .background{
   width: 100vw;
@@ -20,7 +21,11 @@
 }
 
 .header{
-  color: whitesmoke;
+  color: black;
   padding-right: 10px;
   width: 120px
+}
+
+.container {
+  padding-top: 30px;
 }

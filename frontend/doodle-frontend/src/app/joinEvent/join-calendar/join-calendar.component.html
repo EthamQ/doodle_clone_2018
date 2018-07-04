@@ -71,7 +71,7 @@
     </div>
 
   </div>
-  <button class="button" type="submit" class="btn btn-primary" (click)="joinService.postData()" [disabled]="(joinService.joiner.name === 'Your Name')">Submit Data</button>
+  <button class="button" type="submit" class="btn btn-primary" (click)="joinService.postData()" [disabled]="(joinService.joiner.name === 'Your Name')" [routerLink]="joinService.viewNav">Data</button>
 
 </div>
 

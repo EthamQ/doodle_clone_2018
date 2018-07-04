@@ -47,7 +47,6 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
-import {DateService} from './services/date.service';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { AppRoutingModule } from './app-routing.module';
 import {RouterModule} from '@angular/router';
@@ -68,6 +67,8 @@ import { WeekdayPipe } from './pipes/weekday.pipe';
 import { DayPipe } from './pipes/day.pipe';
 import {MonthPipe} from './pipes/month.pipe';
 import { TimeHourPipe } from './pipes/time-hour.pipe';
+import {ViewService} from './services/view.service';
+import {AdminService} from './services/admin.service';
 
 @NgModule({
   exports: [
@@ -126,7 +127,7 @@ export class MaterialModule {}
     CreatePersonalComponent,
     CreateCalendarComponent,
     AppComponent,
-    YearPipe, WeekdayPipe, DayPipe, MonthPipe,TimeHourPipe
+    YearPipe, WeekdayPipe, DayPipe, MonthPipe, TimeHourPipe
   ],
   imports: [
     AppRoutingModule,
@@ -145,7 +146,7 @@ export class MaterialModule {}
     AngularFontAwesomeModule,
     NgbModule.forRoot()
   ],
-  providers: [DateService, CreateService, JoinService],
+  providers: [ViewService, AdminService, CreateService, JoinService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

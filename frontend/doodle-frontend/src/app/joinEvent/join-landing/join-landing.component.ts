@@ -17,8 +17,4 @@ export class JoinLandingComponent implements OnInit {
 
   ngOnInit() {
   }
-  sendToServer() {
-    this.joinService.getData();
-  }
-
 }

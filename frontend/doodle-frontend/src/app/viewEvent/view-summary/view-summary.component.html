@@ -1,3 +1,50 @@
-<p>
-  view-summary works!
-</p>
+<div class="container">
+  <div class="card">
+
+    <div class="card-body">
+      <div id="table" class="table">
+        <table class="table table-bordered table-responsive-md text-center">
+          <tr>
+            <th class="text-center"></th>
+            <th class="text-center" *ngFor="let element of viewService.serverData.date">
+              <div class="d-dateGroup">
+                <div class="d-month">{{element.timeFrom | month}}</div>
+                <div class="d-date">{{element.timeFrom | day}}</div>
+                <div class="d-day">{{element.timeFrom | timeHour}} - {{element.timeTo |timeHour}}</div>
+              </div>
+            </th>
+          </tr>
+          <tr>
+            <td class="pt-3-half" contenteditable="false">
+              <div class="participantCountHeader">{{viewService.serverData.participants.length + 1}} Participants</div>
+            </td>
+            <td class="pt-3-half" contenteditable="false" *ngFor="let count of viewService.votes">
+              <div class="summary-participants"><i class="material-icons">done</i>{{count}}</div>
+            </td>
+          </tr>
+
+          <tr *ngFor="let participant of viewService.serverData.participants" style="background-color: whitesmoke">
+            <td class="pt-3-half" contenteditable="false">{{participant.name}}</td>
+            <td class="pt-3-half" contenteditable="false" *ngFor="let selection of participant.dates; let i = index;">
+              <div class="custom-checker-green" *ngIf="selection === true">
+                <i class="material-icons">
+                  check_box
+                </i>
+              </div>
+              <div class="custom-checker-red" *ngIf="selection === false">
+                <i class="material-icons">
+                  indeterminate_check_box
+                </i>
+              </div>
+            </td>
+          </tr>
+
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
