@@ -73,6 +73,10 @@ import { URLService } from './services/url-service';
 import { LogoHeaderComponent } from './header/logo.component';
 import { AdminViewComponent } from './adminEvent/adminView/admin-view.component';
 import { EventService } from './services/event.service';
+import { AdminViewStateTracker } from './services/stateTracker/admin-view-stateTracker';
+import { StepperNavigationComponent } from './stepper/navigation/stepper-nav.component';
+import { StepperNavButtonsComponent } from './stepper/buttons/nav-buttons.component';
+import { StepperService } from './services/stepper-info.service';
 
 @NgModule({
   exports: [
@@ -133,7 +137,9 @@ export class MaterialModule {}
     AppComponent,
     YearPipe, WeekdayPipe, DayPipe, MonthPipe, TimeHourPipe,
     LogoHeaderComponent,
-    AdminViewComponent
+    AdminViewComponent,
+    StepperNavigationComponent,
+    StepperNavButtonsComponent
   ],
   imports: [
     AppRoutingModule,
@@ -152,7 +158,7 @@ export class MaterialModule {}
     AngularFontAwesomeModule,
     NgbModule.forRoot()
   ],
-  providers: [ViewService, AdminService, CreateService, JoinService, URLService, EventService],
+  providers: [ViewService, AdminService, CreateService, JoinService, URLService, EventService, AdminViewStateTracker, StepperService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -25,6 +25,9 @@ const routes: Routes = [
   { path: 'admin',
     component: AdminViewComponent,
     children: [
+      {path: 'details', component: CreatePersonalComponent},
+      {path: 'calendar', component: CreateCalendarComponent},
+      {path: 'summary', component: CreateSummaryComponent},
       {path: ':id', component: AdminEditComponent}
     ]
   },

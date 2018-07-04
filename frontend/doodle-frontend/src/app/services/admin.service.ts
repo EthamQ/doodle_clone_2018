@@ -34,7 +34,7 @@ export class AdminService {
     this.http.post(this.postURL, this.event).subscribe((data: any) => {
       console.log(data);
       this.adminID = data.data[0].creator.adminUUID;
-      this.joinID = '10.150.133.137:4200/join/' + data.data[0].uuid;
+      this.joinID = this.URLService.getFrontendURL + '/join/' + data.data[0].uuid;
     });
 
   }

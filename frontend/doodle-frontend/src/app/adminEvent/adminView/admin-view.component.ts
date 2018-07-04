@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { EventService } from '../../services/event.service';
+import { AdminViewStateTracker } from '../../services/stateTracker/admin-view-stateTracker';
 
 @Component({
     selector: 'app-admin-view',
@@ -7,15 +9,26 @@ import { Component, OnInit } from '@angular/core';
 
 export class AdminViewComponent implements OnInit {
 
-    editActive = false;
-    adminId : string;
+    public stateTracker = new AdminViewStateTracker();
 
-    constructor() { }
+    constructor(private eventService: EventService) { }
 
-    ngOnInit() { }
+    ngOnInit() {
+     }
 
-    adminIdSubmitted(adminId){
-        this.editActive = !this.editActive;
-        this.adminId = adminId;
+    adminIdSubmitted(adminId) {
+        this.eventService.getEventByAdminId(adminId).subscribe(data => {
+            console.log(data);
+            let response = <any>data;
+            if (response.success && response.data[0].adminAccess) {
+                this.stateTracker.setEditActive(true)
+                this.stateTracker.setAdminId(adminId);
+                this.stateTracker.setEventData(response.data[0]);
+            }
+            else {
+                console.log("not a valid adminId -> error message");
+            }
+        });
+
     }
 }

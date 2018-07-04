@@ -1,4 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { CreateService } from '../../services/create.service';
+import { StepperService } from '../../services/stepper-info.service';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-admin-edit',
@@ -8,12 +12,14 @@ import { Component, OnInit, Input } from '@angular/core';
 export class AdminEditComponent implements OnInit {
 
   public eventToEdit;
-  @Input() adminID : string;
+  @Input() stateTracker : any;
 
-  constructor() { }
+  constructor(public createService: CreateService, private stepperService: StepperService, private router: Router) { }
 
   ngOnInit() {
-    console.log(this.adminID);
+    this.stepperService.setIsEdit();
+    this.router.navigate(['admin/details']);
+    // console.log(this.stateTracker.getEventData());
   }
 
 }

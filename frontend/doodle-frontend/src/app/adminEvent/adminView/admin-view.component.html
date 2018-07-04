@@ -1,2 +1,2 @@
-<app-admin-landing (adminIdSubmit)="adminIdSubmitted($event)" *ngIf="!editActive"></app-admin-landing>
-<app-admin-edit *ngIf="editActive"></app-admin-edit>
+<app-admin-landing *ngIf="stateTracker.showAdminLanding()" (adminIdSubmit)="adminIdSubmitted($event)" ></app-admin-landing>
+<app-admin-edit *ngIf="stateTracker.showAdminEdit()" [stateTracker]="stateTracker"></app-admin-edit>
