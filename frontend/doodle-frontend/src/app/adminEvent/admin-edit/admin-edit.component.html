@@ -8,12 +8,12 @@
     [disabled]="chooseDatesButtonIsDisabled()"
             (click)="adminService.updateMainEventValues()"
             routerLink="calendar"
-            *ngIf="!adminService.detailsBool && !adminService.calendarBool">Save, go to calendar</button>
+            *ngIf="!adminService.detailsBool && !adminService.calendarBool">Update values</button>
     <button class="button" type="submit" class="btn btn-primary"
-          [disabled]="(createService.timeSelection.length === 0)"
-          (click)="adminService.setCalendar()"
+          [disabled]="false"
+          (click)="updateDatesClick()"
           routerLink="summary"
-          *ngIf="adminService.detailsBool && !adminService.calendarBool">Submit and update values</button>
+          *ngIf="adminService.detailsBool && !adminService.calendarBool">Update dates</button>
   </div>
   </div>
   </div>

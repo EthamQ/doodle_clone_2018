@@ -14,6 +14,7 @@ import { AdminViewStateTracker } from './stateTracker/admin-view-stateTracker';
 export class AdminService {
   postURL = '/event/new';
   postURL_update = '/event/update/';
+  postURL_dateRemove = '/date/delete/';
   adminID: string;
   joinID: string;
   creator: CreatorModel;
@@ -33,6 +34,7 @@ export class AdminService {
     this.creator = new CreatorModel('dummy@web.de');
     this.postURL = this.URLService.getServerURL() + this.postURL;
     this.postURL_update = this.URLService.getServerURL() + this.postURL_update;
+    this.postURL_dateRemove = this.URLService.getServerURL() + this.postURL_dateRemove;
   }
   postData() {
     this.http.post(this.postURL, this.event).subscribe((data: any) => {
@@ -73,7 +75,11 @@ export class AdminService {
   }
 
 
-  RemoveDates(){
-
+  indexesToDelete = [];
+  removeDates(){
+    let requestData = {indexesToDelete: this.indexesToDelete};
+    this.http.post(this.postURL_dateRemove  + this.stateTracker.getAdminId(), requestData).subscribe((data: any) => {
+      console.log(data);
+    });
   }
 }

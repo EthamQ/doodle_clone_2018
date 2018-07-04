@@ -32,4 +32,8 @@ export class AdminEditComponent implements OnInit {
     return false;
   }
 
+  updateDatesClick(){
+    this.adminService.removeDates();
+  }
+
 }

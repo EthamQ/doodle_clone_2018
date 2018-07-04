@@ -5,6 +5,8 @@ import {DateButton, DlDateTimePickerChange} from 'angular-bootstrap-datetimepick
 import {TimeselectionModel} from '../../models/timeselection.model';
 import {isUndefined} from 'util';
 import * as deepEqual from "deep-equal";
+import { AdminService } from '../../services/admin.service';
+import { StepperService } from '../../services/stepper-info.service';
 
 
 @Component({
@@ -14,10 +16,14 @@ import * as deepEqual from "deep-equal";
 })
 export class CreateCalendarComponent implements OnInit {
   createService: CreateService;
-  constructor(@Inject(CreateService) createservice: CreateService) {
+  constructor(@Inject(CreateService) createservice: CreateService, private adminService: AdminService,
+public stepperService: StepperService) {
     this.createService = createservice;
   }
-  ngOnInit() {}
+
+  ngOnInit() {
+
+  }
 
   /**
    * user selects a date on the calender
@@ -65,6 +71,29 @@ export class CreateCalendarComponent implements OnInit {
    */
   removeDate(index){
     this.createService.timeSelection.splice(index, 1);
+  }
+
+  removeExistingDate(index){
+    if(!this.dateToBeRemoved(index)){
+      this.adminService.indexesToDelete.push(index);
+    }
+  }
+
+  revertSelection(index){
+    for(let i = 0; i<this.adminService.indexesToDelete.length; i++){
+      if(this.adminService.indexesToDelete[i] == index){
+        this.adminService.indexesToDelete.splice(i, 1);
+      }
+  }
+  }
+
+  dateToBeRemoved(index){
+    for(let i = 0; i<this.adminService.indexesToDelete.length; i++){
+        if(this.adminService.indexesToDelete[i] == index){
+          return true;
+        }
+    }
+    return false;
   }
 
   setCalendar() {
