@@ -28,4 +28,10 @@ export class CreateSummaryComponent implements OnInit {
     document.execCommand('copy');
     document.body.removeChild(selBox);
   }
+
+  getID(isJoin){
+    let id = isJoin? this.createService.joinID : this.createService.adminID;
+    return id? id : '';
+    
+  }
 }

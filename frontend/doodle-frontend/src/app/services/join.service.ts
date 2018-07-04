@@ -33,6 +33,20 @@ export class JoinService {
     this.http.post(this.postURL + this.UUID, this.joiner).subscribe(res => console.log(res));
 
   }
+
+  /**
+   * gives you the possibility to wait until the participant 
+   * is actually in the database, only then the callback is called
+   * @param callback 
+   */
+  postDataAndWait(callback) {
+    this.http.post(this.postURL + this.UUID, this.joiner).subscribe(res => {
+      console.log(res);
+      callback();
+    }
+    );
+
+  }
   getData() {
     this.http.get(this.getURl + this.UUID).subscribe(
       (data: any) => {

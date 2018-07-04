@@ -36,8 +36,6 @@ export class CreateCalendarComponent implements OnInit {
         console.log("Date already exists");
       }
     });
-
-    
   }
 
   /**

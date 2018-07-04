@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {JoinService} from '../../services/join.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 @Component({
   selector: 'app-join-calendar',
   templateUrl: './join-calendar.component.html',
@@ -9,7 +9,7 @@ import {ActivatedRoute} from '@angular/router';
 export class JoinCalendarComponent implements OnInit {
 
   joinService: JoinService;
-  constructor(@Inject(JoinService) joinService: JoinService, private route: ActivatedRoute) {
+  constructor(@Inject(JoinService) joinService: JoinService, private route: ActivatedRoute, private router: Router) {
     this.joinService = joinService;
     this.route.params.subscribe(params => {
       this.joinService.UUID = params.id;
@@ -20,4 +20,13 @@ export class JoinCalendarComponent implements OnInit {
   ngOnInit() {
   }
 
+  /**
+   * waits until the participant is in the database
+   * then it navigates to the view summary component
+   */
+  navigateToViewSummary(){
+    this.joinService.postDataAndWait(()=>{
+      this.router.navigate([this.joinService.viewNav]);
+    });
+  }
 }
