@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AdminService } from '../../../services/admin.service';
+
 
 @Component({
   selector: 'app-admin-options',
@@ -7,7 +9,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AdminOptionsComponent implements OnInit {
 
-  constructor() { }
+  modalOpen = false;
+  
+  constructor(private adminService: AdminService) { }
 
   ngOnInit() {
   }

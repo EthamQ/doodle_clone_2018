@@ -77,7 +77,8 @@ import { AdminViewStateTracker } from './services/stateTracker/admin-view-stateT
 import { StepperNavigationComponent } from './stepper/navigation/stepper-nav.component';
 import { StepperNavButtonsComponent } from './stepper/buttons/nav-buttons.component';
 import { StepperService } from './services/stepper-info.service';
-import { AdminOptionsComponent } from './adminEvent/admin-edit/admin-options/admin-options/admin-options.component';
+import { AdminOptionsComponent } from './adminEvent/admin-edit/admin-options/admin-options.component';
+import { DeleteWarningComponent } from './modals/delete-warning/delete-warning.component';
 
 @NgModule({
   exports: [
@@ -118,7 +119,6 @@ import { AdminOptionsComponent } from './adminEvent/admin-edit/admin-options/adm
 
   imports: [],
 
-  declarations: [AdminOptionsComponent]
 })
 export class MaterialModule {}
 
@@ -140,7 +140,9 @@ export class MaterialModule {}
     LogoHeaderComponent,
     AdminViewComponent,
     StepperNavigationComponent,
-    StepperNavButtonsComponent
+    StepperNavButtonsComponent,
+    AdminOptionsComponent,
+    DeleteWarningComponent
   ],
   imports: [
     AppRoutingModule,
