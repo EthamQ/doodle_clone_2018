@@ -7,6 +7,7 @@ import {TimeselectionModel} from '../models/timeselection.model';
 import * as moment from 'moment';
 import { URLService } from './url-service';
 import { AdminViewStateTracker } from './stateTracker/admin-view-stateTracker';
+import { EventService } from './event.service';
 
 
 @Injectable()
@@ -30,7 +31,8 @@ export class AdminService {
   progress = 10;
   constructor(
     private http: HttpClient,
-    private URLService: URLService
+    private URLService: URLService,
+    private eventService: EventService
   ) {
     this.event = new EventModel();
     this.creator = new CreatorModel('dummy@web.de');
@@ -77,6 +79,9 @@ export class AdminService {
     this.activateCalendar();
     this.http.post(this.postURL_update + this.stateTracker.getAdminId(), this.updatedValues).subscribe((data: any) => {
       console.log(data);
+      if(<any>data.success){
+        this.updateEventData();
+      }
     });
   }
 
@@ -97,7 +102,25 @@ export class AdminService {
     let requestData = {datesToAdd: this.datesToAdd};
     this.http.post(this.postURL_dateAdd  + this.stateTracker.getAdminId(), requestData).subscribe((data: any) => {
       console.log(data);
-      this.timeSelection = [];
+      if(<any>data.success){
+        // reset selected times
+        this.timeSelection = [];
+        this.updateEventData();
+      }
+      
+    });
+  }
+
+  /**
+   * update event data that is displayed in admin edit
+   */
+  updateEventData(){
+    this.eventService.getEventByAdminId(this.stateTracker.getAdminId()).subscribe(data =>{
+      console.log(data);
+      let response = <any>data;
+      if(response.success){
+        this.stateTracker.setEventData(response.data[0]);
+      }
     });
   }
 

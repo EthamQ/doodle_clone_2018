@@ -32,6 +32,13 @@ module.exports = class doodleEventModel extends ModelClass {
             if (key == 'creator') {
                 this.returnCreatorObject(event[key], creatorObject =>{
                     this.model.creator = creatorObject;
+                    // if no dates specified assume the creator can
+                    // participate at every date he suggests
+                    if( this.model.creator.dates.length == 0){
+                        event.date.map(dateEntry =>{
+                            this.model.creator.dates.push(true);
+                        });
+                    }
                 });
             }
         }
@@ -93,13 +100,6 @@ module.exports = class doodleEventModel extends ModelClass {
         creatorModel.setModelProperty(creatorFromRequest, ()=>{
             callback(creatorModel.getModel());
         });
-        // let creator = {
-        //     name: creatorFromRequest.name,
-        //     email: creatorFromRequest.email,
-        //     dates: creatorFromRequest.dates,
-        //     adminUUID: uuid(),
-        // }
-        
     }
 }
 
