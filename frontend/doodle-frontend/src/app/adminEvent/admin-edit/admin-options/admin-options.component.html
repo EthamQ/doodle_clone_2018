@@ -5,7 +5,7 @@
     <app-date-selector (boxClick)="dateSelectionChanged($event)" [dates]="adminService.stateTracker.getEventData().date"></app-date-selector>
   </div>
   <div class="col-12 mt-3">
-      <button class="button" type="submit" class="btn btn-primary">Update values</button>
+      <button class="button" (click)="updateCreatorDates()" type="submit" class="btn btn-primary">Update values</button>
   </div>
   <div class="col-12 mt-3">
       <button class="button" type="submit" class="btn btn-danger" (click)="modalOpen = true">Delete this event</button>

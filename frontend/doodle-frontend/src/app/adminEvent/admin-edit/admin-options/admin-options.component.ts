@@ -10,6 +10,7 @@ import { AdminService } from '../../../services/admin.service';
 export class AdminOptionsComponent implements OnInit {
 
   modalOpen = false;
+  updatedCreatorDates = [];
 
   constructor(private adminService: AdminService) { }
 
@@ -18,7 +19,12 @@ export class AdminOptionsComponent implements OnInit {
   }
 
   dateSelectionChanged(event){
+    this.updatedCreatorDates = event.dates;
     console.log(event);
+  }
+
+  updateCreatorDates(){
+    this.adminService.updateAdminDates(this.updatedCreatorDates);
   }
 
 }

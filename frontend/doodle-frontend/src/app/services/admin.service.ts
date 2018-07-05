@@ -18,7 +18,7 @@ export class AdminService {
   postURL_dateRemove = '/date/delete/';
   postURL_dateAdd = '/date/add/';
   postURL_deleteEvent = '/event/delete/';
-  postURL_updateAdminDates = '/event/delete/';
+  postURL_updateAdminDates = '/creator/date/update/';
   adminID: string;
   joinID: string;
   creator: CreatorModel;
@@ -42,6 +42,7 @@ export class AdminService {
     this.postURL_dateRemove = this.URLService.getServerURL() + this.postURL_dateRemove;
     this.postURL_dateAdd = this.URLService.getServerURL() + this.postURL_dateAdd;
     this.postURL_deleteEvent = this.URLService.getServerURL() + this.postURL_deleteEvent;
+    this.postURL_updateAdminDates = this.URLService.getServerURL() + this.postURL_updateAdminDates;
   }
   postData() {
     this.http.post(this.postURL, this.event).subscribe((data: any) => {
@@ -134,6 +135,13 @@ export class AdminService {
 
   deleteEvent(){
     this.http.post(this.postURL_deleteEvent + this.stateTracker.getAdminId(), {}).subscribe((data: any) => {
+      console.log(data);
+    });
+  }
+
+  updateAdminDates(updatedDates){
+    let request = {updatedDates: updatedDates};
+    this.http.post(this.postURL_updateAdminDates + this.stateTracker.getAdminId(), request).subscribe((data: any) => {
       console.log(data);
     });
   }
