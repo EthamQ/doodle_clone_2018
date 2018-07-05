@@ -16,12 +16,14 @@ import { StepperService } from '../../services/stepper-info.service';
 })
 export class CreateCalendarComponent implements OnInit {
   createService: CreateService;
+  relevantService;
   constructor(@Inject(CreateService) createservice: CreateService, private adminService: AdminService,
 public stepperService: StepperService) {
     this.createService = createservice;
   }
 
   ngOnInit() {
+    this.relevantService = this.stepperService.isCreate? this.createService : this.adminService;
   }
 
   /**
@@ -35,7 +37,12 @@ public stepperService: StepperService) {
     console.log(newDate);
     this.selectionAlreadyExists(newDate, exists =>{
       if(!exists){
-        this.createService.timeSelection.push(newDate);
+        if(this.stepperService.isCreate){
+          this.createService.timeSelection.push(newDate);
+        }
+        else{
+          this.adminService.timeSelection.push(newDate);
+        }
       }
       else{
         console.log("Date already exists");

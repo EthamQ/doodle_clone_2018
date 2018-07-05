@@ -15,6 +15,7 @@ export class AdminService {
   postURL = '/event/new';
   postURL_update = '/event/update/';
   postURL_dateRemove = '/date/delete/';
+  postURL_dateAdd = '/date/add/';
   adminID: string;
   joinID: string;
   creator: CreatorModel;
@@ -35,6 +36,7 @@ export class AdminService {
     this.postURL = this.URLService.getServerURL() + this.postURL;
     this.postURL_update = this.URLService.getServerURL() + this.postURL_update;
     this.postURL_dateRemove = this.URLService.getServerURL() + this.postURL_dateRemove;
+    this.postURL_dateAdd = this.URLService.getServerURL() + this.postURL_dateAdd;
   }
   postData() {
     this.http.post(this.postURL, this.event).subscribe((data: any) => {
@@ -60,6 +62,8 @@ export class AdminService {
     this.postData();
   }
 
+
+
   updatedValues = {
     title: "",
     location: "",
@@ -81,6 +85,26 @@ export class AdminService {
     let requestData = {indexesToDelete: this.indexesToDelete};
     this.http.post(this.postURL_dateRemove  + this.stateTracker.getAdminId(), requestData).subscribe((data: any) => {
       console.log(data);
+      this.indexesToDelete = [];
+      // wait for remove, then add dates
+      this.setCalendarForAdminEdit();
     });
   }
+
+  datesToAdd = [];
+  addDatesToExistingEvent(){
+    let requestData = {datesToAdd: this.datesToAdd};
+    this.http.post(this.postURL_dateAdd  + this.stateTracker.getAdminId(), requestData).subscribe((data: any) => {
+      console.log(data);
+      this.timeSelection = [];
+    });
+  }
+
+  setCalendarForAdminEdit() {
+    for (let i = 0; i < this.timeSelection.length; i++) {
+      this.datesToAdd.push(this.timeSelection[i].parseToTimeStamp());
+    }
+    this.addDatesToExistingEvent();
+  }
+
 }

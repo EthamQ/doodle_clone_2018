@@ -1,5 +1,25 @@
 <div class="container">
+    <div class="existing-dates" *ngIf="!stepperService.isCreate">
+        <h2>Remove existing dates: </h2>
+      <div class="row">
+          <div class="col-6" *ngFor="let date of adminService.stateTracker.getEventData().date; let i = index" style="position: relative">
+            <div [style.opacity]="dateToBeRemoved(i)? '0.5':'1'">
+                <i *ngIf="!dateToBeRemoved(i)" class="material-icons" (click)="removeExistingDate(i)" title="Remove date" style="cursor: pointer; position: absolute; left: -1rem; top: 4px;">
+                    remove_circle
+                    </i>
+                    <i *ngIf="dateToBeRemoved(i)" class="material-icons" (click)="revertSelection(i)" title="Keep date" style="cursor: pointer; position: absolute; left: -1rem; top: 4px;">
+                        check_circle_outline
+                        </i>
+              <h4>{{date.date}}</h4>
+            </div>
+          </div>
+      </div>
+    </div>
   <div class="row">
+    <div class="col-12">
+        <h2 *ngIf="!stepperService.isCreate">Add new dates: </h2>
+    </div>
+      
     <div class="col-6">
       <dl-date-time-picker startView="day" minView="day" maxView="day" (change)="handleEvent($event)">
       </dl-date-time-picker>
@@ -10,7 +30,7 @@
     <div class="col-6 myTableMax">
       <div id="table" class="table">
         <table class="table table-responsive-md text-center">
-          <tr *ngFor="let timeslot of createService.timeSelection; let i = index">
+          <tr *ngFor="let timeslot of relevantService.timeSelection; let i = index">
               <i class="material-icons" (click)="removeDate(i)" title="Remove date" style="cursor: pointer">
                   remove_circle
                   </i>
@@ -144,20 +164,8 @@
     </div>
   </div>
 
-  <h2>Existing dates: </h2>
-  <div *ngIf="!stepperService.isCreate" class="row">
-      <div class="col-6" *ngFor="let date of adminService.stateTracker.getEventData().date; let i = index" style="position: relative">
-        <div [style.opacity]="dateToBeRemoved(i)? '0.5':'1'">
-            <i *ngIf="!dateToBeRemoved(i)" class="material-icons" (click)="removeExistingDate(i)" title="Remove date" style="cursor: pointer; position: absolute; left: -1rem; top: 4px;">
-                remove_circle
-                </i>
-                <i *ngIf="dateToBeRemoved(i)" class="material-icons" (click)="revertSelection(i)" title="Keep date" style="cursor: pointer; position: absolute; left: -1rem; top: 4px;">
-                    check_circle_outline
-                    </i>
-          <h4>{{date.date}}</h4>
-        </div>
-      </div>
-  </div>
+
+
 </div>
 
 
