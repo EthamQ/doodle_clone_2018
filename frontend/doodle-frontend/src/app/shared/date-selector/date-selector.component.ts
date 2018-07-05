@@ -1,5 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { AdminService } from '../../services/admin.service';
+import { MAT_CHECKBOX_CLICK_ACTION } from '@angular/material';
 
 @Component({
   selector: 'app-date-selector',
@@ -8,15 +9,21 @@ import { AdminService } from '../../services/admin.service';
 })
 export class DateSelectorComponent implements OnInit {
 
-  votes = [true, false];
   @Input() dates: any[] = [];
   @Input() creator: any;
   @Input() participants: any[] = [];
+
+  @Output() boxClick = new EventEmitter();
   constructor(private adminService: AdminService) { }
 
   ngOnInit() {
     this.participants.push(this.adminService.stateTracker.getEventData().creator);
     console.log(this.adminService.stateTracker.getEventData().creator);
+  }
+
+  handleBoxClick(participant, participantIndex, selectionIndex, newValue){
+    this.participants[participantIndex].dates[selectionIndex] = newValue;
+    this.boxClick.emit(this.participants[participantIndex]);
   }
 
 

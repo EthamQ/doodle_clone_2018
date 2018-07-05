@@ -78,11 +78,17 @@ router.post('/date/delete/:adminUUID', dateRouteLogic.removeDatesOfEvent);
 /**
  * remove dates from the creator
  */
-router.post('creator/date/remove/:adminUUID', creatorLogic.removeDatesFromCreator);
+router.post('/creator/date/remove/:adminUUID', creatorLogic.removeDatesFromCreator);
 
  /**
  * add dates to the creator
  */
-router.post('creator/date/add/:adminUUID', creatorLogic.addDatesToCreator);
+router.post('/creator/date/add/:adminUUID', creatorLogic.addDatesToCreator);
+
+ /**
+ * update dates to the creator
+ */
+router.post('/creator/date/update/:adminUUID', creatorLogic.updateDatesFromCreator);
+
 
 module.exports = router;

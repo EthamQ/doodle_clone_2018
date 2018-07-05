@@ -17,4 +17,8 @@ export class AdminOptionsComponent implements OnInit {
 
   }
 
+  dateSelectionChanged(event){
+    console.log(event);
+  }
+
 }

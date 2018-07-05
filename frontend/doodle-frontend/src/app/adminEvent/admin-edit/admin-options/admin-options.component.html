@@ -2,7 +2,7 @@
 <div class="row">
   <div class="col-12">
     <h4>Update your date selection</h4>
-    <app-date-selector [dates]="adminService.stateTracker.getEventData().date"></app-date-selector>
+    <app-date-selector (boxClick)="dateSelectionChanged($event)" [dates]="adminService.stateTracker.getEventData().date"></app-date-selector>
   </div>
   <div class="col-12 mt-3">
       <button class="button" type="submit" class="btn btn-primary">Update values</button>

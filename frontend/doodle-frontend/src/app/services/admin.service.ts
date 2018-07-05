@@ -18,6 +18,7 @@ export class AdminService {
   postURL_dateRemove = '/date/delete/';
   postURL_dateAdd = '/date/add/';
   postURL_deleteEvent = '/event/delete/';
+  postURL_updateAdminDates = '/event/delete/';
   adminID: string;
   joinID: string;
   creator: CreatorModel;

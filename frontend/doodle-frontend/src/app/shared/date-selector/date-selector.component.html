@@ -16,15 +16,15 @@
           <tr>
 
             <!-- display the selection of every participant -->
-          <tr *ngFor="let participant of participants" style="background-color: whitesmoke">
+          <tr *ngFor="let participant of participants, let k = index" style="background-color: whitesmoke">
             <td class="pt-3-half" contenteditable="false">You</td>
             <td class="pt-3-half" contenteditable="false" *ngFor="let selection of participant.dates; let i = index;">
-              <div class="custom-checker-green" *ngIf="selection === true">
+              <div class="custom-checker-green" (click)="handleBoxClick(participant, k, i, false)" *ngIf="selection === true">
                 <i class="material-icons">
                   check_box
                 </i>
               </div>
-              <div class="custom-checker-red" *ngIf="selection === false">
+              <div class="custom-checker-red" (click)="handleBoxClick(participant, k, i, true)" *ngIf="selection === false">
                 <i class="material-icons">
                   indeterminate_check_box
                 </i>
