@@ -25,8 +25,7 @@ export class AdminEditComponent implements OnInit {
   ngOnInit() {
     this.stepperService.setIsEdit();
     this.router.navigate(['admin/details']);
-    this.adminService.detailsBool = true;
-    // console.log(this.stateTracker.getEventData());
+    this.adminService.activateDetails();
   }
 
   updateDatesClick(){
