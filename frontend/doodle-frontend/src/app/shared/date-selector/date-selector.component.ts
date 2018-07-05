@@ -17,8 +17,8 @@ export class DateSelectorComponent implements OnInit {
   constructor(private adminService: AdminService) { }
 
   ngOnInit() {
-    this.participants.push(this.adminService.stateTracker.getEventData().creator);
-    console.log(this.adminService.stateTracker.getEventData().creator);
+    console.log(this.participants);
+
   }
 
   handleBoxClick(participant, participantIndex, selectionIndex, newValue){

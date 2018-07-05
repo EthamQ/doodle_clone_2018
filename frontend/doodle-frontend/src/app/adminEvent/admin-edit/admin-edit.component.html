@@ -2,6 +2,7 @@
     <div class ="outerdiv">
   <div class="container">
       <app-logo-header [isCreate]="true"></app-logo-header>
+      
       <div class="row navigation-container d-flex justify-content-center">
           <div class="col-2">
             <div class="navigation-item" (click)="adminService.activateDetails()" [routerLink]="['details']" [style.opacity]="adminService.detailsBool? '1' : '0.5'">
@@ -24,9 +25,21 @@
                 <h4>Admin Options</h4>
               </div>
             </div>
+
+              <div class="row" *ngIf="adminService.isLoading">
+                <div class="col-12 d-flex justify-content-center">
+                    <h5>Processing your changes, please wait a few seconds</h5>
+                </div>
+                <div class="col-12 d-flex justify-content-center">
+                    <img src="./../../../assets/images/loading.gif" alt="loadin please wait a moment" style="height: 6rem">
+                </div>
+              </div>
       </div>
       <router-outlet></router-outlet>
-      <button class="button" type="submit" class="btn btn-primary"
+
+      <div class="row">
+        <div class="col-6">
+            <button class="button" type="submit" class="btn btn-primary"
             (click)="adminService.updateMainEventValues()"
             routerLink="calendar"
             *ngIf="adminService.detailsBool">Update values</button>
@@ -35,6 +48,12 @@
           routerLink="summary"
           (click)="updateDatesClick()"
           *ngIf="adminService.calendarBool">Update dates</button>
+        </div>
+        <div class="col-6 d-flex justify-content-end">
+            <button class="button" type="submit" class="btn btn-success"
+            [routerLink]="''">Done, back to the landing page</button>
+        </div>
+      </div>
   </div>
   </div>
   </div>

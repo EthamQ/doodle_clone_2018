@@ -5,6 +5,7 @@ export class AdminViewStateTracker{
     private editViewActive = false;
     private adminId: string;
     private eventData: any;
+    private adminAsArray: any[];
 
     constructor(){}
 
@@ -34,9 +35,19 @@ export class AdminViewStateTracker{
 
     setEventData(eventData){
         this.eventData = eventData;
+        this.setCreatorForDateEdit(eventData.creator)
     }
 
     getEventData(){
         return this.eventData;
+    }
+
+    setCreatorForDateEdit(admin){
+        this.adminAsArray = [];
+        this.adminAsArray.push(admin);
+    }
+
+    getCreatorForDateEdit(){
+        return this.adminAsArray;
     }
 }

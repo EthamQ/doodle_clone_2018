@@ -30,7 +30,7 @@ export class AdminEditComponent implements OnInit {
 
   updateDatesClick(){
     this.adminService.activateAdminOption();
-    this.adminService.removeDates();
+    this.adminService.handleAdminDateChanges();
   }
 
   debug(){
