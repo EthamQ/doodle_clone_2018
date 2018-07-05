@@ -8,7 +8,7 @@ import { AdminService } from '../../services/admin.service';
 @Component({
   selector: 'app-admin-edit',
   templateUrl: './admin-edit.component.html',
-  styleUrls: ['./admin-edit.component.css']
+  styleUrls: ['./admin-edit.component.scss']
 })
 export class AdminEditComponent implements OnInit {
 
@@ -25,15 +25,18 @@ export class AdminEditComponent implements OnInit {
   ngOnInit() {
     this.stepperService.setIsEdit();
     this.router.navigate(['admin/details']);
+    this.adminService.detailsBool = true;
     // console.log(this.stateTracker.getEventData());
-  }
-
-  chooseDatesButtonIsDisabled(){
-    return false;
   }
 
   updateDatesClick(){
     this.adminService.removeDates();
   }
+
+  debug(){
+    console.log(this.adminService.detailsBool);
+  }
+
+
 
 }

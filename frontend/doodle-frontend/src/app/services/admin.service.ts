@@ -46,7 +46,7 @@ export class AdminService {
   }
   setDetails() {
 
-    this.detailsBool = true;
+    this.detailsBool = false;
     this.progress += 30;
 
   }
@@ -68,7 +68,7 @@ export class AdminService {
 }
   
   updateMainEventValues(){
-    this.setDetails();
+    this.detailsBool = false;
     this.http.post(this.postURL_update + this.stateTracker.getAdminId(), this.updatedValues).subscribe((data: any) => {
       console.log(data);
     });
@@ -77,6 +77,7 @@ export class AdminService {
 
   indexesToDelete = [];
   removeDates(){
+    this.detailsBool = true;
     let requestData = {indexesToDelete: this.indexesToDelete};
     this.http.post(this.postURL_dateRemove  + this.stateTracker.getAdminId(), requestData).subscribe((data: any) => {
       console.log(data);

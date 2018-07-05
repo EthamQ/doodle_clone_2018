@@ -22,7 +22,6 @@ public stepperService: StepperService) {
   }
 
   ngOnInit() {
-
   }
 
   /**
