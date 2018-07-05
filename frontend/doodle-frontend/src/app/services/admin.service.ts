@@ -72,7 +72,7 @@ export class AdminService {
 }
   
   updateMainEventValues(){
-    this.detailsBool = false;
+    this.activateCalendar();
     this.http.post(this.postURL_update + this.stateTracker.getAdminId(), this.updatedValues).subscribe((data: any) => {
       console.log(data);
     });
@@ -81,7 +81,6 @@ export class AdminService {
 
   indexesToDelete = [];
   removeDates(){
-    this.detailsBool = true;
     let requestData = {indexesToDelete: this.indexesToDelete};
     this.http.post(this.postURL_dateRemove  + this.stateTracker.getAdminId(), requestData).subscribe((data: any) => {
       console.log(data);
@@ -107,4 +106,22 @@ export class AdminService {
     this.addDatesToExistingEvent();
   }
 
+
+  activateCalendar(){
+    this.detailsBool = false;
+    this.calendarBool = true;
+    this.summaryBool = false;
+  }
+
+  activateDetails(){
+    this.detailsBool = true;
+    this.calendarBool = false;
+    this.summaryBool = false;
+  }
+
+  activateAdminOption(){
+    this.detailsBool = false;
+    this.summaryBool = true;
+    this.calendarBool = false;
+  }
 }

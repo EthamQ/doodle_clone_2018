@@ -30,11 +30,30 @@ export class AdminEditComponent implements OnInit {
   }
 
   updateDatesClick(){
+    this.adminService.activateAdminOption();
     this.adminService.removeDates();
   }
 
   debug(){
     console.log(this.adminService.detailsBool);
+  }
+
+  activateCalendar(){
+    this.adminService.detailsBool = false;
+    this.adminService.calendarBool = true;
+    this.adminService.summaryBool = false;
+  }
+
+  activateDetails(){
+    this.adminService.detailsBool = true;
+    this.adminService.calendarBool = false;
+    this.adminService.summaryBool = false;
+  }
+
+  activateAdminOption(){
+    this.adminService.detailsBool = false;
+    this.adminService.summaryBool = true;
+    this.adminService.calendarBool = false;
   }
 
 

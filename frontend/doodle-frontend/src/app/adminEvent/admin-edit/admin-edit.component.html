@@ -4,7 +4,7 @@
       <app-logo-header [isCreate]="true"></app-logo-header>
       <div class="row navigation-container d-flex justify-content-center">
           <div class="col-2">
-            <div class="navigation-item" (click)="adminService.detailsBool=true" [routerLink]="['details']" [style.opacity]="adminService.detailsBool? '1' : '0.5'">
+            <div class="navigation-item" (click)="adminService.activateDetails()" [routerLink]="['details']" [style.opacity]="adminService.detailsBool? '1' : '0.5'">
               <h4>Update Details</h4>
             </div>
           </div>
@@ -12,21 +12,34 @@
             <hr [ngClass]="adminService.detailsBool? '' : 'next-step'">
           </div>
           <div class="col-2">
-            <div class="navigation-item" (click)="adminService.detailsBool=false" [routerLink]="['calendar']" [style.opacity]="adminService.detailsBool? '0.5' : '1'">
+            <div class="navigation-item" (click)="adminService.activateCalendar()" [routerLink]="['calendar']" [style.opacity]="adminService.calendarBool? '1' : '0.5'">
               <h4>Update Calendar</h4>
             </div>
           </div>
+          <div class="col-3">
+              <hr [ngClass]="adminService.summaryBool? 'next-step' : ''">
+            </div>
+          <div class="col-2">
+              <div class="navigation-item" (click)="adminService.activateAdminOption()" [routerLink]="['summary']" [style.opacity]="adminService.summaryBool? '1' : '0.5'">
+                <h4>Admin Options</h4>
+              </div>
+            </div>
       </div>
       <router-outlet></router-outlet>
       <button class="button" type="submit" class="btn btn-primary"
             (click)="adminService.updateMainEventValues()"
             routerLink="calendar"
-            *ngIf="adminService.detailsBool">Update values, go to calendar</button>
+            *ngIf="adminService.detailsBool">Update values</button>
     <button class="button" type="submit" class="btn btn-primary"
           [disabled]="false"
+          routerLink="summary"
           (click)="updateDatesClick()"
+          *ngIf="adminService.calendarBool">Update dates</button>
+          
+          <button class="button" type="submit" class="btn btn-primary"
+          [disabled]="false"
           [routerLink]="''"
-          *ngIf="!adminService.detailsBool">Update dates and finish</button>
+          *ngIf="adminService.summaryBool">Admin</button>
   </div>
   </div>
   </div>

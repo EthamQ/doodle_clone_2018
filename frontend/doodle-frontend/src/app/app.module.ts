@@ -77,6 +77,7 @@ import { AdminViewStateTracker } from './services/stateTracker/admin-view-stateT
 import { StepperNavigationComponent } from './stepper/navigation/stepper-nav.component';
 import { StepperNavButtonsComponent } from './stepper/buttons/nav-buttons.component';
 import { StepperService } from './services/stepper-info.service';
+import { AdminOptionsComponent } from './adminEvent/admin-edit/admin-options/admin-options/admin-options.component';
 
 @NgModule({
   exports: [
@@ -117,7 +118,7 @@ import { StepperService } from './services/stepper-info.service';
 
   imports: [],
 
-  declarations: []
+  declarations: [AdminOptionsComponent]
 })
 export class MaterialModule {}
 
