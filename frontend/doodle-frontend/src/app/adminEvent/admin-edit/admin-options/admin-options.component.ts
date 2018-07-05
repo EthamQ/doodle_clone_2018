@@ -10,10 +10,11 @@ import { AdminService } from '../../../services/admin.service';
 export class AdminOptionsComponent implements OnInit {
 
   modalOpen = false;
-  
+
   constructor(private adminService: AdminService) { }
 
   ngOnInit() {
+
   }
 
 }

@@ -79,6 +79,7 @@ import { StepperNavButtonsComponent } from './stepper/buttons/nav-buttons.compon
 import { StepperService } from './services/stepper-info.service';
 import { AdminOptionsComponent } from './adminEvent/admin-edit/admin-options/admin-options.component';
 import { DeleteWarningComponent } from './modals/delete-warning/delete-warning.component';
+import { DateSelectorComponent } from './shared/date-selector/date-selector.component';
 
 @NgModule({
   exports: [
@@ -119,6 +120,8 @@ import { DeleteWarningComponent } from './modals/delete-warning/delete-warning.c
 
   imports: [],
 
+  declarations: [],
+
 })
 export class MaterialModule {}
 
@@ -142,7 +145,8 @@ export class MaterialModule {}
     StepperNavigationComponent,
     StepperNavButtonsComponent,
     AdminOptionsComponent,
-    DeleteWarningComponent
+    DeleteWarningComponent,
+    DateSelectorComponent
   ],
   imports: [
     AppRoutingModule,

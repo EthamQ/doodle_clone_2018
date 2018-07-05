@@ -56,6 +56,7 @@ getDoodleEventByCreatorUUID = function (uuidCreator, callback) {
             // look for creator uuid in event
             for (let i = 0; i < arrayAllEvents.length; i++) {
                 if (arrayAllEvents[i].creator.adminUUID == uuidCreator) {
+                    console.log(arrayAllEvents[i]);
                     callback({ event: arrayAllEvents[i], uuidEvent: arrayAllEvents[i].uuid, success: true });
                     break;
                 }

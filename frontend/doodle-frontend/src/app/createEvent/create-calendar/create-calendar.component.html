@@ -12,10 +12,10 @@
                         </i>
                         <div class="row">
                           <div class="col-12">
-                              <h4>{{date.date}}</h4>
+                              <h4>{{date.timeFrom | month}} {{date.timeFrom | day}}</h4>
                           </div>
                           <div class="col-12">
-                              <h4>{{date.timeFrom}} - {{date.timeTo}}</h4>
+                              <h4>{{date.timeFrom | timeHour}} - {{date.timeTo | timeHour}}</h4>
                           </div>
                         </div>
               
