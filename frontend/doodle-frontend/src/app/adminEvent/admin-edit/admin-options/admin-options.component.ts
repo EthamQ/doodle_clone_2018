@@ -15,7 +15,6 @@ export class AdminOptionsComponent implements OnInit {
   constructor(private adminService: AdminService) { }
 
   ngOnInit() {
-
   }
 
   dateSelectionChanged(event){

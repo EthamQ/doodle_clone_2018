@@ -10,14 +10,12 @@ import { MAT_CHECKBOX_CLICK_ACTION } from '@angular/material';
 export class DateSelectorComponent implements OnInit {
 
   @Input() dates: any[] = [];
-  @Input() creator: any;
   @Input() participants: any[] = [];
 
   @Output() boxClick = new EventEmitter();
   constructor(private adminService: AdminService) { }
 
   ngOnInit() {
-    console.log(this.participants);
 
   }
 

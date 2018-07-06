@@ -5,7 +5,9 @@ import { RouterModule } from '@angular/router';
 import { AppModule } from '../../../app.module';
 import { APP_BASE_HREF } from '@angular/common';
 
+  
 describe('AdminOptionsComponent', () => {
+
   let component: AdminOptionsComponent;
   let fixture: ComponentFixture<AdminOptionsComponent>;
 
@@ -37,3 +39,4 @@ describe('AdminOptionsComponent', () => {
     expect(component).toBeTruthy();
   });
 })
+
