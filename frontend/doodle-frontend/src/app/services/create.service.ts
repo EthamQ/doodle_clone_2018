@@ -23,6 +23,7 @@ export class CreateService {
   summaryBool = false;
   serverResponse: any;
   progress = 10;
+  isLoading = false;
   constructor(
     private http: HttpClient,
     private URLService: URLService
@@ -37,6 +38,7 @@ export class CreateService {
       console.log(data);
       this.adminID = data.data[0].creator.adminUUID;
       this.joinID = this.URLService.getFrontendURL() + '/join/' + data.data[0].uuid;
+      this.isLoading = false;
     });
 
   }
