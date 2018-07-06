@@ -12,7 +12,7 @@ import { StepperService } from '../../services/stepper-info.service';
 @Component({
   selector: 'app-create-calendar',
   templateUrl: './create-calendar.component.html',
-  styleUrls: ['./create-calendar.component.css']
+  styleUrls: ['./create-calendar.component.scss']
 })
 export class CreateCalendarComponent implements OnInit {
   createService: CreateService;

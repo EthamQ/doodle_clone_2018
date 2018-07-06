@@ -32,6 +32,9 @@ export class CreateService {
   }
   postData() {
     console.log(this.postURL);
+    console.log(this.creator);
+    this.event.creator = this.creator;
+    console.log(this.event);
     this.http.post(this.postURL, this.event).subscribe((data: any) => {
       console.log(data);
       this.adminID = data.data[0].creator.adminUUID;

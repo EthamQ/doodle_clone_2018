@@ -2,9 +2,57 @@
   <div class ="outerdiv">
 <div class="container">
     <app-logo-header [isCreate]="true"></app-logo-header>
-    <app-stepper-nav></app-stepper-nav>
+    <div class="row navigation-container">
+        <div class="col-2" *ngIf="!createService.detailsBool">
+          <div [ngClass]="navigation-item" class="navigation-item" [routerLink]="['details']">
+            <h4>1. Details</h4>
+          </div>
+        </div>
+        <div class="col-2" *ngIf="createService.detailsBool">
+          <div class="navigation-item-disabled">
+            <h4>1. Details</h4>
+          </div>
+        </div>
+        <div class="col-3">
+          <hr class="next-step" *ngIf="createService.detailsBool">
+          <hr *ngIf="!createService.detailsBool">
+        </div>
+        <div class="col-2" *ngIf="!createService.detailsBool">
+          <div class="navigation-item" [routerLink]="['calendar']">
+            <h4>2. Calendar</h4>
+          </div>
+        </div>
+        <div class="col-2" *ngIf="createService.detailsBool">
+          <div class="navigation-item-disabled">
+            <h4>2. Calendar</h4>
+          </div>
+        </div>
+        <div class="col-3">
+          <hr class="next-step" *ngIf="createService.calendarBool">
+          <hr *ngIf="!createService.calendarBool">
+        </div>
+        <div class="col-2" *ngIf="createService.calendarBool">
+          <div class="navigation-item" [routerLink]="['summary']">
+            <h4>3. Summary</h4>
+          </div>
+        </div>
+        <div class="col-2" *ngIf="!createService.calendarBool">
+          <div class="navigation-item-disabled">
+            <h4>3. Summary</h4>
+          </div>
+        </div>
+    </div>
     <router-outlet></router-outlet>
-    <app-stepper-nav-button></app-stepper-nav-button>
+    <button class="button" type="submit" class="btn btn-primary"
+    [disabled]="chooseDatesButtonIsDisabled()"
+            (click)="createService.setDetails()"
+            routerLink="calendar"
+            *ngIf="!createService.detailsBool && !createService.calendarBool">Choice your dates</button>
+    <button class="button" type="submit" class="btn btn-primary"
+          [disabled]="(createService.timeSelection.length === 0)"
+          (click)="createService.setCalendar()"
+          routerLink="summary"
+          *ngIf="createService.detailsBool && !createService.calendarBool">Submit</button>
 </div>
 </div>
 </div>
