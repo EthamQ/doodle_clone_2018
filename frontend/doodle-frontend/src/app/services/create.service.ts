@@ -23,8 +23,6 @@ export class CreateService {
   detailsBool = false;
   calendarBool = false;
   summaryBool = false;
-  serverResponse: any;
-  progress = 10;
   isLoading = false;
   constructor(
     private http: HttpClient,
@@ -46,9 +44,23 @@ export class CreateService {
     });
 
   }
+  reset() {
+    this.event = new EventModel();
+    this.adminID = undefined;
+    this.calendarBool = false;
+    this.detailsBool = false;
+    this.summaryBool = false;
+    this.default_time = new TimeselectionModel();
+    this.default_time.setTimeTo(0);
+    this.default_time.setTimeFrom(0);
+    this.event = new EventModel();
+    this.timeSelection = [];
+    this.joinID = undefined;
+    this.creator = new CreatorModel('dummy@web.de');
+    this.isLoading = false;
+  }
   setDetails() {
     this.detailsBool = true;
-    this.progress += 30;
 
   }
   setCalendar() {
@@ -58,7 +70,6 @@ export class CreateService {
     }
     this.event.creator = this.creator;
     this.calendarBool = true;
-    this.progress += 30;
     this.postData();
   }
 }

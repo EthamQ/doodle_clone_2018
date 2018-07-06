@@ -22,8 +22,8 @@ const routes: Routes = [
   { path: 'join',
     component: JoinLandingComponent,
     children: [
-      {path: ':id', component: JoinCalendarComponent},
-      {path: 'finish', component: LandingPageComponent}
+      {path: ':id', component: JoinCalendarComponent, canActivate: [JoinGuardService]},
+      {path: 'finish', component: LandingPageComponent, canActivate: [JoinGuardService]}
     ]},
   { path: 'admin',
     component: AdminViewComponent,

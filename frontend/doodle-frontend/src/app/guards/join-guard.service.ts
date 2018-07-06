@@ -16,15 +16,6 @@ export class JoinGuardService implements CanActivate {
   }
 
   checkData(url: string): boolean {
-      if (this.joinService.getData()) {
-        console.log(url);
-        return true;
-      }
-
-    this.joinService.redirectUrl = url;
-    console.log(url);
-    // Navigate to the login page with extras
-    this.router.navigate(['/join']);
-    return false;
+    return (!this.joinService.dataLoaded);
   }
 }

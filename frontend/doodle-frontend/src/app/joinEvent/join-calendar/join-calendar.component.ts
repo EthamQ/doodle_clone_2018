@@ -15,7 +15,7 @@ export class JoinCalendarComponent implements OnInit {
   constructor(
     @Inject(JoinService) joinService: JoinService,
   private route: ActivatedRoute,
-  private router: Router,
+    private router: Router
 ) {
     this.joinService = joinService;
     this.route.params.subscribe(params => {
