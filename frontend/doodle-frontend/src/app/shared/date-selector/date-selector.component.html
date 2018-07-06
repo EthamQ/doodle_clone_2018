@@ -1,0 +1,37 @@
+<div class="card" *ngIf="!(dates.length==0)">
+    <div class="card-body">
+      <div id="table" class="table">
+        <table class="table table-bordered table-responsive-md text-center">
+          <!-- display available dates -->
+          <tr>
+            <th class="text-center"></th>
+            <th class="text-center" *ngFor="let element of dates">
+              <div class="d-dateGroup">
+                <div class="d-month">{{element.timeFrom | month}}</div>
+                <div class="d-date">{{element.timeFrom | day}}</div>
+                <div class="d-day">{{element.timeFrom | timeHour}} - {{element.timeTo |timeHour}}</div>
+              </div>
+            </th>
+          </tr>
+          <tr>
+
+            <!-- display the selection of every participant -->
+          <tr *ngFor="let participant of participants, let k = index" style="background-color: whitesmoke">
+            <td class="pt-3-half" contenteditable="false">You</td>
+            <td class="pt-3-half" contenteditable="false" *ngFor="let selection of participant.dates; let i = index;">
+              <div class="custom-checker-green" (click)="handleBoxClick(participant, k, i, false)" *ngIf="selection === true">
+                <i class="material-icons">
+                  check_box
+                </i>
+              </div>
+              <div class="custom-checker-red" (click)="handleBoxClick(participant, k, i, true)" *ngIf="selection === false">
+                <i class="material-icons">
+                  indeterminate_check_box
+                </i>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>

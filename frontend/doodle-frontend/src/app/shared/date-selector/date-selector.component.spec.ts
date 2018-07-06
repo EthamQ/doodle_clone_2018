@@ -1,13 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewLandingComponent } from './view-landing.component';
-import { APP_BASE_HREF } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { DateSelectorComponent } from './date-selector.component';
 import { AppModule } from '../../app.module';
+import { RouterModule } from '@angular/router';
+import { APP_BASE_HREF } from '@angular/common';
 
-describe('ViewLandingComponent', () => {
-  let component: ViewLandingComponent;
-  let fixture: ComponentFixture<ViewLandingComponent>;
+describe('DateSelectorComponent', () => {
+  let component: DateSelectorComponent;
+  let fixture: ComponentFixture<DateSelectorComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -29,7 +29,7 @@ describe('ViewLandingComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ViewLandingComponent);
+    fixture = TestBed.createComponent(DateSelectorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

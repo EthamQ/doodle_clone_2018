@@ -19,6 +19,15 @@ export class CreateLandingComponent implements OnInit {
     this.stepperService.setIsCreate();
   }
 
+  chooseDatesButtonIsDisabled(){
+    return (isUndefined(this.createService.event.creator.name) && isUndefined(this.createService.event.description) && isUndefined(this.createService.event.title));
+  }
+
+  submitDates(){
+    this.createService.isLoading = true;
+    this.createService.setCalendar()
+  }
+
 
 
 }

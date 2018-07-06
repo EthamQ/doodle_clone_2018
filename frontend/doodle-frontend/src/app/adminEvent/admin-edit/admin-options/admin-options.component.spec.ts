@@ -1,13 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewLandingComponent } from './view-landing.component';
-import { APP_BASE_HREF } from '@angular/common';
+import { AdminOptionsComponent } from './admin-options.component';
 import { RouterModule } from '@angular/router';
-import { AppModule } from '../../app.module';
+import { AppModule } from '../../../app.module';
+import { APP_BASE_HREF } from '@angular/common';
 
-describe('ViewLandingComponent', () => {
-  let component: ViewLandingComponent;
-  let fixture: ComponentFixture<ViewLandingComponent>;
+  
+describe('AdminOptionsComponent', () => {
+
+  let component: AdminOptionsComponent;
+  let fixture: ComponentFixture<AdminOptionsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -18,7 +20,6 @@ describe('ViewLandingComponent', () => {
         // project modules
         AppModule,
     ],
-      declarations: [ ],
       providers: [
         {
             provide: APP_BASE_HREF, useValue: '/'
@@ -29,7 +30,7 @@ describe('ViewLandingComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ViewLandingComponent);
+    fixture = TestBed.createComponent(AdminOptionsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -37,4 +38,5 @@ describe('ViewLandingComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-});
+})
+

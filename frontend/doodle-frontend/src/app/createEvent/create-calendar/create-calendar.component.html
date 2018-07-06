@@ -2,7 +2,7 @@
     <div class="existing-dates" *ngIf="!stepperService.isCreate">
         <h2>Remove existing dates: </h2>
       <div class="row">
-          <div class="col-6" *ngFor="let date of adminService.stateTracker.getEventData().date; let i = index" style="position: relative">
+          <div class="col-6  hover-background" *ngFor="let date of adminService.stateTracker.getEventData().date; let i = index" style="position: relative">
             <div [style.opacity]="dateToBeRemoved(i)? '0.5':'1'">
                 <i *ngIf="!dateToBeRemoved(i)" class="material-icons" (click)="removeExistingDate(i)" title="Remove date" style="cursor: pointer; position: absolute; left: -1rem; top: 4px;">
                     remove_circle
@@ -10,7 +10,14 @@
                     <i *ngIf="dateToBeRemoved(i)" class="material-icons" (click)="revertSelection(i)" title="Keep date" style="cursor: pointer; position: absolute; left: -1rem; top: 4px;">
                         check_circle_outline
                         </i>
-              <h4>{{date.date}}</h4>
+                        <div class="row">
+                          <div class="col-12">
+                              <h4>{{date.timeFrom | month}} {{date.timeFrom | day}}</h4>
+                          </div>
+                          <div class="col-12">
+                              <h4>{{date.timeFrom | timeHour}} - {{date.timeTo | timeHour}}</h4>
+                          </div>
+                        </div>
             </div>
           </div>
       </div>

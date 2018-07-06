@@ -50,28 +50,26 @@ export class JoinService {
 
   }
   getData() {
-    this.http.get(this.getURl + this.UUID)
-      .subscribe((data: any) => {
-        console.log(data);
-        if (data.success) {
-          const serverData = data.data[0];
-          this.serverData = new ServerModel(serverData);
-          this.viewNav = '../../view/' + this.UUID;
-          this.joiner.dates = [];
-          for (let i = 0; i < this.serverData.date.length; i++) {
-            let votes = 0;
-            for (let j = 0; j < this.serverData.participants.length; j++) {
-              if (this.serverData.participants[j].dates[i] === true) {
-                votes = votes + 1;
-              }
+    this.http.get(this.getURl + this.UUID).subscribe(
+      (data: any) => {
+        const serverData = data.data[0];
+        // add creator to participants array so he is displayed as participant in  join as well
+        serverData.participants.push(data.data[0].creator);
+        this.serverData = new ServerModel(serverData);
+        this.viewNav = '../../view/' + this.UUID;
+        this.joiner.dates = [];
+        for (let i = 0; i < this.serverData.date.length; i++) {
+          let votes = 0;
+          for (let j = 0; j < this.serverData.participants.length; j++) {
+            if (this.serverData.participants[j].dates[i] === true) {
+              votes = votes + 1;
             }
-            this.votes.push(votes);
           }
-          for (let i = 0; i < this.serverData.date.length; i++) {
-            this.joiner.dates.push(false);
-          }
+          this.votes.push(votes);
         }
-      })
-    ;
+        for (let i = 0; i < this.serverData.date.length; i++) {
+          this.joiner.dates.push(false);
+        }
+      });
   }
 }

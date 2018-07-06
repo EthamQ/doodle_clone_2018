@@ -4,7 +4,12 @@
 }
 .navigation-item{
   text-align: center;
+  cursor: pointer;
 
+}
+
+*:focus{
+  outline: none;
 }
 .navigation-item-disabled{
  text-align: center;

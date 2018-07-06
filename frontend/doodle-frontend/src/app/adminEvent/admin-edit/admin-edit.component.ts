@@ -25,16 +25,46 @@ export class AdminEditComponent implements OnInit {
   ngOnInit() {
     this.stepperService.setIsEdit();
     this.router.navigate(['admin/details']);
-    this.adminService.detailsBool = true;
-    // console.log(this.stateTracker.getEventData());
+    this.adminService.activateDetails();
   }
 
   updateDatesClick(){
-    this.adminService.removeDates();
+    this.adminService.handleAdminDateChanges(()=>{
+      this.adminService.isLoading = false;
+      this.adminService.activateAdminOption();
+      this.router.navigate(['admin/summary']);
+    });
+    
+  }
+
+  updateDetailsClick(){
+    this.adminService.updateMainEventValues(()=>{
+      this.router.navigate(['admin/calendar']);
+      this.adminService.isLoading = false;
+    });
+
   }
 
   debug(){
     console.log(this.adminService.detailsBool);
+  }
+
+  activateCalendar(){
+    this.adminService.detailsBool = false;
+    this.adminService.calendarBool = true;
+    this.adminService.summaryBool = false;
+  }
+
+  activateDetails(){
+    this.adminService.detailsBool = true;
+    this.adminService.calendarBool = false;
+    this.adminService.summaryBool = false;
+  }
+
+  activateAdminOption(){
+    this.adminService.detailsBool = false;
+    this.adminService.summaryBool = true;
+    this.adminService.calendarBool = false;
   }
 
 

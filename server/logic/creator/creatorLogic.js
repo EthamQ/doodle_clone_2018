@@ -1,4 +1,8 @@
 const mongodb = require('./../../MongoDB/dbUtils');
+const uuid = require('uuid/v4');
+const ParticipantModel = require('./../../models/participant/participantModel');
+const ResponseBuilder = require('./../responseBuilder');
+const dateLogic = require('./../date/dateLogic');
 
 /**
  * uuid belongs to the event

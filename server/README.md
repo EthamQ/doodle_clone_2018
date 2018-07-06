@@ -26,6 +26,8 @@ router.post('/date/participant/remove/:adminUUID', dateLogic.removeDatesFromPart
 router.post('creator/date/remove/:adminUUID', dateLogic.removeDatesFromCreator);
 12. Add dates to the creator
 router.post('creator/date/add/:adminUUID', dateLogic.addDatesToCreator);
+13. Update dates of the creator
+router.post('creator/date/update/:adminUUID', dateLogic.updateDatesFromCreator);
 
 ##############################################
 1. Creating a new loodle event
@@ -268,6 +270,22 @@ the uuid of the creator, so only he can update those values
 }
 
 ##############################################
+13. Update dates of the creator
+router.post('creator/date/update/:adminUUID', dateLogic.updateDatesFromCreator);
+
+Just send a new date array that will replace the old one, but has to have the same length
+
+Expected data in the url:
+/:adminUUID:
+the uuid of the creator, so only he can update those values
+
+{
+    "updatedDates": [
+        boolean
+    ]
+}
+
+
 ##############################################
 
 

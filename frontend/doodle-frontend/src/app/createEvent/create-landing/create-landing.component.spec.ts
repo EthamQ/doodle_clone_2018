@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CreateLandingComponent } from './create-landing.component';
+import { RouterModule } from '@angular/router';
+import { AppModule } from '../../app.module';
+import { APP_BASE_HREF } from '@angular/common';
 
 describe('CreateLandingComponent', () => {
   let component: CreateLandingComponent;
@@ -8,7 +11,19 @@ describe('CreateLandingComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CreateLandingComponent ]
+      imports: [
+        // angular modules
+        RouterModule.forRoot([]),
+
+        // project modules
+        AppModule,
+    ],
+      declarations: [ ],
+      providers: [
+        {
+            provide: APP_BASE_HREF, useValue: '/'
+        }
+    ]
     })
     .compileComponents();
   }));

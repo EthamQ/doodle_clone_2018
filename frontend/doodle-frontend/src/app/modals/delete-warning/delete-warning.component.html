@@ -1,0 +1,22 @@
+
+<div class="modal" tabindex="-1" role="dialog" style="display: block">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Attention!</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close.emit()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Do you really want to delete the event?
+            You can't reverse your decision afterwards.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" (click)="delete.emit()" [routerLink]="''">Delete anyway</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="close.emit()">Don't delete</button>
+        </div>
+      </div>
+    </div>
+  </div>

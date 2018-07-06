@@ -16,6 +16,7 @@ export class CreateService {
   adminID: string;
   joinID: string;
   default_time = new TimeselectionModel();
+  // is filled by event create and then assigned to event model in postData()
   creator: CreatorModel;
   timeSelection: Array<TimeselectionModel> = [];
   event: EventModel;
@@ -24,6 +25,7 @@ export class CreateService {
   summaryBool = false;
   serverResponse: any;
   progress = 10;
+  isLoading = false;
   constructor(
     private http: HttpClient,
     private URLService: URLService
@@ -35,11 +37,12 @@ export class CreateService {
     this.postURL = this.URLService.getServerURL() + this.postURL;
   }
   postData() {
-    console.log(this.postURL);
+    this.event.creator = this.creator;
     this.http.post(this.postURL, this.event).subscribe((data: any) => {
       console.log(data);
       this.adminID = data.data[0].creator.adminUUID;
       this.joinID = this.URLService.getFrontendURL() + '/join/' + data.data[0].uuid;
+      this.isLoading = false;
     });
 
   }

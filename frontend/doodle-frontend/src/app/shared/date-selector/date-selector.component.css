@@ -1,0 +1,145 @@
+.container{
+    background-color: white;
+    float: none;
+  }
+  
+  .time-selection{
+  
+  }
+  .time-slot{
+  
+  }
+  .time-picker{}
+  
+  .button.button-dark.button-clear {
+    border-color: transparent;
+    background: none;
+    box-shadow: none;
+    color: #444;
+  }
+  
+  .time-selection-value{
+    line-height: inherit;
+    text-align: center;
+  }
+  .time-selection-hour{
+    margin:0;
+    padding:0;
+    border:0;
+    vertical-align: baseline;
+    text-align: center;
+    color:#525252;
+  }
+  
+  .time-selection-minute{
+    margin:0;
+    padding:0;
+    border:0;
+    vertical-align: baseline;
+    color:#525252;
+  }
+  .time-selection-am-pm{
+    margin:0;
+    padding:0;
+    border:0;
+    vertical-align: baseline;
+    color:darkgreen;
+  }
+  .myTableMax{
+    overflow: scroll;
+    max-height: 80vh;
+  }
+  .time-selection-add:hover{
+    cursor: pointer;
+    background-color: whitesmoke;
+  }
+  .time-selection-substract:hover{
+    cursor: pointer;
+    background-color: whitesmoke;
+  }
+  .pt-3-half {
+    padding-top: 1.4rem;
+  }
+  .d-dateGroup{
+    margin:0;
+    padding:0;
+    border:0;
+    vertical-align: baseline;
+  }
+  
+  .d-date{
+    color: darkgreen;
+    font-size: 26px;
+    font-weight: 500;
+    font-family: "Fira Sans","Trebuchet MS","Helvetica Neue","Arial",sans-serif;
+    font-smooth: always;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin: 4px 0;
+  }
+  .d-day{
+    color: #5d6e79;
+    text-transform: uppercase;
+    font-weight: 200;
+    font-style: normal;
+    font-family: "Fira Sans","Trebuchet MS","Helvetica Neue","Arial",sans-serif;
+    font-smooth: always;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: 1px;
+  }
+  .d-month{
+    display: block;
+    font-size: 16px;
+    line-height: inherit;
+  }
+  .participantCountHeader{
+    height: 45px;
+  
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-justify-content: space-around;
+    justify-content: space-around;
+    min-height: 45px;
+  }
+  .summary-participants{
+    position: relative;
+    color: darkgreen;
+    /* Adjust these values accordingly */
+    top: 5px;
+    left: 5px;
+  }
+  .custom-checker-red{
+    color:darkred;
+    cursor: pointer;
+  }
+  
+  
+  .custom-checker-green{
+    color:darkgreen;
+    cursor: pointer;
+  }
+  .custom-click:hover{
+    cursor: pointer;
+  }
+  .trenner{
+    color: #888888
+  }
+  .pt-3-half{
+    padding-top: 0.4rem;
+  }
+  
+  .table td{
+  
+    vertical-align: inherit;
+  }
+  
+  .existing-dates{
+    margin-bottom: 9rem;
+  }
+  
+ 

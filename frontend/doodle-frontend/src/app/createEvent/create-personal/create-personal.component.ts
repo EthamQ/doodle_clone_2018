@@ -80,10 +80,11 @@ private adminService: AdminService) {
   }
 
   handleNewInputCreate(input, type){
+    
     switch(type){
       case this.TITLE: this.createService.event.title = input;
       break;
-      case this.NAME: this.createService.event.creator.name = input;
+      case this.NAME: this.createService.creator.name = input;
       break;
       case this.DESCRIPTION: this.createService.event.description = input;
       break;
