@@ -14,6 +14,7 @@ export class CreateService {
   postURL = '/event/new';
   adminID: string;
   joinID: string;
+  // is filled by event create and then assigned to event model in postData()
   creator: CreatorModel;
   timeSelection: Array<TimeselectionModel> = [];
   event: EventModel;
@@ -31,10 +32,7 @@ export class CreateService {
     this.postURL = this.URLService.getServerURL() + this.postURL;
   }
   postData() {
-    console.log(this.postURL);
-    console.log(this.creator);
     this.event.creator = this.creator;
-    console.log(this.event);
     this.http.post(this.postURL, this.event).subscribe((data: any) => {
       console.log(data);
       this.adminID = data.data[0].creator.adminUUID;

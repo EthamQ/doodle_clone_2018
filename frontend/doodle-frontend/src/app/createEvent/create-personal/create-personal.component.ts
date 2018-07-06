@@ -85,7 +85,6 @@ private adminService: AdminService) {
       case this.TITLE: this.createService.event.title = input;
       break;
       case this.NAME: this.createService.creator.name = input;
-      console.log("Creator name input: " + input);
       break;
       case this.DESCRIPTION: this.createService.event.description = input;
       break;

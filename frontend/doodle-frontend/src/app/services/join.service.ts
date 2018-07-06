@@ -51,7 +51,8 @@ export class JoinService {
     this.http.get(this.getURl + this.UUID).subscribe(
       (data: any) => {
         const serverData = data.data[0];
-        serverData.participants.push(serverData.creator);
+        // add creator to participants array so he is displayed as participant in  join as well
+        serverData.participants.push(data.data[0].creator);
         this.serverData = new ServerModel(serverData);
         this.viewNav = '../../view/' + this.UUID;
         this.joiner.dates = [];

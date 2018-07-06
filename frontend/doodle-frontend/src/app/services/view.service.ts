@@ -21,6 +21,8 @@ export class ViewService {
       this.http.get(this.getURl + this.UUID).subscribe(
         (data: any) => {
           const serverData = data.data[0];
+          // add creator to participants array so he is displayed as a participant as well
+          serverData.participants.push(data.data[0].creator);
           this.serverData = new ServerModel(serverData);
           for (let i = 0; i < this.serverData.date.length; i++) {
             let votes = 0;
