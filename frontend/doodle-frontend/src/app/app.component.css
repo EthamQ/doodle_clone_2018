@@ -9,3 +9,10 @@ ngb-progressbar {
   background-image: url("./../assets/images/background.jpg");
 }
 
+.btn{
+  cursor: pointer;
+}
+
+.pointer{
+  cursor: pointer;
+}

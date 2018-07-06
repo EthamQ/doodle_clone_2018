@@ -49,7 +49,7 @@
           (click)="updateDatesClick()"
           *ngIf="adminService.calendarBool">Update dates</button>
         </div>
-        <div class="col-6 d-flex justify-content-end">
+        <div *ngIf="!adminService.summaryBool" class="col-6 d-flex justify-content-end">
             <button class="button" type="submit" class="btn btn-success"
             [routerLink]="''">Done, back to the landing page</button>
         </div>
