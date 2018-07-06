@@ -11,11 +11,18 @@ import {ViewService} from '../../services/view.service';
 export class ViewSummaryComponent implements OnInit {
 
   viewService: ViewService;
+  callGetData = true;
   constructor(@Inject(ViewService) viewService: ViewService, private route: ActivatedRoute) {
+    console.log("CALL ViewSummaryComponent CONSRTUCTOR");
     this.viewService = viewService;
     this.route.params.subscribe(params => {
+      console.log("READ PARAMS");
       this.viewService.UUID = params.id;
-      this.viewService.getData();
+      if(this.callGetData){
+        this.viewService.getData();
+        this.callGetData = false;
+      }
+      
     });
   }
 
