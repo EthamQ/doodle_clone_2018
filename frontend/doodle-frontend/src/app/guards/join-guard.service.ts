@@ -1,12 +1,13 @@
 import {Inject, Injectable} from '@angular/core';
 import {CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 import {CreateService} from '../services/create.service';
+import {JoinService} from '../services/join.service';
 
 @Injectable()
-export class CreateGuardService implements CanActivate {
-  createService: CreateService;
-  constructor(@Inject(CreateService) createservice: CreateService, private router: Router) {
-    this.createService = createservice;
+export class JoinGuardService implements CanActivate {
+  joinService: JoinService;
+  constructor(@Inject(JoinService) joinservice: JoinService, private router: Router) {
+    this.joinService = joinservice;
   }
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const url: string = state.url;
@@ -15,22 +16,15 @@ export class CreateGuardService implements CanActivate {
   }
 
   checkData(url: string): boolean {
-    if (url === '/create/calendar') {
-      if (this.createService.detailsBool) {
+      if (this.joinService.getData()) {
         console.log(url);
         return true;
       }
-    }
-    if (url === '/create/summary') {
-      if (this.createService.calendarBool) {
-        console.log(url);
-        return true;
-      }
-    }
-    this.createService.redirectUrl = url;
+
+    this.joinService.redirectUrl = url;
     console.log(url);
     // Navigate to the login page with extras
-    this.router.navigate(['/create']);
+    this.router.navigate(['/join']);
     return false;
   }
 }

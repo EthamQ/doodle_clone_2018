@@ -13,13 +13,15 @@ import {JoinCalendarComponent} from './joinEvent/join-calendar/join-calendar.com
 import {ViewSummaryComponent} from './viewEvent/view-summary/view-summary.component';
 import {AdminEditComponent} from './adminEvent/admin-edit/admin-edit.component';
 import { AdminViewComponent } from './adminEvent/adminView/admin-view.component';
+import {CreateGuardService} from './guards/create-guard.service';
+import {JoinGuardService} from './guards/join-guard.service';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent},
   { path: 'join',
     component: JoinLandingComponent,
     children: [
-      {path: ':id', component: JoinCalendarComponent},
+      {path: ':id', component: JoinCalendarComponent },
       {path: 'finish', component: LandingPageComponent}
     ]},
   { path: 'admin',
@@ -41,8 +43,8 @@ const routes: Routes = [
     children: [
       { path: '',   redirectTo: 'details', pathMatch: 'full' },
       {path: 'details', component: CreatePersonalComponent},
-      {path: 'calendar', component: CreateCalendarComponent},
-      {path: 'summary', component: CreateSummaryComponent}
+      {path: 'calendar', component: CreateCalendarComponent,     canActivate: [CreateGuardService]},
+      {path: 'summary', component: CreateSummaryComponent,     canActivate: [CreateGuardService]}
     ]},
 
 ];

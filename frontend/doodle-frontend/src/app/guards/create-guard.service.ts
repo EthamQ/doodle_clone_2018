@@ -15,15 +15,22 @@ export class CreateGuardService implements CanActivate {
   }
 
   checkData(url: string): boolean {
-    if (this.createService.calendarBool && this.createService.detailsBool) {
-      return true;
+    if (url === '/create/calendar') {
+      if (this.createService.detailsBool) {
+        console.log(url);
+        return true;
+      }
     }
-
-    // Store the attempted URL for redirecting
+    if (url === '/create/summary') {
+      if (this.createService.calendarBool) {
+        console.log(url);
+        return true;
+      }
+    }
     this.createService.redirectUrl = url;
-
+    console.log(url);
     // Navigate to the login page with extras
-    this.router.navigate(['/details']);
+    this.router.navigate(['/create']);
     return false;
   }
 }

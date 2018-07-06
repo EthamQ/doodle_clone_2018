@@ -77,6 +77,8 @@ import { AdminViewStateTracker } from './services/stateTracker/admin-view-stateT
 import { StepperNavigationComponent } from './stepper/navigation/stepper-nav.component';
 import { StepperNavButtonsComponent } from './stepper/buttons/nav-buttons.component';
 import { StepperService } from './services/stepper-info.service';
+import {CreateGuardService} from './guards/create-guard.service';
+import {JoinGuardService} from './guards/join-guard.service';
 
 @NgModule({
   exports: [
@@ -158,7 +160,18 @@ export class MaterialModule {}
     AngularFontAwesomeModule,
     NgbModule.forRoot()
   ],
-  providers: [ViewService, AdminService, CreateService, JoinService, URLService, EventService, AdminViewStateTracker, StepperService],
+  providers: [
+    ViewService,
+    AdminService,
+    CreateService,
+    JoinService,
+    URLService,
+    EventService,
+    AdminViewStateTracker,
+    StepperService,
+    CreateGuardService,
+    JoinGuardService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

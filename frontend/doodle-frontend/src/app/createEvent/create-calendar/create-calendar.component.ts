@@ -4,7 +4,8 @@ import * as moment from 'moment';
 import {DateButton, DlDateTimePickerChange} from 'angular-bootstrap-datetimepicker';
 import {TimeselectionModel} from '../../models/timeselection.model';
 import {isUndefined} from 'util';
-import * as deepEqual from "deep-equal";
+import * as deepEqual from 'deep-equal';
+
 import { AdminService } from '../../services/admin.service';
 import { StepperService } from '../../services/stepper-info.service';
 
@@ -28,7 +29,7 @@ public stepperService: StepperService) {
 
   /**
    * user selects a date on the calender
-   * @param event 
+   * @param event
    */
   handleEvent(event: any) {
     const newDate = new TimeselectionModel();
@@ -73,7 +74,7 @@ public stepperService: StepperService) {
 
   /**
    * click on the remove icon, removes date from the users's selection
-   * @param index 
+   * @param index
    */
   removeDate(index){
     this.createService.timeSelection.splice(index, 1);

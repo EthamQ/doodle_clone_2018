@@ -19,8 +19,9 @@
     <div class="col-12">
         <h2 *ngIf="!stepperService.isCreate">Add new dates: </h2>
     </div>
-      
-    <div class="col-6">
+
+
+      <div class="col-6">
       <dl-date-time-picker startView="day" minView="day" maxView="day" (change)="handleEvent($event)">
       </dl-date-time-picker>
       <br>
@@ -28,139 +29,207 @@
       <hr>
     </div>
     <div class="col-6 myTableMax">
-      <div id="table" class="table">
-        <table class="table table-responsive-md text-center">
-          <tr *ngFor="let timeslot of relevantService.timeSelection; let i = index">
+      <div class="row">
+        <div class="col-12 setAll">
+          <div class="row">
+            <div class="col-6">
+              <div class="row">
+                <div class="col-12 setButton">
+                  <button class="btn-danger">set all to this stop time</button>
+                </div>
+                <div class="col-4 time-selection-hour">
+                  <div class="row">
+                    <div class="col-12 time-selection-add">
+                      <i class="material-icons" (click)="createService.default_time.addStopHour()">
+                        keyboard_arrow_up
+                      </i>
+                    </div>
+                    <div class="col-12 time-selection-value">
+                      {{createService.default_time.stopHour}}
+                    </div>
+                    <div class="col-12 time-selection-substract">
+                      <i class="material-icons" (click)="createService.default_time.substractStopHour()">
+                        keyboard_arrow_down
+                      </i>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4 time-selection-minute">
+                  <div class="row">
+                    <div class="col-12 time-selection-add">
+                      <i class="material-icons" (click)="createService.default_time.addStopMinute()">
+                        keyboard_arrow_up
+                      </i>
+                    </div>
+                    <div class="col-12 time-selection-value">
+                      {{createService.default_time.getStopMinute()}}
+                    </div>
+                    <div class="col-12 time-selection-substract">
+                      <i class="material-icons" (click)="createService.default_time.substractStopMinute()">
+                        keyboard_arrow_down
+                      </i>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4 time-selection-am-pm">
+                  <div class="row">
+                    <div class="col-12 time-selection-add">
+                      <i class="material-icons" (click)="createService.default_time.changeStopAM()">
+                        keyboard_arrow_up
+                      </i>
+                    </div>
+                    <div class="col-12 time-selection-value">
+                      {{createService.default_time.stopAMPM}}
+                    </div>
+                    <div class="col-12 time-selection-substract">
+                      <i class="material-icons" (click)="createService.default_time.changeStopAM()">
+                        keyboard_arrow_down
+                      </i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+
+          </div>
+        </div>
+        <div id="table" class="col-12 table">
+          <table class="table table-responsive-md text-center">
+            <tr *ngFor="let timeslot of relevantService.timeSelection; let i = index">
               <i class="material-icons" (click)="removeDate(i)" title="Remove date" style="cursor: pointer">
-                  remove_circle
+                remove_circle
+              </i>
+              <td class="pt-3-half" contenteditable="false">
+                <div class="d-dateGroup">
+                  <div class="d-day">{{timeslot.weekDay}}</div>
+                  <div class="d-date">{{timeslot.day}}</div>
+                  <div class="d-month">{{timeslot.month}}</div>
+                </div>
+              </td>
+              <td class="pt-3-half" contenteditable="false">
+                <div class="row">
+                  <div class="col-4 time-selection-hour">
+                    <div class="row">
+                      <div class="col-12 time-selection-add">
+                        <i class="material-icons" (click)="timeslot.addStartHour()">
+                          keyboard_arrow_up
+                        </i>
+                      </div>
+                      <div class="col-12 time-selection-value">
+                        {{timeslot.startHour}}
+                      </div>
+                      <div class="col-12 time-selection-substract">
+                        <i class="material-icons" (click)="timeslot.substractStartHour()">
+                          keyboard_arrow_down
+                        </i>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-4 time-selection-minute">
+                    <div class="row">
+                      <div class="col-12 time-selection-add">
+                        <i class="material-icons" (click)="timeslot.addStartMinute()">
+                          keyboard_arrow_up
+                        </i>
+                      </div>
+                      <div class="col-12 time-selection-value">
+                        {{timeslot.getStartMinute()}}
+                      </div>
+                      <div class="col-12 time-selection-substract">
+                        <i class="material-icons" (click)="timeslot.substractStartMinute()">
+                          keyboard_arrow_down
+                        </i>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-4 time-selection-am-pm">
+                    <div class="row">
+                      <div class="col-12 time-selection-add">
+                        <i class="material-icons" (click)="timeslot.changeStartAM()">
+                          keyboard_arrow_up
+                        </i>
+                      </div>
+                      <div class="col-12 time-selection-value">
+                        {{timeslot.startAMPM}}
+                      </div>
+                      <div class="col-12 time-selection-substract">
+                        <i class="material-icons" (click)="timeslot.changeStartAM()">
+                          keyboard_arrow_down
+                        </i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="pt-3-half" contenteditable="false">
+                <div class="trenner">
+                  <i class="material-icons">
+                    remove
                   </i>
-            <td class="pt-3-half" contenteditable="false">
-              <div class="d-dateGroup">
-                <div class="d-day">{{timeslot.weekDay}}</div>
-                <div class="d-date">{{timeslot.day}}</div>
-                <div class="d-month">{{timeslot.month}}</div>
-              </div>
-            </td>
-            <td class="pt-3-half" contenteditable="false">
-              <div class="row">
-                <div class="col-4 time-selection-hour">
-                  <div class="row">
-                    <div class="col-12 time-selection-add">
-                      <i class="material-icons" (click)="timeslot.addStartHour()">
-                        keyboard_arrow_up
-                      </i>
+                </div>
+              </td>
+              <td class="pt-3-half" contenteditable="false">
+                <div class="row">
+                  <div class="col-4 time-selection-hour">
+                    <div class="row">
+                      <div class="col-12 time-selection-add">
+                        <i class="material-icons" (click)="timeslot.addStopHour()">
+                          keyboard_arrow_up
+                        </i>
+                      </div>
+                      <div class="col-12 time-selection-value">
+                        {{timeslot.stopHour}}
+                      </div>
+                      <div class="col-12 time-selection-substract">
+                        <i class="material-icons" (click)="timeslot.substractStopHour()">
+                          keyboard_arrow_down
+                        </i>
+                      </div>
                     </div>
-                    <div class="col-12 time-selection-value">
-                      {{timeslot.startHour}}
+                  </div>
+                  <div class="col-4 time-selection-minute">
+                    <div class="row">
+                      <div class="col-12 time-selection-add">
+                        <i class="material-icons" (click)="timeslot.addStopMinute()">
+                          keyboard_arrow_up
+                        </i>
+                      </div>
+                      <div class="col-12 time-selection-value">
+                        {{timeslot.getStopMinute()}}
+                      </div>
+                      <div class="col-12 time-selection-substract">
+                        <i class="material-icons" (click)="timeslot.substractStopMinute()">
+                          keyboard_arrow_down
+                        </i>
+                      </div>
                     </div>
-                    <div class="col-12 time-selection-substract">
-                      <i class="material-icons" (click)="timeslot.substractStartHour()">
-                        keyboard_arrow_down
-                      </i>
+                  </div>
+                  <div class="col-4 time-selection-am-pm">
+                    <div class="row">
+                      <div class="col-12 time-selection-add">
+                        <i class="material-icons" (click)="timeslot.changeStopAM()">
+                          keyboard_arrow_up
+                        </i>
+                      </div>
+                      <div class="col-12 time-selection-value">
+                        {{timeslot.stopAMPM}}
+                      </div>
+                      <div class="col-12 time-selection-substract">
+                        <i class="material-icons" (click)="timeslot.changeStopAM()">
+                          keyboard_arrow_down
+                        </i>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div class="col-4 time-selection-minute">
-                  <div class="row">
-                    <div class="col-12 time-selection-add">
-                      <i class="material-icons" (click)="timeslot.addStartMinute()">
-                        keyboard_arrow_up
-                      </i>
-                    </div>
-                    <div class="col-12 time-selection-value">
-                      {{timeslot.getStartMinute()}}
-                    </div>
-                    <div class="col-12 time-selection-substract">
-                      <i class="material-icons" (click)="timeslot.substractStartMinute()">
-                        keyboard_arrow_down
-                      </i>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-4 time-selection-am-pm">
-                  <div class="row">
-                    <div class="col-12 time-selection-add">
-                      <i class="material-icons" (click)="timeslot.changeStartAM()">
-                        keyboard_arrow_up
-                      </i>
-                    </div>
-                    <div class="col-12 time-selection-value">
-                      {{timeslot.startAMPM}}
-                    </div>
-                    <div class="col-12 time-selection-substract">
-                      <i class="material-icons" (click)="timeslot.changeStartAM()">
-                        keyboard_arrow_down
-                      </i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td class="pt-3-half" contenteditable="false">
-              <div class="trenner">
-                <i class="material-icons">
-                  remove
-                </i>
-              </div>
-            </td>
-            <td class="pt-3-half" contenteditable="false">
-              <div class="row">
-                <div class="col-4 time-selection-hour">
-                  <div class="row">
-                    <div class="col-12 time-selection-add">
-                      <i class="material-icons" (click)="timeslot.addStopHour()">
-                        keyboard_arrow_up
-                      </i>
-                    </div>
-                    <div class="col-12 time-selection-value">
-                      {{timeslot.stopHour}}
-                    </div>
-                    <div class="col-12 time-selection-substract">
-                      <i class="material-icons" (click)="timeslot.substractStopHour()">
-                        keyboard_arrow_down
-                      </i>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-4 time-selection-minute">
-                  <div class="row">
-                    <div class="col-12 time-selection-add">
-                      <i class="material-icons" (click)="timeslot.addStopMinute()">
-                        keyboard_arrow_up
-                      </i>
-                    </div>
-                    <div class="col-12 time-selection-value">
-                      {{timeslot.getStopMinute()}}
-                    </div>
-                    <div class="col-12 time-selection-substract">
-                      <i class="material-icons" (click)="timeslot.substractStopMinute()">
-                        keyboard_arrow_down
-                      </i>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-4 time-selection-am-pm">
-                  <div class="row">
-                    <div class="col-12 time-selection-add">
-                      <i class="material-icons" (click)="timeslot.changeStopAM()">
-                        keyboard_arrow_up
-                      </i>
-                    </div>
-                    <div class="col-12 time-selection-value">
-                      {{timeslot.stopAMPM}}
-                    </div>
-                    <div class="col-12 time-selection-substract">
-                      <i class="material-icons" (click)="timeslot.changeStopAM()">
-                        keyboard_arrow_down
-                      </i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </td>
-          </tr>
-        </table>
+              </td>
+            </tr>
+          </table>
+        </div>
       </div>
+
     </div>
   </div>
 

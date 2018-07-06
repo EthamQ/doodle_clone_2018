@@ -12,8 +12,10 @@ import { URLService } from './url-service';
 
 export class CreateService {
   postURL = '/event/new';
+  redirectUrl: string;
   adminID: string;
   joinID: string;
+  default_time = new TimeselectionModel();
   creator: CreatorModel;
   timeSelection: Array<TimeselectionModel> = [];
   event: EventModel;
@@ -26,6 +28,8 @@ export class CreateService {
     private http: HttpClient,
     private URLService: URLService
   ) {
+    this.default_time.setTimeTo(0);
+    this.default_time.setTimeFrom(0);
     this.event = new EventModel();
     this.creator = new CreatorModel('dummy@web.de');
     this.postURL = this.URLService.getServerURL() + this.postURL;

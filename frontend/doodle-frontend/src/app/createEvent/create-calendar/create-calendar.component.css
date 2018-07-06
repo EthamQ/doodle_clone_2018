@@ -24,10 +24,10 @@
 }
 .time-selection-hour{
   margin:0;
+  text-align: center;
   padding:0;
   border:0;
   vertical-align: baseline;
-  text-align: center;
   color:#525252;
 }
 
@@ -35,6 +35,8 @@
   margin:0;
   padding:0;
   border:0;
+  text-align: center;
+
   vertical-align: baseline;
   color:#525252;
 }
@@ -42,6 +44,7 @@
   margin:0;
   padding:0;
   border:0;
+  text-align: center;
   vertical-align: baseline;
   color:darkgreen;
 }

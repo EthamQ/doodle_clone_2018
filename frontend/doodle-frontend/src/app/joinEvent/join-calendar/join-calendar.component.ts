@@ -2,6 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {JoinService} from '../../services/join.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import { AdminService } from '../../services/admin.service';
+import {callbackify} from 'util';
 @Component({
   selector: 'app-join-calendar',
   templateUrl: './join-calendar.component.html',
@@ -12,8 +13,8 @@ export class JoinCalendarComponent implements OnInit {
   componentActive = true;
   joinService: JoinService;
   constructor(
-    @Inject(JoinService) joinService: JoinService, 
-  private route: ActivatedRoute, 
+    @Inject(JoinService) joinService: JoinService,
+  private route: ActivatedRoute,
   private router: Router,
 ) {
     this.joinService = joinService;
@@ -31,9 +32,10 @@ export class JoinCalendarComponent implements OnInit {
    * waits until the participant is in the database
    * then it navigates to the view summary component
    */
-  navigateToViewSummary(){
+
+  navigateToViewSummary() {
     this.componentActive = false;
-    this.joinService.postDataAndWait(()=>{
+    this.joinService.postDataAndWait(() => {
       this.router.navigate([this.joinService.viewNav]);
     });
   }
