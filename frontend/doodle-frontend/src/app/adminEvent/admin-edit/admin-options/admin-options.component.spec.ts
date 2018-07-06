@@ -18,7 +18,6 @@ describe('AdminOptionsComponent', () => {
         // project modules
         AppModule,
     ],
-      declarations: [ ],
       providers: [
         {
             provide: APP_BASE_HREF, useValue: '/'
@@ -37,4 +36,4 @@ describe('AdminOptionsComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-});
+})
