@@ -29,8 +29,20 @@ export class AdminEditComponent implements OnInit {
   }
 
   updateDatesClick(){
-    this.adminService.activateAdminOption();
-    this.adminService.handleAdminDateChanges();
+    this.adminService.handleAdminDateChanges(()=>{
+      this.adminService.isLoading = false;
+      this.adminService.activateAdminOption();
+      this.router.navigate(['admin/summary']);
+    });
+    
+  }
+
+  updateDetailsClick(){
+    this.adminService.updateMainEventValues(()=>{
+      this.router.navigate(['admin/calendar']);
+      this.adminService.isLoading = false;
+    });
+
   }
 
   debug(){

@@ -29,3 +29,7 @@
 .container {
   padding-top: 30px;
 }
+
+.btn{
+  cursor: pointer;
+}

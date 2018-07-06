@@ -24,7 +24,10 @@ export class AdminOptionsComponent implements OnInit {
   }
 
   updateCreatorDates(){
-    this.adminService.updateAdminDates(this.updatedCreatorDates);
+    this.adminService.isLoading = true;
+    this.adminService.updateAdminDates(this.updatedCreatorDates, ()=>{
+      this.adminService.isLoading = false;
+    });
   }
 
 }

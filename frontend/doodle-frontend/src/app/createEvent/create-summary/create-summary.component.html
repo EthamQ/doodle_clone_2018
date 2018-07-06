@@ -2,7 +2,7 @@
     <div class="input-group mb-3">
       <h4 class="header"> Admin ID </h4>
       <input id="admin" type="text" class="form-control" [value]='getID(false)'>
-      <button (click)="copyMessage(createService.adminID)" >Copy</button>
+      <button class="btn btn-secondary" (click)="copyMessage(createService.adminID)" >Copy</button>
     </div>
 
     <div class="input-group mb-3">
@@ -10,7 +10,7 @@
       <input id="event" type="text" class="form-control" [value]='getID(true)'>
 
 
-      <button (click)="copyMessage(createService.joinID)" >Copy</button>
+      <button class="btn btn-secondary" (click)="copyMessage(createService.joinID)" >Copy</button>
     </div>
 
 </div>

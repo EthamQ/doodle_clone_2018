@@ -75,14 +75,20 @@ export class AdminService {
   /**
    * update title, location, description of an event in the database
    */
-  updateMainEventValues() {
+  updateMainEventValues(done) {
     this.activateCalendar();
     if (this.shouldUpdateValues()) {
       this.isLoading = true;
       this.http.post(this.postURL_update + this.stateTracker.getAdminId(), this.updatedValues).subscribe((data: any) => {
         console.log(data);
         if (data.success) {
-          this.updateEventData();
+          this.updateEventDataGetObservable().subscribe((data: any)=>{
+            console.log(data);
+            if (data.success) {
+              this.stateTracker.setEventData(data.data[0]);
+              done();
+            }
+          });
         }
       });
     }
@@ -92,7 +98,7 @@ export class AdminService {
    * user click on update values in the admin date view
    * deletes or adds dates to the event if selected by the user
    */
-  handleAdminDateChanges() {
+  handleAdminDateChanges(done) {
     // call delete and add
     if (this.shouldDeleteDates() && this.shouldAddDates()) {
       this.isLoading = true;
@@ -103,7 +109,13 @@ export class AdminService {
         this.indexesToDelete = [];
         // add
         this.setAndAddDates(() => {
-          this.updateEventData();
+          this.updateEventDataGetObservable().subscribe((data: any)=>{
+            console.log(data);
+            if (data.success) {
+              this.stateTracker.setEventData(data.data[0]);
+              done();
+            }
+          });
         });
       });
     }
@@ -115,7 +127,13 @@ export class AdminService {
         console.log(data);
         // reset
         this.indexesToDelete = [];
-        this.updateEventData();
+        this.updateEventDataGetObservable().subscribe((data: any)=>{
+          console.log(data);
+          if (data.success) {
+            this.stateTracker.setEventData(data.data[0]);
+            done();
+          }
+        });
       });
     }
     // call only add
@@ -124,7 +142,13 @@ export class AdminService {
       console.log("only add");
       this.setAndAddDates(() => {
         console.log("update now");
-        this.updateEventData();
+        this.updateEventDataGetObservable().subscribe((data: any)=>{
+          console.log(data);
+          if (data.success) {
+            this.stateTracker.setEventData(data.data[0]);
+            done();
+          }
+        });
       });
     }
   }
@@ -216,6 +240,10 @@ export class AdminService {
       });
   }
 
+  updateEventDataGetObservable() {
+    return this.eventService.getEventByAdminId(this.stateTracker.getAdminId());
+}
+
   /**
    * delete an event as admin
    */
@@ -230,11 +258,17 @@ export class AdminService {
    * replace the old one, called in admin options in admin edit
    * @param updatedDates 
    */
-  updateAdminDates(updatedDates) {
+  updateAdminDates(updatedDates, done) {
     let request = { updatedDates: updatedDates };
     this.http.post(this.postURL_updateAdminDates + this.stateTracker.getAdminId(), request).subscribe((data: any) => {
       console.log(data);
-      this.updateEventData();
+      this.updateEventDataGetObservable().subscribe((data: any)=>{
+        console.log(data);
+        if (data.success) {
+          this.stateTracker.setEventData(data.data[0]);
+          done();
+        }
+      });
     });
   }
 
