@@ -74,8 +74,6 @@ import { LogoHeaderComponent } from './header/logo.component';
 import { AdminViewComponent } from './adminEvent/adminView/admin-view.component';
 import { EventService } from './services/event.service';
 import { AdminViewStateTracker } from './services/stateTracker/admin-view-stateTracker';
-import { StepperNavigationComponent } from './stepper/navigation/stepper-nav.component';
-import { StepperNavButtonsComponent } from './stepper/buttons/nav-buttons.component';
 import { StepperService } from './services/stepper-info.service';
 import { AdminOptionsComponent } from './adminEvent/admin-edit/admin-options/admin-options.component';
 import { DeleteWarningComponent } from './modals/delete-warning/delete-warning.component';
@@ -142,8 +140,6 @@ export class MaterialModule {}
     YearPipe, WeekdayPipe, DayPipe, MonthPipe, TimeHourPipe,
     LogoHeaderComponent,
     AdminViewComponent,
-    StepperNavigationComponent,
-    StepperNavButtonsComponent,
     AdminOptionsComponent,
     DeleteWarningComponent,
     DateSelectorComponent

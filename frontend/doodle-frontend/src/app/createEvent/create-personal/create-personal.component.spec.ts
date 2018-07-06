@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CreatePersonalComponent } from './create-personal.component';
+import { AppModule } from '../../app.module';
+import { APP_BASE_HREF } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 describe('CreatePersonalComponent', () => {
   let component: CreatePersonalComponent;
@@ -8,7 +11,19 @@ describe('CreatePersonalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CreatePersonalComponent ]
+      imports: [
+        // angular modules
+        RouterModule.forRoot([]),
+
+        // project modules
+        AppModule,
+    ],
+      declarations: [ ],
+      providers: [
+        {
+            provide: APP_BASE_HREF, useValue: '/'
+        }
+    ]
     })
     .compileComponents();
   }));

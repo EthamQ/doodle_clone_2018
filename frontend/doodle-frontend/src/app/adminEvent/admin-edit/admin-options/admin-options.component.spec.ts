@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AdminOptionsComponent } from './admin-options.component';
+import { RouterModule } from '@angular/router';
+import { AppModule } from '../../../app.module';
+import { APP_BASE_HREF } from '@angular/common';
 
 describe('AdminOptionsComponent', () => {
   let component: AdminOptionsComponent;
@@ -8,7 +11,19 @@ describe('AdminOptionsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AdminOptionsComponent ]
+      imports: [
+        // angular modules
+        RouterModule.forRoot([]),
+
+        // project modules
+        AppModule,
+    ],
+      declarations: [ ],
+      providers: [
+        {
+            provide: APP_BASE_HREF, useValue: '/'
+        }
+    ]
     })
     .compileComponents();
   }));
