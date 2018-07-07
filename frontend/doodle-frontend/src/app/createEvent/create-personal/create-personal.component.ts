@@ -80,7 +80,7 @@ private adminService: AdminService) {
   }
 
   handleNewInputCreate(input, type){
-    
+    console.log("IN HANDLE NEW INPUT ");
     switch(type){
       case this.TITLE: this.createService.event.title = input;
       break;
