@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class URLService {
 
-    private isLocalServer = false;
+    private isLocalServer = true;
     readonly localServer = 'http://localhost:3000';
     readonly uniServer = 'http://10.150.133.137:3000';
     readonly localFrontend = 'http://localhost:4200';

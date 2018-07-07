@@ -65,3 +65,8 @@
 .custom-click:hover{
   cursor: pointer;
 }
+
+.event-info-box{
+  border: 1px solid #e1e1e1;
+  padding: 1rem;
+}

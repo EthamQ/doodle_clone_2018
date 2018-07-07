@@ -33,7 +33,11 @@ export class JoinService {
   postData() {
     console.log('in postData: ');
     console.log(this.joiner);
-    this.http.post(this.postURL + this.UUID, this.joiner).subscribe(res => console.log(res));
+    this.http.post(this.postURL + this.UUID, this.joiner).subscribe((res: any) =>{
+      if(!res.success){
+        console.log("error");
+      }
+    });
 
   }
 

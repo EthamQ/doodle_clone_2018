@@ -10,7 +10,7 @@ import {callbackify} from 'util';
 })
 export class JoinCalendarComponent implements OnInit {
 
-  componentActive = true;
+  showEventDetails = false;
   joinService: JoinService;
   constructor(
     @Inject(JoinService) joinService: JoinService,
@@ -34,7 +34,6 @@ export class JoinCalendarComponent implements OnInit {
    */
 
   navigateToViewSummary() {
-    this.componentActive = false;
     this.joinService.postDataAndWait(() => {
       this.router.navigate([this.joinService.viewNav]);
     });
