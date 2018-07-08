@@ -11,6 +11,9 @@ import { URLService } from './url-service';
 @Injectable()
 
 export class CreateService {
+  // test spec file sets it temporarily to true
+  // and avoids sending actual data to the server
+  isTestCall: boolean = false;
   postURL = '/event/new';
   redirectUrl: string;
   adminID: string;
@@ -35,15 +38,22 @@ export class CreateService {
     this.postURL = this.URLService.getServerURL() + this.postURL;
   }
   postData() {
-    this.event.creator = this.creator;
+    this.setCalendar();
+    this.setCreator();
     console.log(this.event);
-    this.http.post(this.postURL, this.event).subscribe((data: any) => {
-      console.log(data);
-      this.adminID = data.data[0].creator.adminUUID;
-      this.joinID = this.URLService.getFrontendURL() + '/join/' + data.data[0].uuid;
-      this.isLoading = false;
-    });
+    if(!this.isTestCall){
+      this.http.post(this.postURL, this.event).subscribe((data: any) => {
+        console.log(data);
+        this.adminID = data.data[0].creator.adminUUID;
+        this.joinID = this.URLService.getFrontendURL() + '/join/' + data.data[0].uuid;
+        this.isLoading = false;
+      });
+    }
+  
+  }
 
+  setCreator(){
+    this.event.creator = this.creator;
   }
   reset() {
     this.event = new EventModel();

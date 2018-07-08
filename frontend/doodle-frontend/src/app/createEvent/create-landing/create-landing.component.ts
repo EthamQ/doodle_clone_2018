@@ -28,7 +28,6 @@ export class CreateLandingComponent implements OnInit {
   submitDates(){
     console.log("CLICK ON SUBMIT DATES");
     this.createService.isLoading = true;
-    this.createService.setCalendar()
     this.createService.postData();
   }
 

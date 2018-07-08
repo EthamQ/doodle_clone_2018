@@ -34,9 +34,8 @@ describe('CreateLandingComponent', () => {
 
   // services
   let mockDataService: MockDataService;
-
-  let serviceInstance: CreateService;
-
+  // used to store the service data of the different components
+  let createServiceTemp: CreateService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -46,27 +45,24 @@ describe('CreateLandingComponent', () => {
 
         // project modules
         AppModule,
-    ],
-      declarations: [ ],
+      ],
+      declarations: [],
       providers: [
         {
-            provide: APP_BASE_HREF, useValue: '/'
+          provide: APP_BASE_HREF, useValue: '/'
         }
-    ]
+      ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
-  beforeAll(()=>{
-    mockDataService = new MockDataService();
-  });
 
   beforeEach(() => {
     // this component
     fixture = TestBed.createComponent(CreateLandingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    
+
     // CreatePersonalComponent
     fixturePersonal = TestBed.createComponent(CreatePersonalComponent);
     createPersonalComponent = fixturePersonal.componentInstance;
@@ -77,15 +73,14 @@ describe('CreateLandingComponent', () => {
     createCalendarComponent = fixtureCalendar.componentInstance;
     fixtureCalendar.detectChanges();
 
-   
-    
+    // services
+    mockDataService = new MockDataService();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  
   describe('CreatePersonalComponent', () => {
     it('should create CreatePersonalComponent', () => {
       expect(createPersonalComponent).toBeTruthy();
@@ -97,26 +92,27 @@ describe('CreateLandingComponent', () => {
       titleInput.nativeElement.value = mockDataService.createInput.title;
       titleInput.nativeElement.dispatchEvent(new Event('input'));
       expect(component.createService.event.title).toBe(mockDataService.createInput.title);
-  
+
       // location
       locationInput = fixturePersonal.debugElement.query(By.css('#location'));
       locationInput.nativeElement.value = mockDataService.createInput.location;
       locationInput.nativeElement.dispatchEvent(new Event('input'));
       expect(component.createService.event.location).toBe(mockDataService.createInput.location);
-  
+
       // description
       descriptionInput = fixturePersonal.debugElement.query(By.css('#description'));
       descriptionInput.nativeElement.value = mockDataService.createInput.description;
       descriptionInput.nativeElement.dispatchEvent(new Event('input'));
       expect(component.createService.event.description).toBe(mockDataService.createInput.description);
-  
+
       // admin name
       adminNameInput = fixturePersonal.debugElement.query(By.css('#name'));
       adminNameInput.nativeElement.value = mockDataService.createInput.creator.name;
       adminNameInput.nativeElement.dispatchEvent(new Event('input'));
       expect(component.createService.creator.name).toBe(mockDataService.createInput.creator.name);
 
-      serviceInstance = component.createService;
+      // temporarily store generated service data for the next tests
+      createServiceTemp = component.createService;
     }));
   });
 
@@ -127,33 +123,54 @@ describe('CreateLandingComponent', () => {
     it('user input in CreateCalendarComponent should be correctly stored in timeSelection', fakeAsync(() => {
       tick();
       datepicker = fixtureCalendar.debugElement.query(By.css('dl-date-time-picker'));
-      for(let i = 0; i<mockDataService.dateInput.length; i++){
+      for (let i = 0; i < mockDataService.dateInput.length; i++) {
         let date = mockDataService.dateInput[i].value;
-        let dateForChangeEvent = {value: {value: date}};
+        let dateForChangeEvent = { value: { value: date } };
         datepicker.triggerEventHandler('change', dateForChangeEvent);
         let expectedValue = mockDataService.dateInput[i].expectedValueForDatabase;
         expect(component.createService.timeSelection[i].timeTo).toBe(expectedValue);
-        serviceInstance.timeSelection = component.createService.timeSelection;
       }
+      // temporarily store generated service data for the next tests
+      createServiceTemp.timeSelection = component.createService.timeSelection;
     }));
-
   });
 
-  
   describe('CreateLandingComponent', () => {
     it('click on submit button should generate the correct request data', () => {
+      // assign so far generated data to the instance of this service
+      component.createService.event = createServiceTemp.event;
+      component.createService.creator = createServiceTemp.creator;
+      component.createService.timeSelection = createServiceTemp.timeSelection;
 
-      component.createService.event = serviceInstance.event;
-      component.createService.creator = serviceInstance.creator;
-      component.createService.timeSelection = serviceInstance.timeSelection;
-      expect(component.createService.timeSelection.length).toBeGreaterThan(0);
-      expect(component.createService.creator.name).toBe(mockDataService.createInput.creator.name);
-      // component.createService.detailsBool = true;
-      // submitButton = fixture.debugElement.query(By.css('#submit'));
-      // submitButton.nativeElement.dispatchEvent(new Event('click'));
-      // console.log("Event title: " + component.createService.event.title);
+      // post Data is called with a click on submit
+      component.createService.isTestCall = true;
+      component.createService.postData();
+
+      // now our entire request data should be ready
+      // is it?
+
+      // 1. Main event values
+       // title
+       expect(component.createService.event.title).toBe(mockDataService.createInput.title);
+       // location
+       expect(component.createService.event.location).toBe(mockDataService.createInput.location);
+       // description
+       expect(component.createService.event.description).toBe(mockDataService.createInput.description);
+       // admin name
+       expect(component.createService.event.creator.name).toBe(mockDataService.createInput.creator.name);
+
+      // 2. Dates
+      // server expects at least length 0
+      expect(component.createService.event.date.length).toBeGreaterThan(0);
+      // number of dates equal to number of mock dates
+      expect(component.createService.event.date.length).toBe(mockDataService.dateInput.length);
+      // date values correct?
+      for (let i = 0; i < mockDataService.dateInput.length; i++) {
+        let expectedValue = mockDataService.dateInput[i].expectedValueForDatabase;
+        expect(component.createService.timeSelection[i].timeFrom).toBe(expectedValue);
+        expect(component.createService.timeSelection[i].timeTo).toBe(expectedValue);
+      }
+      component.createService.isTestCall = false;
     });
   });
-  
- 
 });
