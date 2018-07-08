@@ -17,6 +17,7 @@ describe('CreatePersonalComponent', () => {
   let titleInput: DebugElement;
   let locationInput: DebugElement;
   let adminNameInput: DebugElement;
+  let descriptionInput: DebugElement;
 
 
   beforeEach(async(() => {
@@ -38,7 +39,6 @@ describe('CreatePersonalComponent', () => {
     .compileComponents();
   }));
 
-
   beforeEach(() => {
     fixture = TestBed.createComponent(CreatePersonalComponent);
     mockDataService = new MockDataService();
@@ -50,7 +50,7 @@ describe('CreatePersonalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('user input title, location and admin name should be stored in the event object', fakeAsync(() => {
+  it('user input in create details should be correctly stored in the event object', fakeAsync(() => {
     tick();
     // title
     titleInput = fixture.debugElement.query(By.css('#title'));
@@ -63,6 +63,12 @@ describe('CreatePersonalComponent', () => {
     locationInput.nativeElement.value = mockDataService.createInput.location;
     locationInput.nativeElement.dispatchEvent(new Event('input'));
     expect(component.createService.event.location).toBe(mockDataService.createInput.location);
+
+    // description
+    descriptionInput = fixture.debugElement.query(By.css('#description'));
+    descriptionInput.nativeElement.value = mockDataService.createInput.description;
+    descriptionInput.nativeElement.dispatchEvent(new Event('input'));
+    expect(component.createService.event.description).toBe(mockDataService.createInput.description);
 
     // admin name
     adminNameInput = fixture.debugElement.query(By.css('#name'));
