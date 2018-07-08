@@ -10,7 +10,6 @@ import {JoinService} from '../../services/join.service';
 export class JoinLandingComponent implements OnInit {
 
   joinService: JoinService;
-  private wrongID: boolean;
 
   constructor(@Inject(JoinService) joinService: JoinService) {
     this.joinService = joinService;
@@ -18,10 +17,9 @@ export class JoinLandingComponent implements OnInit {
 
 
   ngOnInit() {
-    this.wrongID = false;
   }
 
   switchError() {
-    this.wrongID = true;
+    this.joinService.wrongID = true;
   }
 }

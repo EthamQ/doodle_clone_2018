@@ -88,8 +88,11 @@ export class TimeselectionModel {
   }
 
   parseToTimeStamp() {
-    this.timeFrom = moment(this.year + '-' + this.month + '-' + this.day + ' ' + this.startHour + ':' + this.getStartMinute() + ':' + this.startAMPM).unix();
-    this.timeTo = moment(this.year + '-' + this.month + '-' + this.day + ' ' + this.stopHour + ':' + this.getStopMinute() + ':' + this.stopAMPM).unix();
+    const date = this.day + '-' + this.month + '-' + this.year;
+    const startTime = this.startHour.toString() + ':' + this.getStartMinute() + ' ' + this.startAMPM;
+    const stopTime = this.stopHour.toString() + ':' + this.getStopMinute() + ' ' + this.stopAMPM;
+    this.timeFrom = moment(date + ' ' + startTime).unix();
+    this.timeTo = moment(date + ' ' + stopTime).unix();
     return new DatesModel(this.timeFrom, this.timeTo);
   }
 }

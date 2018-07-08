@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 
 @Injectable()
-export class AdminViewStateTracker{
-    private editViewActive = false;
-    private adminId: string;
-    private eventData: any;
-    private adminAsArray: any[];
+export class AdminViewStateTracker {
+    editViewActive = false;
+    adminId: string;
+    eventData: any;
+    adminAsArray: any[];
+    wrongID = false;
 
-    constructor(){}
+    constructor() {}
 
     setEditActive(boolean){
         this.editViewActive = boolean;
@@ -29,7 +30,17 @@ export class AdminViewStateTracker{
         return this.editViewActive;
     }
 
-    showAdminLanding(){
+    showError(boolean){
+      this.wrongID = boolean;
+    }
+
+    getError(){
+      return this.wrongID;
+    }
+
+
+
+  showAdminLanding(){
         return !this.editViewActive;
     }
 

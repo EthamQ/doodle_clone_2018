@@ -9,6 +9,7 @@ export class ViewService {
   UUID = '';
   votes = [];
   serverData: ServerModel;
+  dataLoaded = false;
   constructor(
     private http: HttpClient,
     private URLService: URLService
@@ -37,6 +38,7 @@ export class ViewService {
                 this.votes.push(votes);
               }
           }
+          this.dataLoaded = true;
         });
 
   }
@@ -44,5 +46,6 @@ export class ViewService {
     this.UUID = '';
     this.votes = [];
     this.serverData = undefined;
+    this.dataLoaded = false;
   }
 }

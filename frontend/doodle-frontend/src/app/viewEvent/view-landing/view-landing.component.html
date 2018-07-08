@@ -8,7 +8,7 @@
         <button (click)="switchError()" class="btn btn-primary" type="button" (click)="viewService.getData()" [routerLink]="viewService.UUID">Send</button>
       </div>
     </div>
-    <p class="errorText" *ngIf="wrongID"> Invalid ID Entered!</p>
+    <p class="errorText" *ngIf="wrongID && !viewService.dataLoaded"> Invalid ID Entered!</p>
   </div>
 
 </div>
