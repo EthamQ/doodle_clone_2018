@@ -10,15 +10,10 @@ import { DebugElement } from '@angular/core';
 import { MockDataService } from '../../../test/mock-data.service';
 
 
+
 describe('CreatePersonalComponent', () => {
   let component: CreatePersonalComponent;
   let fixture: ComponentFixture<CreatePersonalComponent>;
-  let mockDataService: MockDataService;
-  let titleInput: DebugElement;
-  let locationInput: DebugElement;
-  let adminNameInput: DebugElement;
-  let descriptionInput: DebugElement;
-
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -41,7 +36,6 @@ describe('CreatePersonalComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CreatePersonalComponent);
-    mockDataService = new MockDataService();
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -49,31 +43,4 @@ describe('CreatePersonalComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('user input in create details should be correctly stored in the event object', fakeAsync(() => {
-    tick();
-    // title
-    titleInput = fixture.debugElement.query(By.css('#title'));
-    titleInput.nativeElement.value = mockDataService.createInput.title;
-    titleInput.nativeElement.dispatchEvent(new Event('input'));
-    expect(component.createService.event.title).toBe(mockDataService.createInput.title);
-
-    // location
-    locationInput = fixture.debugElement.query(By.css('#location'));
-    locationInput.nativeElement.value = mockDataService.createInput.location;
-    locationInput.nativeElement.dispatchEvent(new Event('input'));
-    expect(component.createService.event.location).toBe(mockDataService.createInput.location);
-
-    // description
-    descriptionInput = fixture.debugElement.query(By.css('#description'));
-    descriptionInput.nativeElement.value = mockDataService.createInput.description;
-    descriptionInput.nativeElement.dispatchEvent(new Event('input'));
-    expect(component.createService.event.description).toBe(mockDataService.createInput.description);
-
-    // admin name
-    adminNameInput = fixture.debugElement.query(By.css('#name'));
-    adminNameInput.nativeElement.value = mockDataService.createInput.creator.name;
-    adminNameInput.nativeElement.dispatchEvent(new Event('input'));
-    expect(component.createService.creator.name).toBe(mockDataService.createInput.creator.name);
-  }));
 });
