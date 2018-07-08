@@ -3,7 +3,10 @@
   <div class="card">
     <ng-template [ngIf]="viewService.serverData != undefined">
       <div>
-        <button class="button" class="btn btn-primary" (click)="showEventDetails = !showEventDetails">Show event Infos</button>
+        <button
+          mat-flat-button
+          class="col-12 setColor"
+          (click)="showEventDetails = !showEventDetails">Show event Infos</button>
       </div>
       <div class="event-info-box" *ngIf="showEventDetails">
         <h3 class="title">{{viewService.serverData.title}}</h3> <h3> </h3>
