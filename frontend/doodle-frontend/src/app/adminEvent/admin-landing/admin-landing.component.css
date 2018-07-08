@@ -29,3 +29,8 @@
 .button{
   padding-top: 10px;
 }
+
+.errorText{
+  color: #ff4841;
+  padding-left: 10px;
+}

@@ -2,15 +2,26 @@
 <div class="container">
   <app-logo-header [isCreate]="true"></app-logo-header>
   <ng-template [ngIf]="joinService.serverData != undefined">
-      <button class="btn btn-primary" (click)="showEventDetails = !showEventDetails">Show event Infos</button>
-      <div class="event-info-box" *ngIf="showEventDetails">
-          <h4> Title: {{joinService.serverData.title}}</h4>
-          <h4>Location: {{joinService.serverData.location}}</h4>
-          <h4>Description: {{joinService.serverData.description}}</h4>
-          <h4>Event creator: {{joinService.serverData.creator.name}}</h4>
-      </div>
-     
   <div class="card mt-5" *ngIf="!(joinService.serverData.date.length==0)">
+    <button class="button" class="btn btn-primary" (click)="showEventDetails = !showEventDetails">Show event Infos</button>
+    <div class="event-info-box" *ngIf="showEventDetails">
+      <h3 class="title">{{joinService.serverData.title}}</h3> <h3> </h3>
+      <div class="inner-event-info">
+        <div>
+          <h5> Description </h5>
+          <textarea readonly unselectable="on" class="info">{{joinService.serverData.description}}</textarea >
+        </div>
+
+        <div class="rest">
+          <p><i class="material-icons">
+            location_on
+          </i> {{joinService.serverData.location}}</p>
+          <p><i class="material-icons">
+            face
+          </i> {{joinService.serverData.creator.name}}</p>
+        </div>
+      </div>
+    </div>
     <div class="card-body">
       <div id="table" class="table">
         <table class="table table-bordered table-responsive-md text-center">

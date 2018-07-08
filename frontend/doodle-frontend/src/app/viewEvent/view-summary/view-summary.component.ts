@@ -12,6 +12,7 @@ export class ViewSummaryComponent implements OnInit {
 
   viewService: ViewService;
   callGetData = true;
+  showEventDetails = false;
   constructor(@Inject(ViewService) viewService: ViewService, private route: ActivatedRoute) {
     console.log("CALL ViewSummaryComponent CONSRTUCTOR");
     this.viewService = viewService;
@@ -22,7 +23,7 @@ export class ViewSummaryComponent implements OnInit {
         this.viewService.getData();
         this.callGetData = false;
       }
-      
+
     });
   }
 

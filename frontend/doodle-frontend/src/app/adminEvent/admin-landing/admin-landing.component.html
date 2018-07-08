@@ -1,16 +1,16 @@
 <div class="background">
     <app-logo-header [isLanding]="true"></app-logo-header>
-  <button type="button" class="close" aria-label="Close">
     <span aria-hidden="true">&times;</span>
-  </button>
   <div class="outerdiv">
     <h2 class="header">Admin ID</h2>
     <div class="input-group mb-3">
     <input type="text" class="form-control" placeholder="Please enter your ID." aria-label="Please enter your ID." aria-describedby="basic-addon2" (input)="setAdminId($event.target.value)">
-    <div class="input-group-append">
+      <div class="input-group-append">
       <button class="btn btn-primary" (click)="navigeToAdminEdit()" type="button">Send</button>
     </div>
   </div>
+    <p class="errorText" *ngIf="wrongID"> Invalid ID Entered!</p>
   </div>
+
 
 </div>

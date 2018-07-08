@@ -10,15 +10,18 @@ export class AdminLandingComponent implements OnInit {
 
   @Output() adminIdSubmit = new EventEmitter();
 
-  private adminId : string;
+  private adminId: string;
+  private wrongID: boolean;
 
   constructor(private router: Router) { }
 
   ngOnInit() {
+    this.wrongID = false;
   }
 
   navigeToAdminEdit(){
     this.adminIdSubmit.emit(this.adminId);
+    this.wrongID = true;
   }
 
   setAdminId(adminId){

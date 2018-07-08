@@ -10,10 +10,17 @@ export class ViewLandingComponent implements OnInit {
 
 
   viewService: ViewService;
+  private wrongID: boolean;
+
   constructor(@Inject(ViewService) viewService: ViewService) {
     this.viewService = viewService;
   }
   ngOnInit() {
+    this.wrongID = false;
+  }
+
+  switchError() {
+    this.wrongID = true;
   }
 
 }

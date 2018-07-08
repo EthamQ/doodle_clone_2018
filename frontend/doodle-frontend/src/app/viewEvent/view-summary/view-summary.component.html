@@ -2,6 +2,27 @@
     <app-logo-header [isViewEvent]="true"></app-logo-header>
   <div class="card">
     <ng-template [ngIf]="viewService.serverData != undefined">
+      <div>
+        <button class="button" class="btn btn-primary" (click)="showEventDetails = !showEventDetails">Show event Infos</button>
+      </div>
+      <div class="event-info-box" *ngIf="showEventDetails">
+        <h3 class="title">{{viewService.serverData.title}}</h3> <h3> </h3>
+        <div class="inner-event-info">
+          <div>
+            <h5> Description </h5>
+            <textarea readonly unselectable="on" class="info">{{viewService.serverData.description}}</textarea >
+          </div>
+
+          <div class="rest">
+            <p><i class="material-icons">
+              location_on
+            </i> {{viewService.serverData.location}}</p>
+            <p><i class="material-icons">
+              face
+            </i> {{viewService.serverData.creator.name}}</p>
+          </div>
+        </div>
+      </div>
       <div class="card-body">
         <div id="table" class="table">
           <table class="table table-bordered table-responsive-md text-center">
