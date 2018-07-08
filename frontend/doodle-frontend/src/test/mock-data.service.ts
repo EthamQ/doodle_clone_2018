@@ -12,8 +12,8 @@ export class MockDataService {
       title: 'thai\'s promi dinner',
       location: 'thai\'s living room',
       'description': 'my mom is not at home',
-      'creator': {
-        'name': 'thai',
+      creator: {
+        name: 'thai',
       },
       'date': [
         {
