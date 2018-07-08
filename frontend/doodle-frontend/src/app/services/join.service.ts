@@ -19,6 +19,8 @@ export class JoinService {
   serverData: ServerModel;
   joiner = new ParticipantModel('Your Name');
   dataLoaded: boolean;
+  wrongID: boolean;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -29,13 +31,14 @@ export class JoinService {
     this.dataLoaded = false;
     this.getURl = this.URLService.getServerURL() + this.getURl;
     this.postURL = this.URLService.getServerURL() + this.postURL;
+    this.wrongID = false;
   }
   postData() {
     console.log('in postData: ');
     console.log(this.joiner);
-    this.http.post(this.postURL + this.UUID, this.joiner).subscribe((res: any) =>{
-      if(!res.success){
-        console.log("error");
+    this.http.post(this.postURL + this.UUID, this.joiner).subscribe((res: any) => {
+      if (!res.success) {
+        console.log('error');
       }
     });
 
@@ -96,5 +99,6 @@ export class JoinService {
     this.serverData = undefined;
     this.joiner = new ParticipantModel('Your Name');
     this.dataLoaded = undefined;
+    this.wrongID = false;
   }
 }

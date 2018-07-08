@@ -8,7 +8,7 @@
         <button (click)="switchError()" class="btn btn-primary" type="button" [routerLink]="joinService.UUID">Send</button>
       </div>
     </div>
-    <p class="errorText" *ngIf="wrongID"> Invalid ID Entered!</p>
+    <p class="errorText" *ngIf="!joinService.dataLoaded && joinService.wrongID"> Invalid ID Entered!</p>
   </div>
 </div>
 <router-outlet></router-outlet>
