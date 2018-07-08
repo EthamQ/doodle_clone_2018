@@ -9,6 +9,7 @@ import { MockDataService } from '../../../test/mock-data.service';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { CreateCalendarComponent } from '../create-calendar/create-calendar.component';
+import * as moment from 'moment';
 
 
 describe('CreateLandingComponent', () => {
@@ -26,6 +27,8 @@ describe('CreateLandingComponent', () => {
   let locationInput: DebugElement;
   let adminNameInput: DebugElement;
   let descriptionInput: DebugElement;
+
+  let datepicker: DebugElement;
 
 
   beforeEach(async(() => {
@@ -72,8 +75,6 @@ describe('CreateLandingComponent', () => {
   });
 
   
-
-
   describe('CreatePersonalComponent', () => {
     it('should create CreatePersonalComponent', () => {
       expect(createPersonalComponent).toBeTruthy();
@@ -113,6 +114,15 @@ describe('CreateLandingComponent', () => {
     });
     it('user input in CreateCalendarComponent should be correctly stored in timeSelection', fakeAsync(() => {
       tick();
+
+      datepicker = fixtureCalendar.debugElement.query(By.css('dl-date-time-picker'));
+      for(let i = 0; i<mockDataService.dateInput.length; i++){
+        let date = mockDataService.dateInput[i].value;
+        let dateForChangeEvent = {value: {value: date}};
+        datepicker.triggerEventHandler('change', dateForChangeEvent);
+        let expectedValue = mockDataService.dateInput[i].expectedValueForDatabase;
+        expect(component.createService.timeSelection[i].timeTo).toBe(expectedValue);
+      }
     }));
   });
   
