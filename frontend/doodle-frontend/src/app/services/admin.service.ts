@@ -63,12 +63,10 @@ export class AdminService {
     this.event = new EventModel();
     this.creator = new CreatorModel('dummy@web.de');
     this.initUrls();
-    this.stateTracker.wrongID = false;
-    this.stateTracker.editViewActive = false;
+    this.stateTracker.editViewActive = undefined;
     this.stateTracker.adminId = undefined;
     this.stateTracker.eventData = undefined;
     this.stateTracker.adminAsArray = undefined;
-    
   }
   /**
    * depending on if we're working locally or on the lmu server
