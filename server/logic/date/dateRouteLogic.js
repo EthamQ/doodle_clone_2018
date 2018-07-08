@@ -14,6 +14,7 @@ const uuid = require('uuid/v4');
  * to the dates array of every participant and the creaotr
  */
 addDatesToEvent = function (req, res, next) {
+    res.setHeader("Content-Type", "application/json"); 
     let responseBuilder = new ResponseBuilder();
     let adminUUID = req.params.adminUUID;
     let newDates = req.body.datesToAdd;
@@ -72,6 +73,7 @@ addDatesToEvent = function (req, res, next) {
  * and from dates array from participant
  */
 removeDatesOfEvent = function (req, res, next) {
+    res.setHeader("Content-Type", "application/json"); 
     let responseBuilder = new ResponseBuilder();
     let indexesToDelete = req.body.indexesToDelete;
     let creatorUUID = req.params.adminUUID;

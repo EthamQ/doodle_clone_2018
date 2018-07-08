@@ -56,24 +56,23 @@ describe('CreateLandingComponent', () => {
       .compileComponents();
   }));
 
-
   beforeEach(() => {
-    // this component
+    // init this component
     fixture = TestBed.createComponent(CreateLandingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
 
-    // CreatePersonalComponent
+    // init  CreatePersonalComponent
     fixturePersonal = TestBed.createComponent(CreatePersonalComponent);
     createPersonalComponent = fixturePersonal.componentInstance;
     fixturePersonal.detectChanges();
 
-    // CreatePersonalComponent
+    // init  CreatePersonalComponent
     fixtureCalendar = TestBed.createComponent(CreateCalendarComponent);
     createCalendarComponent = fixtureCalendar.componentInstance;
     fixtureCalendar.detectChanges();
 
-    // services
+    // init services
     mockDataService = new MockDataService();
   });
 
@@ -129,6 +128,7 @@ describe('CreateLandingComponent', () => {
         datepicker.triggerEventHandler('change', dateForChangeEvent);
         let expectedValue = mockDataService.dateInput[i].expectedValueForDatabase;
         expect(component.createService.timeSelection[i].timeTo).toBe(expectedValue);
+        expect(component.createService.timeSelection[i].timeFrom).toBe(expectedValue);
       }
       // temporarily store generated service data for the next tests
       createServiceTemp.timeSelection = component.createService.timeSelection;

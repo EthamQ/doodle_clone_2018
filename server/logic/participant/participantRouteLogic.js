@@ -12,6 +12,7 @@ const participantLogic = require('./participantLogic');
  * TODO: check if dateArray.length == date.length
  */
 addParticipantToEvent = function (req, res, next) {
+    res.setHeader("Content-Type", "application/json"); 
     let responseBuilder = new ResponseBuilder();
     let eventUUID = req.params.uuid;
     let participant = req.body;
@@ -63,6 +64,7 @@ addParticipantToEvent = function (req, res, next) {
  * collection
  */
 removeParticipants = function (req, res, next) {
+    res.setHeader("Content-Type", "application/json"); 
     let responseBuilder = new ResponseBuilder();
     let adminUUID = req.params.adminUUID;
     participantIdArray = req.body.participantIdArray;
@@ -104,6 +106,7 @@ removeParticipants = function (req, res, next) {
  * POST '/date/participant/add/:adminUUID'
  */
 addDatesToParticipant = function (req, res, next) {
+    res.setHeader("Content-Type", "application/json"); 
     let responseBuilder = new ResponseBuilder();
     let participantId = req.body.participantId;
     let dateIndexToAdd = req.body.dateIndexToAdd;
@@ -134,6 +137,7 @@ addDatesToParticipant = function (req, res, next) {
  * POST '/date/participant/remove/:adminUUID'
  */
 removeDatesFromParticipant = function (req, res, next) {
+    res.setHeader("Content-Type", "application/json"); 
     let responseBuilder = new ResponseBuilder();
     let participantId = req.body.participantId;
     let dateIndexToRemove = req.body.dateIndexToRemove;
@@ -162,5 +166,4 @@ module.exports = {
     removeParticipants: removeParticipants,
     removeDatesFromParticipant: removeDatesFromParticipant,
     addDatesToParticipant: addDatesToParticipant
-
 }

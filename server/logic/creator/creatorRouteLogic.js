@@ -11,6 +11,7 @@ const dateLogic = require('./../date/dateLogic');
  * sets indexes of dates array of creator to true
  */
 addDatesToCreator = function (req, res, next) {
+    res.setHeader("Content-Type", "application/json"); 
     let responseBuilder = new ResponseBuilder();
     let dateIndexToAdd = req.body.dateIndexToAdd;
     let adminUUID = req.params.adminUUID;
@@ -40,6 +41,7 @@ addDatesToCreator = function (req, res, next) {
  * sets indexes of dates array of creator to false
  */
 removeDatesFromCreator = function (req, res, next) {
+    res.setHeader("Content-Type", "application/json"); 
     let responseBuilder = new ResponseBuilder();
     let dateIndexToRemove = req.body.dateIndexToRemove;
     let adminUUID = req.params.adminUUID;
@@ -64,6 +66,7 @@ removeDatesFromCreator = function (req, res, next) {
 }
 
 updateDatesFromCreator = function (req, res, next) {
+    res.setHeader("Content-Type", "application/json"); 
     console.log("updatedates");
     let responseBuilder = new ResponseBuilder();
     let updatedDates = req.body.updatedDates;

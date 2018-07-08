@@ -15,6 +15,7 @@ const dateLogic = require('./../date/dateLogic');
  * and creates a response for the client
  */
 saveNewDoodleEvent = function (req, res, next) {
+    res.setHeader("Content-Type", "application/json"); 
     let responseBuilder = new ResponseBuilder();
     prepareNewDoodleEvent(req, res, next).then(doodleEventToSave => {
         if (doodleEventToSave.modelIsValid() && doodleEventToSave.childModelsAreValid()) {
@@ -48,6 +49,7 @@ saveNewDoodleEvent = function (req, res, next) {
  * update title, description, eventType, location of an event
  */
 updateDoodleEvent = function (req, res, next) {
+    res.setHeader("Content-Type", "application/json"); 
     let responseBuilder = new ResponseBuilder();
     creatorUUID = req.params.creatorUUID;
     getDoodleEventByCreatorUUID(creatorUUID, data => {
@@ -84,6 +86,7 @@ updateDoodleEvent = function (req, res, next) {
  * sends the event with the uuid to the client
  */
 getDoodleEventDataByUUID = function (req, res, next) {
+    res.setHeader("Content-Type", "application/json"); 
     let uuidEvent = req.params.uuid;
     let responseBuilder = new ResponseBuilder();
     // look for event with event uuid
@@ -130,6 +133,7 @@ getDoodleEventDataByUUID = function (req, res, next) {
  * in the date and participant collection
  */
 deleteEvent = function (req, res, next) {
+    res.setHeader("Content-Type", "application/json"); 
     let responseBuilder = new ResponseBuilder();
     let creatorUUID = req.params.creatorUUID;
     getDoodleEventByCreatorUUID(creatorUUID, data => {
