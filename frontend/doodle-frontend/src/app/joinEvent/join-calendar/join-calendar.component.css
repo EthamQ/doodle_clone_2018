@@ -9,7 +9,7 @@
 }
 
 .d-date{
-  color: darkgreen;
+  color: #16a085;
   font-size: 26px;
   font-weight: 500;
   font-family: "Fira Sans","Trebuchet MS","Helvetica Neue","Arial",sans-serif;
@@ -49,18 +49,18 @@
 }
 .summary-participants{
   position: relative;
-  color: darkgreen;
+  color: #16a085;
   /* Adjust these values accordingly */
   top: 5px;
   left: 5px;
 }
 .custom-checker-red{
- color:darkred;
+ color:#c0392b;
 }
 
 
 .custom-checker-green{
-  color:darkgreen;
+  color:#16a085;
 }
 .custom-click:hover{
   cursor: pointer;
@@ -106,5 +106,10 @@
   padding-left: 10px;
   align-items: left;
   min-width: 5rem;
+
+}
+.setColor{
+  color: white;
+  background-color: #16a085;
 
 }

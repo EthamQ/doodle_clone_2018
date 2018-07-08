@@ -64,8 +64,21 @@ export class CreateService {
     this.detailsBool = true;
 
   }
+  setAllStart() {
+    for (let i = 0; i < this.timeSelection.length; i++) {
+      this.timeSelection[i].startAMPM = this.default_time.startAMPM;
+      this.timeSelection[i].startMinute = this.default_time.startMinute;
+      this.timeSelection[i].startHour = this.default_time.startHour;
+    }
+  }
+  setAllStop() {
+    for (let i = 0; i < this.timeSelection.length; i++) {
+      this.timeSelection[i].stopAMPM = this.default_time.stopAMPM;
+      this.timeSelection[i].stopMinute = this.default_time.stopMinute;
+      this.timeSelection[i].stopHour = this.default_time.stopHour;
+    }
+  }
   setCalendar() {
-    console.log("setCalendar()");
     for (let i = 0; i < this.timeSelection.length; i++) {
       this.event.date.push(this.timeSelection[i].parseToTimeStamp());
     }

@@ -3,7 +3,10 @@
   <app-logo-header [isCreate]="true"></app-logo-header>
   <ng-template [ngIf]="joinService.serverData != undefined">
   <div class="card mt-5" *ngIf="!(joinService.serverData.date.length==0)">
-    <button class="button" class="btn btn-primary" (click)="showEventDetails = !showEventDetails">Show event Infos</button>
+    <button
+      mat-flat-button
+      class="setColor"
+      (click)="showEventDetails = !showEventDetails">Show event Infos</button>
     <div class="event-info-box" *ngIf="showEventDetails">
       <h3 class="title">{{joinService.serverData.title}}</h3> <h3> </h3>
       <div class="inner-event-info">
@@ -85,7 +88,11 @@
     </div>
   </div>
 </ng-template>
-  <button class="button" type="submit" class="btn btn-primary" (click)="navigateToViewSummary()" [disabled]="(joinService.joiner.name === 'Your Name')">Data</button>
+  <button
+    mat-flat-button
+    class="setColor"
+    (click)="navigateToViewSummary()"
+    [disabled]="(joinService.joiner.name === 'Your Name')">Submit</button>
 
 </div>
 

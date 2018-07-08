@@ -2,22 +2,22 @@
     background-color: white;
     float: none;
   }
-  
+
   .time-selection{
-  
+
   }
   .time-slot{
-  
+
   }
   .time-picker{}
-  
+
   .button.button-dark.button-clear {
     border-color: transparent;
     background: none;
     box-shadow: none;
     color: #444;
   }
-  
+
   .time-selection-value{
     line-height: inherit;
     text-align: center;
@@ -30,7 +30,7 @@
     text-align: center;
     color:#525252;
   }
-  
+
   .time-selection-minute{
     margin:0;
     padding:0;
@@ -43,7 +43,7 @@
     padding:0;
     border:0;
     vertical-align: baseline;
-    color:darkgreen;
+    color:#16a085;
   }
   .myTableMax{
     overflow: scroll;
@@ -66,9 +66,9 @@
     border:0;
     vertical-align: baseline;
   }
-  
+
   .d-date{
-    color: darkgreen;
+    color: #16a085;
     font-size: 26px;
     font-weight: 500;
     font-family: "Fira Sans","Trebuchet MS","Helvetica Neue","Arial",sans-serif;
@@ -95,7 +95,7 @@
   }
   .participantCountHeader{
     height: 45px;
-  
+
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
@@ -108,19 +108,19 @@
   }
   .summary-participants{
     position: relative;
-    color: darkgreen;
+    color: #16a085;
     /* Adjust these values accordingly */
     top: 5px;
     left: 5px;
   }
   .custom-checker-red{
-    color:darkred;
+    color:#c0392b;
     cursor: pointer;
   }
-  
-  
+
+
   .custom-checker-green{
-    color:darkgreen;
+    color:#16a085;
     cursor: pointer;
   }
   .custom-click:hover{
@@ -132,14 +132,13 @@
   .pt-3-half{
     padding-top: 0.4rem;
   }
-  
+
   .table td{
-  
+
     vertical-align: inherit;
   }
-  
+
   .existing-dates{
     margin-bottom: 9rem;
   }
-  
- 
+

@@ -41,9 +41,67 @@
           <div class="row">
             <div class="col-6">
               <div class="row">
-                <div class="col-12 setButton">
-                  <button class="btn-danger">set all to this stop time</button>
+
+                <div class="col-4 time-selection-hour">
+                  <div class="row">
+                    <div class="col-12 time-selection-add">
+                      <i class="material-icons" (click)="createService.default_time.addStartHour()">
+                        keyboard_arrow_up
+                      </i>
+                    </div>
+                    <div class="col-12 time-selection-value">
+                      {{createService.default_time.startHour}}
+                    </div>
+                    <div class="col-12 time-selection-substract">
+                      <i class="material-icons" (click)="createService.default_time.substractStartHour()">
+                        keyboard_arrow_down
+                      </i>
+                    </div>
+                  </div>
                 </div>
+                <div class="col-4 time-selection-minute">
+                  <div class="row">
+                    <div class="col-12 time-selection-add">
+                      <i class="material-icons" (click)="createService.default_time.addStartMinute()">
+                        keyboard_arrow_up
+                      </i>
+                    </div>
+                    <div class="col-12 time-selection-value">
+                      {{createService.default_time.getStartMinute()}}
+                    </div>
+                    <div class="col-12 time-selection-substract">
+                      <i class="material-icons" (click)="createService.default_time.substractStartMinute()">
+                        keyboard_arrow_down
+                      </i>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4 time-selection-am-pm">
+                  <div class="row">
+                    <div class="col-12 time-selection-add">
+                      <i class="material-icons" (click)="createService.default_time.changeStartAM()">
+                        keyboard_arrow_up
+                      </i>
+                    </div>
+                    <div class="col-12 time-selection-value">
+                      {{createService.default_time.startAMPM}}
+                    </div>
+                    <div class="col-12 time-selection-substract">
+                      <i class="material-icons" (click)="createService.default_time.changeStartAM()">
+                        keyboard_arrow_down
+                      </i>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 setButton">
+                  <button mat-raised-button class="col-12 setStartBtn" (click)="createService.setAllStart()">Set All Start</button>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-6">
+              <div class="row">
+
                 <div class="col-4 time-selection-hour">
                   <div class="row">
                     <div class="col-12 time-selection-add">
@@ -95,11 +153,12 @@
                     </div>
                   </div>
                 </div>
+                <div class="col-12 setButton">
+                  <button mat-raised-button class="col-12 setStopBtn" (click)="createService.setAllStop()">Set All Stop</button>
+                </div>
               </div>
 
             </div>
-
-
           </div>
         </div>
         <div id="table" class="col-12 table">

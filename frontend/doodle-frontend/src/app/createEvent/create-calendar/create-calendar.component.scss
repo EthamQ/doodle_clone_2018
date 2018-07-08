@@ -46,7 +46,7 @@
   border:0;
   text-align: center;
   vertical-align: baseline;
-  color:darkgreen;
+  color:#16a085;
 }
 .myTableMax{
   overflow: scroll;
@@ -71,7 +71,7 @@
 }
 
 .d-date{
-  color: darkgreen;
+  color: #16a085;
   font-size: 26px;
   font-weight: 500;
   font-family: "Fira Sans","Trebuchet MS","Helvetica Neue","Arial",sans-serif;
@@ -111,18 +111,18 @@
 }
 .summary-participants{
   position: relative;
-  color: darkgreen;
+  color: #16a085;
   /* Adjust these values accordingly */
   top: 5px;
   left: 5px;
 }
 .custom-checker-red{
-  color:darkred;
+  color:#e74c3c;
 }
 
 
 .custom-checker-green{
-  color:darkgreen;
+  color:#16a085;
 }
 .custom-click:hover{
   cursor: pointer;
@@ -143,6 +143,19 @@
   margin-bottom: 9rem;
 }
 
+.setStopBtn{
+  background-color: #c0392b;
+  color: white;
+}
+.setStartBtn{
+  background-color: #16a085;
+  color: white;
+}
+
+
+.setAll{
+  margin-bottom: 10px;
+}
 // .hover-background{
 //   &:hover{
 //     background: #dde0e3;
