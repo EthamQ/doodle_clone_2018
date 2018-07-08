@@ -55,7 +55,7 @@
     [disabled]="chooseDatesButtonIsDisabled()"
             (click)="createService.setDetails()"
             routerLink="calendar"
-            *ngIf="!createService.detailsBool && !createService.calendarBool">Choice your dates</button>
+            *ngIf="!createService.detailsBool && !createService.calendarBool">Choose your dates</button>
     <button class="button" type="submit" class="btn btn-primary"
           [disabled]="(createService.timeSelection.length === 0)"
           (click)="submitDates()"
