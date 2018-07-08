@@ -1,6 +1,6 @@
 <div class="container">
     <div class="existing-dates" *ngIf="!stepperService.isCreate">
-        <h2>Remove existing dates: </h2>
+        <h3 class="title font-green-dark">Remove existing dates:</h3>
       <div class="row">
           <div class="col-6  hover-background" *ngFor="let date of adminService.stateTracker.getEventData().date; let i = index" style="position: relative">
             <div [style.opacity]="dateToBeRemoved(i)? '0.5':'1'">
@@ -15,7 +15,8 @@
                               <h4>{{date.timeFrom | month}} {{date.timeFrom | day}}</h4>
                           </div>
                           <div class="col-12">
-                              <h4>{{date.timeFrom | timeHour}} - {{date.timeTo | timeHour}}</h4>
+                              <h4 *ngIf="date.timeFrom != date.timeTo">{{date.timeFrom | timeHour}} - {{date.timeTo | timeHour}}</h4>
+                              <h4 *ngIf="date.timeFrom == date.timeTo">{{date.timeFrom | timeHour}}</h4>
                           </div>
                         </div>
             </div>
@@ -24,7 +25,7 @@
     </div>
   <div class="row">
     <div class="col-12">
-        <h2 *ngIf="!stepperService.isCreate">Add new dates: </h2>
+        <h3 class="title font-green-dark" *ngIf="!stepperService.isCreate">Add new dates: </h3>
     </div>
       <div class="col-6">
       <dl-date-time-picker startView="day" minView="day" maxView="day" (change)="handleEvent($event.value)">

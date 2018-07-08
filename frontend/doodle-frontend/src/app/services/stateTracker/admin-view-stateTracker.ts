@@ -53,6 +53,10 @@ export class AdminViewStateTracker {
         return this.eventData;
     }
 
+    getUUID(){
+        return this.eventData.uuid;
+    }
+
     setCreatorForDateEdit(admin){
         this.adminAsArray = [];
         this.adminAsArray.push(admin);

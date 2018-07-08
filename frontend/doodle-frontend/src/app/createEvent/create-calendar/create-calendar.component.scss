@@ -140,7 +140,7 @@
 }
 
 .existing-dates{
-  margin-bottom: 9rem;
+  margin-bottom: 4rem;
 }
 
 .setStopBtn{
@@ -156,8 +156,14 @@
 .setAll{
   margin-bottom: 10px;
 }
-// .hover-background{
-//   &:hover{
-//     background: #dde0e3;
-//   }
-// }
+
+
+.title{
+  padding: 1rem;
+  font-weight: bold;
+
+}
+
+.font-green-dark{
+  color: darkgreen;
+}

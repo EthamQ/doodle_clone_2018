@@ -1,10 +1,15 @@
 
-<div class="row">
-  <div class="col-12">
+<div *ngIf="adminService.stateTracker != undefined" class="row">
+    <div class="col-12">
+            <h4>Share this link to your event:</h4>
+    </div>
+    <div class="col-12">
+        <h5 class="font-color">{{getJoinUrl()}}</h5>
+    </div>
+  <div class="col-12 mt-5">
     <h4>Update your date selection</h4>
-    <app-date-selector *ngIf="adminService.stateTracker != undefined" (boxClick)="dateSelectionChanged($event)" [participants]="adminService.stateTracker.getCreatorForDateEdit()" [dates]="adminService.stateTracker.getEventData().date"></app-date-selector>
+    <app-date-selector (boxClick)="dateSelectionChanged($event)" [participants]="adminService.stateTracker.getCreatorForDateEdit()" [dates]="adminService.stateTracker.getEventData().date"></app-date-selector>
   </div>
-
   <div class="col-6 mt-3">
       <button class="button" (click)="updateCreatorDates()" type="submit" class="btn btn-primary">Update values</button>
   </div>

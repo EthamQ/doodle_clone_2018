@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminService } from '../../../services/admin.service';
+import { URLService } from '../../../services/url-service';
 
 
 @Component({
@@ -12,9 +13,13 @@ export class AdminOptionsComponent implements OnInit {
   modalOpen = false;
   updatedCreatorDates = [];
 
-  constructor(private adminService: AdminService) { }
+  constructor(private adminService: AdminService, private urlService: URLService) { }
 
   ngOnInit() {
+  }
+
+  getJoinUrl(){
+    return this.urlService.getFrontendURL() + '/join/' + this.adminService.stateTracker.getUUID();
   }
 
   dateSelectionChanged(event){
