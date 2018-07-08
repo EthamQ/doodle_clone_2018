@@ -84,6 +84,5 @@ export class CreateService {
     }
     this.event.creator = this.creator;
     this.calendarBool = true;
-    this.postData();
   }
 }

@@ -11,7 +11,9 @@ import { StepperService } from '../../services/stepper-info.service';
 })
 export class CreateLandingComponent implements OnInit {
   createService: CreateService;
-  constructor(@Inject(CreateService) createservice: CreateService, private stepperService: StepperService) {
+  constructor(
+    @Inject(CreateService) createservice: CreateService,
+   private stepperService: StepperService) {
     this.createService = createservice;
   }
 
@@ -24,8 +26,10 @@ export class CreateLandingComponent implements OnInit {
   }
 
   submitDates(){
+    console.log("CLICK ON SUBMIT DATES");
     this.createService.isLoading = true;
     this.createService.setCalendar()
+    this.createService.postData();
   }
 
 

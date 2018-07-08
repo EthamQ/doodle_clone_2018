@@ -10,25 +10,32 @@ import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { CreateCalendarComponent } from '../create-calendar/create-calendar.component';
 import * as moment from 'moment';
+import { CreateService } from '../../services/create.service';
 
 
 describe('CreateLandingComponent', () => {
+  // this component
   let component: CreateLandingComponent;
   let fixture: ComponentFixture<CreateLandingComponent>;
+  let submitButton: DebugElement;
 
+  // personal data
   let createPersonalComponent: CreatePersonalComponent;
   let fixturePersonal: ComponentFixture<CreatePersonalComponent>;
-
-  let createCalendarComponent: CreateCalendarComponent;
-  let fixtureCalendar: ComponentFixture<CreateCalendarComponent>;
-
-  let mockDataService: MockDataService;
   let titleInput: DebugElement;
   let locationInput: DebugElement;
   let adminNameInput: DebugElement;
   let descriptionInput: DebugElement;
 
+  // calendar
+  let createCalendarComponent: CreateCalendarComponent;
+  let fixtureCalendar: ComponentFixture<CreateCalendarComponent>;
   let datepicker: DebugElement;
+
+  // services
+  let mockDataService: MockDataService;
+
+  let serviceInstance: CreateService;
 
 
   beforeEach(async(() => {
@@ -50,9 +57,11 @@ describe('CreateLandingComponent', () => {
     .compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeAll(()=>{
     mockDataService = new MockDataService();
+  });
 
+  beforeEach(() => {
     // this component
     fixture = TestBed.createComponent(CreateLandingComponent);
     component = fixture.componentInstance;
@@ -67,6 +76,8 @@ describe('CreateLandingComponent', () => {
     fixtureCalendar = TestBed.createComponent(CreateCalendarComponent);
     createCalendarComponent = fixtureCalendar.componentInstance;
     fixtureCalendar.detectChanges();
+
+   
     
   });
 
@@ -79,7 +90,6 @@ describe('CreateLandingComponent', () => {
     it('should create CreatePersonalComponent', () => {
       expect(createPersonalComponent).toBeTruthy();
     });
-
     it('user input should be correctly stored in the event object', fakeAsync(() => {
       tick();
       // title
@@ -105,6 +115,8 @@ describe('CreateLandingComponent', () => {
       adminNameInput.nativeElement.value = mockDataService.createInput.creator.name;
       adminNameInput.nativeElement.dispatchEvent(new Event('input'));
       expect(component.createService.creator.name).toBe(mockDataService.createInput.creator.name);
+
+      serviceInstance = component.createService;
     }));
   });
 
@@ -114,7 +126,6 @@ describe('CreateLandingComponent', () => {
     });
     it('user input in CreateCalendarComponent should be correctly stored in timeSelection', fakeAsync(() => {
       tick();
-
       datepicker = fixtureCalendar.debugElement.query(By.css('dl-date-time-picker'));
       for(let i = 0; i<mockDataService.dateInput.length; i++){
         let date = mockDataService.dateInput[i].value;
@@ -122,12 +133,27 @@ describe('CreateLandingComponent', () => {
         datepicker.triggerEventHandler('change', dateForChangeEvent);
         let expectedValue = mockDataService.dateInput[i].expectedValueForDatabase;
         expect(component.createService.timeSelection[i].timeTo).toBe(expectedValue);
+        serviceInstance.timeSelection = component.createService.timeSelection;
       }
     }));
-  });
-  
 
-    
+  });
+
+  
+  describe('CreateLandingComponent', () => {
+    it('click on submit button should generate the correct request data', () => {
+
+      component.createService.event = serviceInstance.event;
+      component.createService.creator = serviceInstance.creator;
+      component.createService.timeSelection = serviceInstance.timeSelection;
+      expect(component.createService.timeSelection.length).toBeGreaterThan(0);
+      expect(component.createService.creator.name).toBe(mockDataService.createInput.creator.name);
+      // component.createService.detailsBool = true;
+      // submitButton = fixture.debugElement.query(By.css('#submit'));
+      // submitButton.nativeElement.dispatchEvent(new Event('click'));
+      // console.log("Event title: " + component.createService.event.title);
+    });
+  });
   
  
 });

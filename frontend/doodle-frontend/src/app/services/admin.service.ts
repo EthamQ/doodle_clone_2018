@@ -67,6 +67,7 @@ export class AdminService {
     this.stateTracker.adminId = undefined;
     this.stateTracker.eventData = undefined;
     this.stateTracker.adminAsArray = undefined;
+
   }
   /**
    * depending on if we're working locally or on the lmu server

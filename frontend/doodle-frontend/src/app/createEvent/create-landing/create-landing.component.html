@@ -51,21 +51,20 @@
         </div>
       </div>
     <router-outlet></router-outlet>
-   <button
-     *ngIf="!createService.detailsBool && !createService.calendarBool"
-     mat-raised-button
-     class="col-6 nextBtn"
-     routerLink="calendar"
-     (click)="createService.setDetails()">Next</button>
-
-  <button
-    *ngIf="(createService.timeSelection.length > 0) && createService.detailsBool  && !createService.calendarBool"
-    mat-raised-button
-    class="col-6 nextBtn"
-    routerLink="summary"
-    (click)="createService.setCalendar()">Finish</button>
-
-
+    <button class="button" type="submit" class="btn btn-primary"
+    [disabled]="chooseDatesButtonIsDisabled()"
+            (click)="createService.setDetails()"
+            routerLink="calendar"
+            *ngIf="!createService.detailsBool && !createService.calendarBool">Choose your dates</button>
+    <button id="submit" class="button" type="submit" class="btn btn-primary"
+          [disabled]="(createService.timeSelection.length === 0)"
+          (click)="submitDates()"
+          routerLink="summary"
+          *ngIf="createService.detailsBool && !createService.calendarBool">Submit</button>
+          <button id="submit" class="button" type="submit" class="btn btn-primary"
+          [disabled]="(createService.timeSelection.length === 0)"
+          (click)="submitDates()"
+          routerLink="summary">Submit</button>
 </div>
 </div>
 </div>
