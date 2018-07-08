@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import { AdminService } from '../../../services/admin.service';
 
 
@@ -11,20 +11,22 @@ export class AdminOptionsComponent implements OnInit {
 
   modalOpen = false;
   updatedCreatorDates = [];
-
-  constructor(private adminService: AdminService) { }
+  adminService: AdminService;
+  constructor(@Inject(AdminService) adminService: AdminService) {
+    this.adminService = adminService;
+  }
 
   ngOnInit() {
   }
 
-  dateSelectionChanged(event){
+  dateSelectionChanged(event) {
     this.updatedCreatorDates = event.dates;
     console.log(event);
   }
 
-  updateCreatorDates(){
+  updateCreatorDates() {
     this.adminService.isLoading = true;
-    this.adminService.updateAdminDates(this.updatedCreatorDates, ()=>{
+    this.adminService.updateAdminDates(this.updatedCreatorDates, () => {
       this.adminService.isLoading = false;
     });
   }

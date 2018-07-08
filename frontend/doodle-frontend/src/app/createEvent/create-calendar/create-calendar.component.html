@@ -1,33 +1,11 @@
 <div class="container">
-    <div class="existing-dates" *ngIf="!stepperService.isCreate">
-        <h2>Remove existing dates: </h2>
-      <div class="row">
-          <div class="col-6  hover-background" *ngFor="let date of adminService.stateTracker.getEventData().date; let i = index" style="position: relative">
-            <div [style.opacity]="dateToBeRemoved(i)? '0.5':'1'">
-                <i *ngIf="!dateToBeRemoved(i)" class="material-icons" (click)="removeExistingDate(i)" title="Remove date" style="cursor: pointer; position: absolute; left: -1rem; top: 4px;">
-                    remove_circle
-                    </i>
-                    <i *ngIf="dateToBeRemoved(i)" class="material-icons" (click)="revertSelection(i)" title="Keep date" style="cursor: pointer; position: absolute; left: -1rem; top: 4px;">
-                        check_circle_outline
-                        </i>
-                        <div class="row">
-                          <div class="col-12">
-                              <h4>{{date.timeFrom | month}} {{date.timeFrom | day}}</h4>
-                          </div>
-                          <div class="col-12">
-                              <h4>{{date.timeFrom | timeHour}} - {{date.timeTo | timeHour}}</h4>
-                          </div>
-                        </div>
-            </div>
-          </div>
-      </div>
-    </div>
+
   <div class="row">
-    <div class="col-12">
-        <h2 *ngIf="!stepperService.isCreate">Add new dates: </h2>
-    </div>
-      <div class="col-6">
-      <dl-date-time-picker startView="day" minView="day" maxView="day" (change)="handleEvent($event.value)">
+
+
+
+    <div class="col-6">
+      <dl-date-time-picker startView="day" minView="day" maxView="day" (change)="handleEvent($event)">
       </dl-date-time-picker>
       <br>
       <br>
@@ -39,21 +17,19 @@
           <div class="row">
             <div class="col-6">
               <div class="row">
-                <div class="col-12 setButton">
-                  <button class="btn-danger">set all to this stop time</button>
-                </div>
+
                 <div class="col-4 time-selection-hour">
                   <div class="row">
                     <div class="col-12 time-selection-add">
-                      <i class="material-icons" (click)="createService.default_time.addStopHour()">
+                      <i class="material-icons" (click)="relevantService.default_time.addStartHour()">
                         keyboard_arrow_up
                       </i>
                     </div>
                     <div class="col-12 time-selection-value">
-                      {{createService.default_time.stopHour}}
+                      {{relevantService.default_time.startHour}}
                     </div>
                     <div class="col-12 time-selection-substract">
-                      <i class="material-icons" (click)="createService.default_time.substractStopHour()">
+                      <i class="material-icons" (click)="relevantService.default_time.substractStartHour()">
                         keyboard_arrow_down
                       </i>
                     </div>
@@ -62,15 +38,15 @@
                 <div class="col-4 time-selection-minute">
                   <div class="row">
                     <div class="col-12 time-selection-add">
-                      <i class="material-icons" (click)="createService.default_time.addStopMinute()">
+                      <i class="material-icons" (click)="relevantService.default_time.addStartMinute()">
                         keyboard_arrow_up
                       </i>
                     </div>
                     <div class="col-12 time-selection-value">
-                      {{createService.default_time.getStopMinute()}}
+                      {{relevantService.default_time.getStartMinute()}}
                     </div>
                     <div class="col-12 time-selection-substract">
-                      <i class="material-icons" (click)="createService.default_time.substractStopMinute()">
+                      <i class="material-icons" (click)="relevantService.default_time.substractStartMinute()">
                         keyboard_arrow_down
                       </i>
                     </div>
@@ -79,31 +55,122 @@
                 <div class="col-4 time-selection-am-pm">
                   <div class="row">
                     <div class="col-12 time-selection-add">
-                      <i class="material-icons" (click)="createService.default_time.changeStopAM()">
+                      <i class="material-icons" (click)="relevantService.default_time.changeStartAM()">
                         keyboard_arrow_up
                       </i>
                     </div>
                     <div class="col-12 time-selection-value">
-                      {{createService.default_time.stopAMPM}}
+                      {{relevantService.default_time.startAMPM}}
                     </div>
                     <div class="col-12 time-selection-substract">
-                      <i class="material-icons" (click)="createService.default_time.changeStopAM()">
+                      <i class="material-icons" (click)="relevantService.default_time.changeStartAM()">
                         keyboard_arrow_down
                       </i>
                     </div>
                   </div>
                 </div>
+                <div class="col-12 setButton">
+                  <button mat-raised-button class="col-12 setStartBtn" (click)="relevantService.setAllStart()">Set All Start</button>
+                </div>
               </div>
 
             </div>
+            <div class="col-6">
+              <div class="row">
 
+                <div class="col-4 time-selection-hour">
+                  <div class="row">
+                    <div class="col-12 time-selection-add">
+                      <i class="material-icons" (click)="relevantService.default_time.addStopHour()">
+                        keyboard_arrow_up
+                      </i>
+                    </div>
+                    <div class="col-12 time-selection-value">
+                      {{relevantService.default_time.stopHour}}
+                    </div>
+                    <div class="col-12 time-selection-substract">
+                      <i class="material-icons" (click)="relevantService.default_time.substractStopHour()">
+                        keyboard_arrow_down
+                      </i>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4 time-selection-minute">
+                  <div class="row">
+                    <div class="col-12 time-selection-add">
+                      <i class="material-icons" (click)="relevantService.default_time.addStopMinute()">
+                        keyboard_arrow_up
+                      </i>
+                    </div>
+                    <div class="col-12 time-selection-value">
+                      {{relevantService.default_time.getStopMinute()}}
+                    </div>
+                    <div class="col-12 time-selection-substract">
+                      <i class="material-icons" (click)="relevantService.default_time.substractStopMinute()">
+                        keyboard_arrow_down
+                      </i>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4 time-selection-am-pm">
+                  <div class="row">
+                    <div class="col-12 time-selection-add">
+                      <i class="material-icons" (click)="relevantService.default_time.changeStopAM()">
+                        keyboard_arrow_up
+                      </i>
+                    </div>
+                    <div class="col-12 time-selection-value">
+                      {{relevantService.default_time.stopAMPM}}
+                    </div>
+                    <div class="col-12 time-selection-substract">
+                      <i class="material-icons" (click)="relevantService.default_time.changeStopAM()">
+                        keyboard_arrow_down
+                      </i>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 setButton">
+                  <button mat-raised-button class="col-12 setStopBtn" (click)="relevantService.setAllStop()">Set All Stop</button>
+                </div>
+              </div>
 
+            </div>
           </div>
         </div>
         <div id="table" class="col-12 table">
           <table class="table table-responsive-md text-center">
+            <ng-container *ngIf="!stepperService.isCreate">
+              <tr *ngFor="let date of adminService.getEventData().date; let i = index " [style.opacity]="dateToBeRemoved(i)? '0.5':'1'">
+                <i *ngIf="!dateToBeRemoved(i)" class="material-icons remove-circle" (click)="removeExistingDate(i)" title="Remove date">
+                  remove_circle
+                </i>
+                <i *ngIf="dateToBeRemoved(i)" class="material-icons add-circle" (click)="revertSelection(i)" title="Remove date">
+                  add_circle
+                </i>
+                <td class="pt-3-half" contenteditable="false" >
+                  <div class="d-dateGroup">
+                    <div class="d-day">{{date.timeFrom | weekday}}</div>
+                    <div class="d-date">{{date.timeFrom | day}}</div>
+                    <div class="d-month">{{date.timeFrom | month}}</div>
+                  </div>
+                </td>
+                <td class="pt-3-half" contenteditable="false">
+                  {{date.timeFrom | timeHour}}
+                </td>
+                <td class="pt-3-half" contenteditable="false">
+                  <div class="trenner">
+                    <i class="material-icons">
+                      remove
+                    </i>
+                  </div>
+                </td>
+                <td class="pt-3-half" contenteditable="false">
+                  {{date.timeTo | timeHour}}
+                </td>
+              </tr>
+            </ng-container>
             <tr *ngFor="let timeslot of relevantService.timeSelection; let i = index">
-              <i class="material-icons" (click)="removeDate(i)" title="Remove date" style="cursor: pointer">
+              <i class="material-icons remove-circle" (click)="removeDate(i)" title="Remove date">
                 remove_circle
               </i>
               <td class="pt-3-half" contenteditable="false">

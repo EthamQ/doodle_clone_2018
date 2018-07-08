@@ -9,21 +9,26 @@
           (click)="showEventDetails = !showEventDetails">Show event Infos</button>
       </div>
       <div class="event-info-box" *ngIf="showEventDetails">
-        <h3 class="title">{{viewService.serverData.title}}</h3> <h3> </h3>
+        <div class="event-title"> {{viewService.serverData.title}}</div>
         <div class="inner-event-info">
-          <div>
-            <h5> Description </h5>
-            <textarea readonly unselectable="on" class="info">{{viewService.serverData.description}}</textarea >
+          <div class="row">
+            <div class="col-12 description-style">
+              {{viewService.serverData.description}}
+            </div>
+            <div class="col-6 user-style">
+              <p><i class="material-icons">
+                face
+              </i> Creator: {{viewService.serverData.creator.name}}</p>
+            </div>
+            <div class="col-6 location-style">
+              <i class="material-icons">
+                location_on
+              </i> Location: {{viewService.serverData.location}}
+            </div>
+
+
           </div>
 
-          <div class="rest">
-            <p><i class="material-icons">
-              location_on
-            </i> {{viewService.serverData.location}}</p>
-            <p><i class="material-icons">
-              face
-            </i> {{viewService.serverData.creator.name}}</p>
-          </div>
         </div>
       </div>
       <div class="card-body">

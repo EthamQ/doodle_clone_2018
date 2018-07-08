@@ -1,3 +1,9 @@
+.warning-color{
+  background-color: #e67e22;
+  color: white;
+}
+
+
 .navigation-container{
     padding: 30px;
     float: none;
@@ -17,8 +23,8 @@
     color:darkgreen; /* old IE */
     background-color: darkgreen ; /* Modern Browsers */
   }
-  
-  
+
+
   .container{
     float: none;
     border-bottom: 20px solid white;
@@ -32,5 +38,4 @@
       outline: none;
     }
   }
-  
-  
+

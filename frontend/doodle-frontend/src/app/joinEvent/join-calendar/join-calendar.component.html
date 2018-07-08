@@ -8,21 +8,26 @@
       class="setColor"
       (click)="showEventDetails = !showEventDetails">Show event Infos</button>
     <div class="event-info-box" *ngIf="showEventDetails">
-      <h3 class="title">{{joinService.serverData.title}}</h3> <h3> </h3>
+      <div class="event-title"> {{joinService.serverData.title}}</div>
       <div class="inner-event-info">
-        <div>
-          <h5> Description </h5>
-          <textarea readonly unselectable="on" class="info">{{joinService.serverData.description}}</textarea >
+        <div class="row">
+          <div class="col-12 description-style">
+            {{joinService.serverData.description}}
+          </div>
+          <div class="col-6 user-style">
+            <p><i class="material-icons">
+              face
+            </i> Creator: {{joinService.serverData.creator.name}}</p>
+          </div>
+          <div class="col-6 location-style">
+            <i class="material-icons">
+              location_on
+            </i> Location: {{joinService.serverData.location}}
+          </div>
+
+
         </div>
 
-        <div class="rest">
-          <p><i class="material-icons">
-            location_on
-          </i> {{joinService.serverData.location}}</p>
-          <p><i class="material-icons">
-            face
-          </i> {{joinService.serverData.creator.name}}</p>
-        </div>
       </div>
     </div>
     <div class="card-body">

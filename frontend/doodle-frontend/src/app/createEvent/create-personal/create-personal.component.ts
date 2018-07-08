@@ -9,20 +9,23 @@ import { AdminService } from '../../services/admin.service';
   styleUrls: ['./create-personal.component.css']
 })
 export class CreatePersonalComponent implements OnInit {
-
+  adminService: AdminService;
   createService: CreateService;
-  constructor(@Inject(CreateService) createservice: CreateService, public stepperService: StepperService,
-private adminService: AdminService) {
+  constructor(@Inject(CreateService) createservice: CreateService,
+              @Inject(AdminService) adminService: AdminService,
+              public stepperService: StepperService
+) {
     this.createService = createservice;
+    this.adminService = adminService;
   }
 
   readonly TITLE = 0;
-  readonly NAME = 1
+  readonly NAME = 1;
   readonly DESCRIPTION = 2;
   readonly LOCATION = 3;
 
   ngOnInit() {
-    console.log("is create personal " + this.stepperService.isCreate);
+    console.log('is create personal ' + this.stepperService.isCreate);
   }
   setDetails() {
     this.createService.setDetails();
@@ -32,18 +35,17 @@ private adminService: AdminService) {
    * in order to avoid undefined in the input values
    * @param inputType constant that represents an input field
    */
-  returnInputValue(inputType){
-   if(this.stepperService.isCreate){
+  returnInputValue(inputType) {
+   if (this.stepperService.isCreate) {
       return this.returnCreateInputValue(inputType);
-   }
-   else{
+   } else {
      return this.returnEditInputValue(inputType);
    }
   }
 
-  returnCreateInputValue(inputType){
-    let inputValue = "";
-    switch(inputType){
+  returnCreateInputValue(inputType) {
+    let inputValue = '';
+    switch (inputType) {
       case this.TITLE: inputValue = this.createService.event.title;
       break;
       case this.NAME: inputValue = this.createService.event.creator.name;
@@ -53,35 +55,34 @@ private adminService: AdminService) {
       case this.LOCATION: inputValue = this.createService.event.location;
       break;
     }
-    return (inputValue == undefined)? "" : inputValue;
+    return (inputValue === undefined) ? '' : inputValue;
   }
 
-  returnEditInputValue(inputType){
-    let inputValue = "";
-    switch(inputType){
-      case this.TITLE: inputValue = this.adminService.stateTracker.getEventData().title;
+  returnEditInputValue(inputType) {
+    let inputValue = '';
+    switch (inputType) {
+      case this.TITLE: inputValue = this.adminService.getEventData().title;
       break;
-      case this.DESCRIPTION: inputValue = this.adminService.stateTracker.getEventData().description;
+      case this.DESCRIPTION: inputValue = this.adminService.getEventData().description;
       break;
-      case this.LOCATION: inputValue = this.adminService.stateTracker.getEventData().location;
+      case this.LOCATION: inputValue = this.adminService.getEventData().location;
       break;
     }
-    return (inputValue == undefined)? "" : inputValue;
+    return (inputValue === undefined) ? '' : inputValue;
   }
 
-  handleNewInput(input, type){
-    if(this.stepperService.isCreate){
+  handleNewInput(input, type) {
+    if (this.stepperService.isCreate) {
       this.handleNewInputCreate(input, type);
-    }
-    else{
+    } else {
       this.handleNewInputEdit(input, type);
     }
 
   }
 
-  handleNewInputCreate(input, type){
-    console.log("IN HANDLE NEW INPUT ");
-    switch(type){
+  handleNewInputCreate(input, type) {
+    console.log('IN HANDLE NEW INPUT ');
+    switch (type) {
       case this.TITLE: this.createService.event.title = input;
       break;
       case this.NAME: this.createService.creator.name = input;
@@ -93,8 +94,8 @@ private adminService: AdminService) {
     }
   }
 
-  handleNewInputEdit(input, type){
-    switch(type){
+  handleNewInputEdit(input, type) {
+    switch (type) {
       case this.TITLE: this.adminService.updatedValues.title = input;
       break;
       case this.DESCRIPTION: this.adminService.updatedValues.description = input;

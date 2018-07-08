@@ -35,7 +35,6 @@ export class LandingPageComponent implements OnInit {
     this.adminService.reset();
     console.log(this.joinService.serverData);
     console.log(this.createService.event);
-    console.log(this.adminService.stateTracker);
   }
 
 }

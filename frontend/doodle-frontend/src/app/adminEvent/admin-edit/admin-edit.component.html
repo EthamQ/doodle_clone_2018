@@ -2,7 +2,7 @@
     <div class ="outerdiv">
   <div class="container">
       <app-logo-header [isCreate]="true"></app-logo-header>
-      
+
       <div class="row navigation-container d-flex justify-content-center">
           <div class="col-2">
             <div class="navigation-item" (click)="adminService.activateDetails()" [routerLink]="['details']" [style.opacity]="adminService.detailsBool? '1' : '0.5'">
@@ -39,20 +39,25 @@
 
       <div class="row">
         <div class="col-6">
-            <button class="button" type="submit" class="btn btn-primary"
-            (click)="updateDetailsClick()"
-            *ngIf="adminService.detailsBool">Update values</button>
-    <button class="button" type="submit" class="btn btn-primary"
-          [disabled]="false"
-          (click)="updateDatesClick()"
-          *ngIf="adminService.calendarBool">Update dates</button>
+          <button
+            *ngIf="adminService.detailsBool"
+            mat-flat-button
+            color="primary"
+            (click)="updateDetailsClick()">Update Details</button>
+          <button
+            *ngIf="adminService.calendarBool"
+            mat-flat-button
+            color="primary"
+            (click)="updateDatesClick()">Update Dates</button>
         </div>
         <div *ngIf="!adminService.summaryBool" class="col-6 d-flex justify-content-end">
-            <button class="button" type="submit" class="btn btn-success"
-            [routerLink]="''">Done, back to the landing page</button>
+          <button
+            [routerLink]="''"
+            mat-flat-button
+            class= "warning-color"
+            >Abort</button>
         </div>
       </div>
   </div>
   </div>
   </div>
-  

@@ -5,6 +5,6 @@ export class CreatorModel {
   constructor(mail: string) {
     this.email = mail;
     this.selection = [];
-    this.name = "";
+    this.name = '';
   }
 }

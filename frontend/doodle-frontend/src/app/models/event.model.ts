@@ -13,6 +13,6 @@ export class EventModel {
   constructor() {
     this.date = [];
     this.participants = [];
-    this.creator = new CreatorModel("dummy@web.de");
+    this.creator = new CreatorModel('dummy@web.de');
   }
 }

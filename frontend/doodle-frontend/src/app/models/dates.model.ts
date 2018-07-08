@@ -4,7 +4,7 @@ export class DatesModel {
   timeFrom: number;
   timeTo: number;
   constructor(timeFrom, timeTo) {
-    console.log(timeFrom, timeTo)
+    console.log(timeFrom, timeTo);
     moment.locale('en');
     this.timeFrom = timeFrom;
     this.timeTo = timeTo;

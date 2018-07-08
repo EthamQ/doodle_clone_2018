@@ -2,18 +2,28 @@
 <div class="row">
   <div class="col-12">
     <h4>Update your date selection</h4>
-    <app-date-selector *ngIf="adminService.stateTracker != undefined" (boxClick)="dateSelectionChanged($event)" [participants]="adminService.stateTracker.getCreatorForDateEdit()" [dates]="adminService.stateTracker.getEventData().date"></app-date-selector>
+    <app-date-selector *ngIf="adminService != undefined" (boxClick)="dateSelectionChanged($event)" [participants]="adminService.getCreatorForDateEdit()" [dates]="adminService.getEventData().date"></app-date-selector>
   </div>
 
-  <div class="col-6 mt-3">
-      <button class="button" (click)="updateCreatorDates()" type="submit" class="btn btn-primary">Update values</button>
+  <div class="col-4 ">
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="updateCreatorDates()">Update Values</button>
   </div>
-  <div class="col-6 mt-3 d-flex justify-content-end">
-      <button class="button" type="submit" class="btn btn-success" [routerLink]="''">Done, back to landing page</button>
+  <div class="col-4">
+    <button
+      (click)="modalOpen = true"
+      mat-flat-button
+      color="warn">Delete Event</button>
   </div>
-  <div class="col-12 mt-3">
-      <button class="button" type="submit" class="btn btn-danger" (click)="modalOpen = true">Delete this event</button>
+  <div class="col-4 align-content-lg-end">
+    <button
+      [routerLink]="''"
+      mat-flat-button
+      class= "warning-color">Abort</button>
   </div>
+
 </div>
 
     <app-delete-warning *ngIf="modalOpen" (close)="modalOpen = false" (delete)="adminService.deleteEvent()"></app-delete-warning>

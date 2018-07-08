@@ -73,7 +73,6 @@ import { URLService } from './services/url-service';
 import { LogoHeaderComponent } from './header/logo.component';
 import { AdminViewComponent } from './adminEvent/adminView/admin-view.component';
 import { EventService } from './services/event.service';
-import { AdminViewStateTracker } from './services/stateTracker/admin-view-stateTracker';
 import { StepperService } from './services/stepper-info.service';
 import {CreateGuardService} from './guards/create-guard.service';
 import {JoinGuardService} from './guards/join-guard.service';
@@ -169,7 +168,6 @@ export class MaterialModule {}
     JoinService,
     URLService,
     EventService,
-    AdminViewStateTracker,
     StepperService,
     CreateGuardService,
     JoinGuardService

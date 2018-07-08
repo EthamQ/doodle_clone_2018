@@ -70,7 +70,8 @@ export class TimeselectionModel {
     }
   }
   addStopHour() {
-    this.stopHour = Math.max(1, Math.abs((this.stopHour + 1) % 13));  }
+    this.stopHour = Math.max(1, Math.abs((this.stopHour + 1) % 13));
+  }
   substractStopHour() {
     if ((this.stopHour - 1) === 0) {
       this.stopHour = 12;
@@ -88,9 +89,12 @@ export class TimeselectionModel {
   }
 
   parseToTimeStamp() {
+    // Datum 09-07-2018
     const date = this.day + '-' + this.month + '-' + this.year;
+    // 02:30 AM
     const startTime = this.startHour.toString() + ':' + this.getStartMinute() + ' ' + this.startAMPM;
     const stopTime = this.stopHour.toString() + ':' + this.getStopMinute() + ' ' + this.stopAMPM;
+   // 09-07-2018 02:30 AM
     this.timeFrom = moment(date + ' ' + startTime).unix();
     this.timeTo = moment(date + ' ' + stopTime).unix();
     return new DatesModel(this.timeFrom, this.timeTo);

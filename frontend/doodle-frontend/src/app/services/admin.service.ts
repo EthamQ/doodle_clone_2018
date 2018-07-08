@@ -6,24 +6,29 @@ import { DatesModel } from '../models/dates.model';
 import { TimeselectionModel } from '../models/timeselection.model';
 import * as moment from 'moment';
 import { URLService } from './url-service';
-import { AdminViewStateTracker } from './stateTracker/admin-view-stateTracker';
 import { EventService } from './event.service';
 
 
 @Injectable()
 
 export class AdminService {
+  editViewActive = false;
+  default_time = new TimeselectionModel();
 
+  adminId: string;
+  eventData: EventModel;
+  eventTime: TimeselectionModel;
+  adminAsArray: any[];
+  wrongID = false;
   // stores all the relevant values of the event edited by the admin
-  stateTracker: AdminViewStateTracker;
   // update main event values as admin
   postURL_update = '/event/update/';
   updatedValues: any = {
-    title: "",
-    location: "",
-    description: "",
-    eventType: ""
-  }
+    title: '',
+    location: '',
+    description: '',
+    eventType: ''
+  };
   // remove dates from as admin
   postURL_dateRemove = '/date/delete/';
   indexesToDelete: number[] = [];
@@ -57,22 +62,36 @@ export class AdminService {
     this.event = new EventModel();
     this.creator = new CreatorModel('dummy@web.de');
     this.initUrls();
+    this.default_time.setTimeTo(0);
+    this.default_time.setTimeFrom(0);
   }
-
+  setAllStart() {
+    for (let i = 0; i < this.timeSelection.length; i++) {
+      this.timeSelection[i].startAMPM = this.default_time.startAMPM;
+      this.timeSelection[i].startMinute = this.default_time.startMinute;
+      this.timeSelection[i].startHour = this.default_time.startHour;
+    }
+  }
+  setAllStop() {
+    for (let i = 0; i < this.timeSelection.length; i++) {
+      this.timeSelection[i].stopAMPM = this.default_time.stopAMPM;
+      this.timeSelection[i].stopMinute = this.default_time.stopMinute;
+      this.timeSelection[i].stopHour = this.default_time.stopHour;
+    }
+  }
   reset() {
     this.event = new EventModel();
     this.creator = new CreatorModel('dummy@web.de');
-    this.initUrls();
-    this.stateTracker.editViewActive = undefined;
-    this.stateTracker.adminId = undefined;
-    this.stateTracker.eventData = undefined;
-    this.stateTracker.adminAsArray = undefined;
+    this.editViewActive = undefined;
+    this.adminId = undefined;
+    this.eventData = undefined;
+    this.adminAsArray = undefined;
   }
   /**
    * depending on if we're working locally or on the lmu server
    * we're initilizing different front and backend urls
    */
-  initUrls(){
+  initUrls() {
     this.postURL = this.URLService.getServerURL() + this.postURL;
     this.postURL_update = this.URLService.getServerURL() + this.postURL_update;
     this.postURL_dateRemove = this.URLService.getServerURL() + this.postURL_dateRemove;
@@ -88,13 +107,14 @@ export class AdminService {
     this.activateCalendar();
     if (this.shouldUpdateValues()) {
       this.isLoading = true;
-      this.http.post(this.postURL_update + this.stateTracker.getAdminId(), this.updatedValues).subscribe((data: any) => {
+      console.log(this.postURL_update);
+      this.http.post(this.postURL_update + this.getAdminId(), this.updatedValues).subscribe((data: any) => {
         console.log(data);
         if (data.success) {
-          this.updateEventDataGetObservable().subscribe((data: any)=>{
+          this.updateEventDataGetObservable().subscribe((data: any) => {
             console.log(data);
             if (data.success) {
-              this.stateTracker.setEventData(data.data[0]);
+              this.setEventData(data.data[0]);
               done();
             }
           });
@@ -118,10 +138,10 @@ export class AdminService {
         this.indexesToDelete = [];
         // add
         this.setAndAddDates(() => {
-          this.updateEventDataGetObservable().subscribe((data: any)=>{
+          this.updateEventDataGetObservable().subscribe((data: any) => {
             console.log(data);
             if (data.success) {
-              this.stateTracker.setEventData(data.data[0]);
+              this.setEventData(data.data[0]);
               done();
             }
           });
@@ -131,15 +151,15 @@ export class AdminService {
     // call only delete
     else if (this.shouldDeleteDates()) {
       this.isLoading = true;
-      console.log("only delete");
+      console.log('only delete');
       this.removeDates().subscribe(data => {
         console.log(data);
         // reset
         this.indexesToDelete = [];
-        this.updateEventDataGetObservable().subscribe((data: any)=>{
+        this.updateEventDataGetObservable().subscribe((data: any) => {
           console.log(data);
           if (data.success) {
-            this.stateTracker.setEventData(data.data[0]);
+            this.setEventData(data.data[0]);
             done();
           }
         });
@@ -148,13 +168,13 @@ export class AdminService {
     // call only add
     else if (this.shouldAddDates()) {
       this.isLoading = true;
-      console.log("only add");
+      console.log('only add');
       this.setAndAddDates(() => {
-        console.log("update now");
-        this.updateEventDataGetObservable().subscribe((data: any)=>{
+        console.log('update now');
+        this.updateEventDataGetObservable().subscribe((data: any) => {
           console.log(data);
           if (data.success) {
-            this.stateTracker.setEventData(data.data[0]);
+            this.setEventData(data.data[0]);
             done();
           }
         });
@@ -199,11 +219,11 @@ export class AdminService {
    * did the admin change any of the main values of the event?
    */
   shouldUpdateValues() {
-    let shouldUpdate = (
-      this.updatedValues.title == this.stateTracker.getEventData().title
-      && this.updatedValues.description == this.stateTracker.getEventData().description
-      && this.updatedValues.location == this.stateTracker.getEventData().location
-      && this.updatedValues.eventType == this.stateTracker.getEventData().eventType
+    const shouldUpdate = (
+      this.updatedValues.title === this.getEventData().title
+      && this.updatedValues.description === this.getEventData().description
+      && this.updatedValues.location === this.getEventData().location
+      && this.updatedValues.eventType === this.getEventData().eventType
     );
     return !shouldUpdate;
   }
@@ -212,8 +232,8 @@ export class AdminService {
    * remove the dates from the event that are stored in this.indexesToDelete
    */
   removeDates() {
-    let requestData = { indexesToDelete: this.indexesToDelete };
-    return this.http.post(this.postURL_dateRemove + this.stateTracker.getAdminId(), requestData);
+    const requestData = { indexesToDelete: this.indexesToDelete };
+    return this.http.post(this.postURL_dateRemove + this.getAdminId(), requestData);
   }
 
   /**
@@ -231,33 +251,33 @@ export class AdminService {
    * add the dates to an event
    */
   addDatesToExistingEvent() {
-    let requestData = { datesToAdd: this.datesToAdd };
-    return this.http.post(this.postURL_dateAdd + this.stateTracker.getAdminId(), requestData);
+    const requestData = { datesToAdd: this.datesToAdd };
+    return this.http.post(this.postURL_dateAdd + this.getAdminId(), requestData);
   }
 
   /**
    * update event data that is displayed in admin edit
-   * just get all the event data again and store them in the stateTracker
+   * just get all the event data again and store them in the
    */
   updateEventData() {
-      this.eventService.getEventByAdminId(this.stateTracker.getAdminId()).subscribe((data: any) => {
+      this.eventService.getEventByAdminId(this.getAdminId()).subscribe((data: any) => {
         console.log(data);
         if (data.success) {
-          this.stateTracker.setEventData(data.data[0]);
+          this.setEventData(data.data[0]);
           this.isLoading = false;
         }
       });
   }
 
   updateEventDataGetObservable() {
-    return this.eventService.getEventByAdminId(this.stateTracker.getAdminId());
+    return this.eventService.getEventByAdminId(this.getAdminId());
 }
 
   /**
    * delete an event as admin
    */
   deleteEvent() {
-    this.http.post(this.postURL_deleteEvent + this.stateTracker.getAdminId(), {}).subscribe((data: any) => {
+    this.http.post(this.postURL_deleteEvent + this.getAdminId(), {}).subscribe((data: any) => {
       console.log(data);
     });
   }
@@ -268,13 +288,13 @@ export class AdminService {
    * @param updatedDates
    */
   updateAdminDates(updatedDates, done) {
-    let request = { updatedDates: updatedDates };
-    this.http.post(this.postURL_updateAdminDates + this.stateTracker.getAdminId(), request).subscribe((data: any) => {
+    const request = { updatedDates: updatedDates };
+    this.http.post(this.postURL_updateAdminDates + this.getAdminId(), request).subscribe((data: any) => {
       console.log(data);
-      this.updateEventDataGetObservable().subscribe((data: any)=>{
+      this.updateEventDataGetObservable().subscribe((data: any) => {
         console.log(data);
         if (data.success) {
-          this.stateTracker.setEventData(data.data[0]);
+          this.setEventData(data.data[0]);
           done();
         }
       });
@@ -307,5 +327,57 @@ export class AdminService {
     this.summaryBool = true;
     this.detailsBool = false;
     this.calendarBool = false;
+  }
+  setEditActive(boolean) {
+    this.editViewActive = boolean;
+  }
+
+  getEditActive() {
+    return this.editViewActive;
+  }
+
+  setAdminId(adminId) {
+    this.adminId = adminId;
+  }
+
+  getAdminId() {
+    return this.adminId;
+  }
+
+  showAdminEdit() {
+    return this.editViewActive;
+  }
+
+  showError(boolean) {
+    this.wrongID = boolean;
+  }
+
+  getError() {
+    return this.wrongID;
+  }
+
+
+
+  showAdminLanding() {
+    return !this.editViewActive;
+  }
+
+  setEventData(eventData) {
+    this.eventData = eventData;
+    this.setCreatorForDateEdit(eventData.creator);
+  }
+
+  getEventData() {
+    console.log(this.eventData);
+    return this.eventData;
+  }
+
+  setCreatorForDateEdit(admin) {
+    this.adminAsArray = [];
+    this.adminAsArray.push(admin);
+  }
+
+  getCreatorForDateEdit() {
+    return this.adminAsArray;
   }
 }

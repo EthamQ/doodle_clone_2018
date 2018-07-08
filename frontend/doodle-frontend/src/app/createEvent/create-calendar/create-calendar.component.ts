@@ -24,7 +24,7 @@ public stepperService: StepperService) {
   }
 
   ngOnInit() {
-    this.relevantService = this.stepperService.isCreate? this.createService : this.adminService;
+    this.relevantService = this.stepperService.isCreate ? this.createService : this.adminService;
   }
 
   /**
@@ -36,67 +36,48 @@ public stepperService: StepperService) {
     newDate.setTimeFrom(moment(event.value).unix());
     newDate.setTimeTo(moment(event.value).unix());
     console.log(newDate);
-    this.selectionAlreadyExists(newDate, exists =>{
-      if(!exists){
-        if(this.stepperService.isCreate){
-          this.createService.timeSelection.push(newDate);
-        }
-        else{
-          this.adminService.timeSelection.push(newDate);
-        }
-      }
-      else{
-        console.log("Date already exists");
-      }
-    });
+    if (this.stepperService.isCreate) {
+      this.createService.timeSelection.push(newDate);
+      console.log(this.createService.timeSelection);
+    } else {
+      this.adminService.timeSelection.push(newDate);
+      console.log(this.adminService.timeSelection);
+    }
   }
+
 
   /**
    * callback true if date has already been selected else false
    */
-  selectionAlreadyExists(selectedTime, callback){
-    // is first date
-    if(this.createService.timeSelection.length == 0){
-      callback(false);
-    }
-    let i = 0;
-    this.createService.timeSelection.map(time =>{
-      if(deepEqual(time, selectedTime)){
-        callback(true);
-      }
-      // end off array nothing found
-      else if(i === this.createService.timeSelection.length-1){
-        callback(false);
-      }
-      i++;
-    });
-  }
-
   /**
    * click on the remove icon, removes date from the users's selection
    * @param index
    */
-  removeDate(index){
-    this.createService.timeSelection.splice(index, 1);
+  removeDate(index) {
+    if (this.stepperService.isCreate) {
+      this.createService.timeSelection.splice(index, 1);
+    } else {
+      this.adminService.timeSelection.splice(index, 1);
+    }
   }
 
-  removeExistingDate(index){
-    if(!this.dateToBeRemoved(index)){
+  removeExistingDate(index) {
+    if (!this.dateToBeRemoved(index)) {
       this.adminService.indexesToDelete.push(index);
     }
   }
 
-  revertSelection(index){
-    for(let i = 0; i<this.adminService.indexesToDelete.length; i++){
-      if(this.adminService.indexesToDelete[i] == index){
+  revertSelection(index) {
+    for (let i = 0; i < this.adminService.indexesToDelete.length; i++) {
+      if (this.adminService.indexesToDelete[i] === index) {
         this.adminService.indexesToDelete.splice(i, 1);
       }
   }
   }
 
-  dateToBeRemoved(index){
-    for(let i = 0; i<this.adminService.indexesToDelete.length; i++){
-        if(this.adminService.indexesToDelete[i] == index){
+  dateToBeRemoved(index) {
+    for (let i = 0; i < this.adminService.indexesToDelete.length; i++) {
+        if (this.adminService.indexesToDelete[i] === index) {
           return true;
         }
     }

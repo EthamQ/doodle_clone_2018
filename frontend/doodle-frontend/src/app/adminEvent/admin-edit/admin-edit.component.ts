@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, OnInit, Input, Inject} from '@angular/core';
 import { CreateService } from '../../services/create.service';
 import { StepperService } from '../../services/stepper-info.service';
 import { Router } from '@angular/router';
@@ -11,16 +11,13 @@ import { AdminService } from '../../services/admin.service';
   styleUrls: ['./admin-edit.component.scss']
 })
 export class AdminEditComponent implements OnInit {
+  adminService: AdminService;
 
-  public eventToEdit;
-  @Input() stateTracker : any;
-
-  constructor(
-    public createService: CreateService, 
-    private stepperService: StepperService, 
-    private router: Router,
-    public adminService: AdminService
-  ) { }
+  constructor(@Inject(AdminService) adminService: AdminService, public createService: CreateService,
+    private stepperService: StepperService,
+    private router: Router) {
+    this.adminService = adminService;
+  }
 
   ngOnInit() {
     this.stepperService.setIsEdit();
@@ -28,40 +25,39 @@ export class AdminEditComponent implements OnInit {
     this.adminService.activateDetails();
   }
 
-  updateDatesClick(){
-    this.adminService.handleAdminDateChanges(()=>{
+  updateDatesClick() {
+    this.adminService.handleAdminDateChanges(() => {
       this.adminService.isLoading = false;
       this.adminService.activateAdminOption();
       this.router.navigate(['admin/summary']);
     });
-    
   }
 
-  updateDetailsClick(){
-    this.adminService.updateMainEventValues(()=>{
+  updateDetailsClick() {
+    this.adminService.updateMainEventValues(() => {
       this.router.navigate(['admin/calendar']);
       this.adminService.isLoading = false;
     });
 
   }
 
-  debug(){
+  debug() {
     console.log(this.adminService.detailsBool);
   }
 
-  activateCalendar(){
+  activateCalendar() {
     this.adminService.detailsBool = false;
     this.adminService.calendarBool = true;
     this.adminService.summaryBool = false;
   }
 
-  activateDetails(){
+  activateDetails() {
     this.adminService.detailsBool = true;
     this.adminService.calendarBool = false;
     this.adminService.summaryBool = false;
   }
 
-  activateAdminOption(){
+  activateAdminOption() {
     this.adminService.detailsBool = false;
     this.adminService.summaryBool = true;
     this.adminService.calendarBool = false;
