@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 @Injectable()
-export class AdminViewStateTracker{
+export class AdminViewStateTracker {
     editViewActive = false;
     adminId: string;
     eventData: any;

@@ -56,9 +56,20 @@ export class AdminService {
   ) {
     this.event = new EventModel();
     this.creator = new CreatorModel('dummy@web.de');
-    this.initUrls();  
+    this.initUrls();
   }
 
+  reset() {
+    this.event = new EventModel();
+    this.creator = new CreatorModel('dummy@web.de');
+    this.initUrls();
+    this.stateTracker.wrongID = false;
+    this.stateTracker.editViewActive = false;
+    this.stateTracker.adminId = undefined;
+    this.stateTracker.eventData = undefined;
+    this.stateTracker.adminAsArray = undefined;
+    
+  }
   /**
    * depending on if we're working locally or on the lmu server
    * we're initilizing different front and backend urls
@@ -156,7 +167,7 @@ export class AdminService {
   /**
    * calls setCalendarForAdminEdit() to init the datesToAdd array
    * then adds the dates of datesToAdd to the database
-   * @param done 
+   * @param done
    */
   setAndAddDates(done) {
     this.setCalendarForAdminEdit(() => {
@@ -256,7 +267,7 @@ export class AdminService {
   /**
    * send a new boolean array of admin dates to the server which
    * replace the old one, called in admin options in admin edit
-   * @param updatedDates 
+   * @param updatedDates
    */
   updateAdminDates(updatedDates, done) {
     let request = { updatedDates: updatedDates };
