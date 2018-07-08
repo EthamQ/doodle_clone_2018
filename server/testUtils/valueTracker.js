@@ -89,6 +89,23 @@ module.exports = class EventValueTracker{
         }
         
     }
+    decreaseDates(){
+        if(this.numberDates > 0){
+            this.numberDates--;
+        }
+        else{
+            throw new Error("You can't remove a date if there aren't any");
+        }  
+    }
+    getNumberOfDates(){
+        return this.numberDates;
+    }
+    initNumberOfDates(){
+        this.numberDates = 0;
+    }
+    incrementDates(){
+        this.numberDates++;
+    }
     
     MOCK_setDatesToAddToParticipant(mockdata){
         this.datesToAddToParticipant = mockdata;

@@ -2,6 +2,7 @@
 const successHelper = require('./general');
 const participantHelper = require('./participant');
 const dateHelper = require('./date');
+const eventMock = require('./../mockData/event');
 let chai;
 let should;
 let expect;
@@ -29,14 +30,24 @@ initChai = function(chaiToPass, shouldToPass, expectToPass){
     event.should.have.property('title');
     let title = event.title;
     title.should.be.a('string');
+    expect(title).to.be.equal(eventMock.newEvent.title);
     // location
     event.should.have.property('location');
     let location = event.location;
     location.should.be.a('string');
+    expect(location).to.be.equal(eventMock.newEvent.location);
     // description
     event.should.have.property('description');
+    let description = event.description;
+    description.should.be.a('string');
+    expect(description).to.be.equal(eventMock.newEvent.description);
   
+    // event type
     event.should.have.property('eventType');
+    let eventType = event.eventType;
+    eventType.should.be.a('string');
+    expect(eventType).to.be.equal(eventMock.newEvent.eventType);
+
     event.should.have.property('creator');
     event.should.have.property('uuid');
     event.should.have.property('url');

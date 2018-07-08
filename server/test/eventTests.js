@@ -38,6 +38,10 @@ describe('Create a new event', () => {
         valueTracker.setUUID(event.uuid);
         valueTracker.setAdminUUID(event.creator.adminUUID);
         valueTracker.initNumberParticipants();
+        valueTracker.initNumberOfDates();
+        eventMock.newEvent.date.map(date =>{
+          valueTracker.incrementDates();
+        });
         done();
       });
   });
@@ -127,6 +131,9 @@ describe("Add dates to an event", () => {
       .send(dateMock.newDates)
       .end((err, res) => {
         checkSuccess(res, () => {
+          dateMock.newDates.datesToAdd.map(date=>{
+            valueTracker.incrementDates();
+          });
           GET_eventByUUID(server, valueTracker.getUUID(), response => {
             checkSuccess(response, () => {
               let previousDates = valueTracker.getDate().slice();
@@ -192,7 +199,7 @@ describe("Add dates from an event to a participant", () => {
 // Delete dates of a participant
 // ############################################
 let urlRemoveDateFromPart = "/date/participant/remove/";
-describe("Add dates from an event to a participant", () => {
+describe("Remove dates from a participant", () => {
   it("Should get success true from the server", done => {
     GET_eventByUUID(server, valueTracker.getUUID(), response => {
       checkSuccess(response, () => {
@@ -282,26 +289,33 @@ describe('Delete a date', ()=>{
         .end((err, res) => {
           console.log(res.body);
           checkSuccess(res, () => {
+            indexesToDelete.map(index =>{
+              valueTracker.decreaseDates();
+            });
             done();
           });
         });
       });
     });
   });
-  it("The date array of the creator and the participants should have the correct decreased length", done => {
+  it("The date array of the event, the creator and the participants should have the correct decreased length", done => {
     GET_eventByUUID(server, valueTracker.getUUID(), response => {
       let indexesToDelete = [];
       indexesToDelete.push(0);
       let mockRequestData = {indexesToDelete};
       checkSuccess(response, () => {
-        chai.request(server)
-        .post(url_deleteDate + valueTracker.getAdminUUID())
-        .send(mockRequestData)
-        .end((err, res) => {
-          checkSuccess(res, () => {
-            done();
-          });
+        let updatedParticipants = extractParticipants(response);
+        let updatedDates = extractDates(response);
+        let creator = extractEvent(response).creator;
+        // dates
+        expect(updatedDates.length).to.be.equal(valueTracker.getNumberOfDates());
+        // dates creator
+        expect(creator.dates.length).to.be.equal(valueTracker.getNumberOfDates());
+        // dates participants
+        updatedParticipants.map(participant=>{
+          expect(participant.dates.length).to.be.equal(valueTracker.getNumberOfDates());
         });
+        done();
       });
     });
   });
@@ -333,7 +347,7 @@ describe("Delete participants", ()=>{
       });
     });
   });
-  it("Should not find the participant in the updated event anymore", done =>{
+  it("Should not find the participant in the updated event anymore and length of participant array should have the correct decreased length", done =>{
     GET_eventByUUID(server, valueTracker.getUUID(), response => {
       checkSuccess(response, () => {
         let updatedParticipants = extractParticipants(response);
@@ -347,11 +361,11 @@ describe("Delete participants", ()=>{
           });
         }
         expect(participantIsGone).to.be.true;
+        expect(updatedParticipants.length).to.be.equal(valueTracker.getNumberParticipants());
         done();
       });
     });
   });
-  
 });
 
 
