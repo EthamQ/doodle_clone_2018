@@ -62,7 +62,6 @@ export class AdminService {
   reset() {
     this.event = new EventModel();
     this.creator = new CreatorModel('dummy@web.de');
-    this.initUrls();
     this.stateTracker = new AdminViewStateTracker();
 
   }
@@ -147,6 +146,7 @@ export class AdminService {
     else if (this.shouldAddDates()) {
       this.isLoading = true;
       console.log("only add");
+      console.log();
       this.setAndAddDates(() => {
         console.log("update now");
         this.updateEventDataGetObservable().subscribe((data: any)=>{
@@ -230,6 +230,8 @@ export class AdminService {
    */
   addDatesToExistingEvent() {
     let requestData = { datesToAdd: this.datesToAdd };
+    console.log(requestData);
+    console.log(this.postURL_dateAdd);
     return this.http.post(this.postURL_dateAdd + this.stateTracker.getAdminId(), requestData);
   }
 
@@ -266,6 +268,8 @@ export class AdminService {
    * @param updatedDates
    */
   updateAdminDates(updatedDates, done) {
+    console.log(this.postURL_updateAdminDates);
+    console.log(updatedDates);
     let request = { updatedDates: updatedDates };
     this.http.post(this.postURL_updateAdminDates + this.stateTracker.getAdminId(), request).subscribe((data: any) => {
       console.log(data);

@@ -28,33 +28,43 @@ updateParticipantsWithUUID = function (uuid, participantsUpdated) {
 addRemoveDatesParticipant = function (adminUUID, participantId, indexArray, shouldAdd) {
     return new Promise((resolve, reject) => {
         getDoodleEventByCreatorUUID(adminUUID, data => {
-            let participantsUpdated = data.event.participants;
-            let uuid = data.event.uuid;
-            let maxIndex = data.event.date.length - 1;
-            // variables to detect if a participant was found
-            let i = 0;
-            let partIdFound = false;
-            participantsUpdated.map(participant => {
-                if (participant.id == participantId) {
-                    partIdFound = true;
-                    indexArray.map(index => {
-                        if (index > maxIndex) {
-                            resolve({ success: false, errorMsg: "Highest allowed Index is " + maxIndex + "!" });
+            if(data.success){
+                let participantsUpdated = data.event.participants;
+                let uuid = data.event.uuid;
+                let maxIndex = data.event.date.length - 1;
+                // variables to detect if a participant was found
+                let i = 0;
+                let partIdFound = false;
+                if(participantsUpdated.length > 0){
+                    participantsUpdated.map(participant => {
+                        if (participant.id == participantId) {
+                            partIdFound = true;
+                            indexArray.map(index => {
+                                if (index > maxIndex) {
+                                    resolve({ success: false, errorMsg: "Highest allowed Index is " + maxIndex + "!" });
+                                }
+                                participant.dates[index] = shouldAdd;
+                            });
+                            updateParticipantsWithUUID(uuid, participantsUpdated).then(() => {
+                                resolve({ success: true });
+                            }).catch(err => {
+                                reject(err);
+                            });
                         }
-                        participant.dates[index] = shouldAdd;
-                    });
-                    updateParticipantsWithUUID(uuid, participantsUpdated).then(() => {
-                        resolve({ success: true });
-                    }).catch(err => {
-                        reject(err);
+                        // no participant with the id found
+                        else if (isLastIteration(i, participantsUpdated) && !partIdFound) {
+                            resolve({ success: false, errorMsg: "ParticipantId not found" });
+                        }
+                        i++;
                     });
                 }
-                // no participant with the id found
-                else if (isLastIteration(i, participantsUpdated) && !partIdFound) {
+                else{
                     resolve({ success: false, errorMsg: "ParticipantId not found" });
                 }
-                i++;
-            });
+            }
+            else{
+                resolve({ success: false, errorMsg: "No event with this id was found" });
+            }
         });
     });
 }

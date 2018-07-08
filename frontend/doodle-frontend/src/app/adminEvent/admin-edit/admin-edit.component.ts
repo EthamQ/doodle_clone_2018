@@ -38,6 +38,7 @@ export class AdminEditComponent implements OnInit {
   }
 
   updateDetailsClick(){
+    console.log("h: inside updateDetailsClick()");
     this.adminService.updateMainEventValues(()=>{
       this.router.navigate(['admin/calendar']);
       this.adminService.isLoading = false;

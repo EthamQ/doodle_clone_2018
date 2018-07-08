@@ -64,40 +64,47 @@ addParticipantToEvent = function (req, res, next) {
  * collection
  */
 removeParticipants = function (req, res, next) {
-    res.setHeader("Content-Type", "application/json"); 
     let responseBuilder = new ResponseBuilder();
-    let adminUUID = req.params.adminUUID;
-    participantIdArray = req.body.participantIdArray;
-    getDoodleEventByCreatorUUID(adminUUID, data => {
-        if (data.success) {
-            let participantsUpdated = data.event.participants;
-            let i = 0;
-            let numberRemovedParticipants = 0;
-            participantsUpdated.map(participant =>{
-                participantIdArray.map(id =>{
-                    if(participant.id == id){
-                        participantsUpdated.splice(i, 1);
-                        numberRemovedParticipants++;
-                    }
+    res.setHeader("Content-Type", "application/json"); 
+    if(!req.body.participantIdArray){
+        responseBuilder.setSuccess(false);
+        responseBuilder.addMessage(responseBuilder.getValuesMissingFailureMsg());
+        res.send(responseBuilder.getResponse());
+    }
+    else{
+        let adminUUID = req.params.adminUUID;
+        participantIdArray = req.body.participantIdArray;
+        getDoodleEventByCreatorUUID(adminUUID, data => {
+            if (data.success) {
+                let participantsUpdated = data.event.participants;
+                let i = 0;
+                let numberRemovedParticipants = 0;
+                participantsUpdated.map(participant =>{
+                    participantIdArray.map(id =>{
+                        if(participant.id == id){
+                            participantsUpdated.splice(i, 1);
+                            numberRemovedParticipants++;
+                        }
+                    });
+                    i++;
                 });
-                i++;
-            });
-                updateParticipantsWithUUID(data.event.uuid, participantsUpdated).then(() => {
-                    responseBuilder.setSuccess(true);
-                    responseBuilder.addMessage(numberRemovedParticipants + " participant(s) successfully removed");
-                    res.send(responseBuilder.getResponse());
-                }).catch(err => {
-                    responseBuilder.setSuccess(true);
-                    responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
-                    res.send(responseBuilder.getResponse());
-                });
-        }
-        else {
-            responseBuilder.setSuccess(false);
-            responseBuilder.addMessage(responseBuilder.getDoodleEventByCreatorUUIDFailureMsg());
-            res.send(responseBuilder.getResponse());
-        }
-    });
+                    updateParticipantsWithUUID(data.event.uuid, participantsUpdated).then(() => {
+                        responseBuilder.setSuccess(true);
+                        responseBuilder.addMessage(numberRemovedParticipants + " participant(s) successfully removed");
+                        res.send(responseBuilder.getResponse());
+                    }).catch(err => {
+                        responseBuilder.setSuccess(true);
+                        responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
+                        res.send(responseBuilder.getResponse());
+                    });
+            }
+            else {
+                responseBuilder.setSuccess(false);
+                responseBuilder.addMessage(responseBuilder.getDoodleEventByCreatorUUIDFailureMsg());
+                res.send(responseBuilder.getResponse());
+            }
+        });
+    }
 }
 
 
@@ -112,24 +119,30 @@ addDatesToParticipant = function (req, res, next) {
     let dateIndexToAdd = req.body.dateIndexToAdd;
     let adminUUID = req.params.adminUUID;
     let shouldAdd = true;
-    addRemoveDatesParticipant(adminUUID, participantId, dateIndexToAdd, shouldAdd).then(data => {
-        if (data.success) {
-            responseBuilder.addMessage("Dates successfully added");
-            responseBuilder.setSuccess(true);
-            res.send(responseBuilder.getResponse());
-        }
-        else {
-            responseBuilder.addMessage(data.errorMsg);
+    if(!participantId || !dateIndexToAdd){
+        responseBuilder.setSuccess(false);
+        responseBuilder.addMessage(responseBuilder.getValuesMissingFailureMsg());
+        res.send(responseBuilder.getResponse());
+    }
+    else{
+        addRemoveDatesParticipant(adminUUID, participantId, dateIndexToAdd, shouldAdd).then(data => {
+            if (data.success) {
+                responseBuilder.addMessage("Dates successfully added");
+                responseBuilder.setSuccess(true);
+                res.send(responseBuilder.getResponse());
+            }
+            else {
+                responseBuilder.addMessage(data.errorMsg);
+                responseBuilder.setSuccess(false);
+                res.send(responseBuilder.getResponse());
+            }
+        }).catch(err => {
+            responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
+            responseBuilder.addMessage(err.toString());
             responseBuilder.setSuccess(false);
             res.send(responseBuilder.getResponse());
-        }
-
-    }).catch(err => {
-        responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
-        responseBuilder.addMessage(err.toString());
-        responseBuilder.setSuccess(false);
-        res.send(responseBuilder.getResponse());
-    });
+        });
+    }
 }
 
 /**
@@ -143,24 +156,32 @@ removeDatesFromParticipant = function (req, res, next) {
     let dateIndexToRemove = req.body.dateIndexToRemove;
     let adminUUID = req.params.adminUUID;
     let shouldAdd = false;
-    addRemoveDatesParticipant(adminUUID, participantId, dateIndexToRemove, shouldAdd).then(data => {
-        if (data.success) {
-            responseBuilder.addMessage("Dates successfully removed");
-            responseBuilder.setSuccess(true);
-            res.send(responseBuilder.getResponse());
-        }
-        else {
-            responseBuilder.addMessage(data.errorMsg);
+    if(!participantId || !dateIndexToRemove){
+        responseBuilder.setSuccess(false);
+        responseBuilder.addMessage(responseBuilder.getValuesMissingFailureMsg());
+        res.send(responseBuilder.getResponse());
+    }
+    else{
+        addRemoveDatesParticipant(adminUUID, participantId, dateIndexToRemove, shouldAdd).then(data => {
+            if (data.success) {
+                responseBuilder.addMessage("Dates successfully removed");
+                responseBuilder.setSuccess(true);
+                res.send(responseBuilder.getResponse());
+            }
+            else {
+                responseBuilder.addMessage(data.errorMsg);
+                responseBuilder.setSuccess(false);
+                res.send(responseBuilder.getResponse());
+            }
+        }).catch(err => {
+            responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
+            responseBuilder.addMessage(err.toString());
             responseBuilder.setSuccess(false);
             res.send(responseBuilder.getResponse());
-        }
-    }).catch(err => {
-        responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
-        responseBuilder.addMessage(err.toString());
-        responseBuilder.setSuccess(false);
-        res.send(responseBuilder.getResponse());
-    });
+        });
+    }
 }
+
 module.exports = {
     addParticipantToEvent: addParticipantToEvent,
     removeParticipants: removeParticipants,

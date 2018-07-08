@@ -56,10 +56,10 @@ updateDoodleEvent = function (req, res, next) {
         if (data.success) {
             let criteria = { uuid: data.uuidEvent };
             let update = {
-                title: req.body.title,
-                location: req.body.location,
-                description: req.body.description,
-                eventType: req.body.eventType,
+                title: req.body.title? req.body.title: data.event.title,
+                location: req.body.location? req.body.location: data.event.location,
+                description: req.body.description? req.body.description: data.event.description,
+                eventType: req.body.eventType? req.body.eventType: data.event.eventType,
             }
             mongodb.updateItem(mongodb.doodleEventDBInfo.dbName, mongodb.doodleEventDBInfo.collectionName, criteria, update).then(data => {
                 responseBuilder.setSuccess(true);
@@ -105,6 +105,7 @@ getDoodleEventDataByUUID = function (req, res, next) {
         else {
             // look if a creator has this uuid
             getDoodleEventByCreatorUUID(uuidEvent, data => {
+                console.log(data);
                 if (data.success) {
                     // event with creator uuid found
                     data.event.adminAccess = true;
@@ -117,7 +118,7 @@ getDoodleEventDataByUUID = function (req, res, next) {
                 else {
                     // failure when reading the database
                     responseBuilder.setSuccess(false);
-                    responseBuilder.addMessage(responseBuilder.getDatabaseFailureMsg());
+                    responseBuilder.addMessage(data.errorMsg);
                     res.send(responseBuilder.getResponse());
                 }
             });
@@ -158,7 +159,7 @@ deleteEvent = function (req, res, next) {
         }
         else {
             responseBuilder.setSuccess(false);
-            responseBuilder.addMessage("Event with this creator uuid not found");
+            responseBuilder.addMessage(data.errorMsg);
             res.send(responseBuilder.getResponse());
         }
     });

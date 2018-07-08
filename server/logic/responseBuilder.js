@@ -75,6 +75,9 @@ module.exports = class Response {
     getDatabaseFailureMsg() {
         return this.messages.DATABASE_FAILURE;
     }
+    getValuesMissingFailureMsg(){
+        return "Required values are missing";
+    }
 
 
 }

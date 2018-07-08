@@ -49,6 +49,7 @@ getDoodleEventByUUID = function (uuidEvent, callback) {
  * on failure: returns { event: null, uuidEvent: null, success: false } in a callback
  */
 getDoodleEventByCreatorUUID = function (uuidCreator, callback) {
+    let responseBuilder = new ResponseBuilder;
     mongodb.getAllItems(dbInfo.dbName, dbInfo.collectionName).then(data => {
         let arrayAllEvents = data.data;
         // console.log(data.data[0].creator);
@@ -63,14 +64,14 @@ getDoodleEventByCreatorUUID = function (uuidCreator, callback) {
                 // creator id not found, end of array
                 else {
                     if (i === (arrayAllEvents.length - 1)) {
-                        callback({ event: null, uuidEvent: null, success: false });
+                        callback({ event: null, uuidEvent: null, success: false, errorMsg:"No event with this uuid was found"});
                     }
                 }
             }
         }
     }).catch(err => {
         console.log(err);
-        callback({ event: null, uuidEvent: null, success: false });
+        callback({ event: null, uuidEvent: null, success: false, errorMsg: responseBuilder.getDatabaseFailureMsg()});
     });
 }
 

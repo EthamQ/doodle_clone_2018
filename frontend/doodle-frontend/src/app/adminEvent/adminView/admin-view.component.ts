@@ -18,6 +18,7 @@ export class AdminViewComponent implements OnInit {
     this.stateTracker = stateTrack;
   }
     ngOnInit() {
+        this.stateTracker.setEditActive(false);
      }
 
     adminIdSubmitted(adminId) {
