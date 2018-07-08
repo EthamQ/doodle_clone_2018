@@ -1,5 +1,7 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import {Component, OnInit, EventEmitter, Output, Inject} from '@angular/core';
 import { Router } from '@angular/router';
+import {AdminViewStateTracker} from '../../services/stateTracker/admin-view-stateTracker';
+import {CreateService} from '../../services/create.service';
 
 @Component({
   selector: 'app-admin-landing',
@@ -11,20 +13,21 @@ export class AdminLandingComponent implements OnInit {
   @Output() adminIdSubmit = new EventEmitter();
 
   private adminId: string;
-  private wrongID: boolean;
+  stateTracker: AdminViewStateTracker;
 
-  constructor(private router: Router) { }
+  constructor(@Inject(AdminViewStateTracker) stateTrack: AdminViewStateTracker, private router: Router ) {
+    this.stateTracker = stateTrack;
+  }
 
   ngOnInit() {
-    this.wrongID = false;
   }
 
-  navigeToAdminEdit(){
-    this.adminIdSubmit.emit(this.adminId);
-    this.wrongID = true;
+  navigeToAdminEdit() {
+    this.adminIdSubmit.emit(this.adminId) ;
+
   }
 
-  setAdminId(adminId){
+  setAdminId(adminId) {
     this.adminId = adminId;
   }
 

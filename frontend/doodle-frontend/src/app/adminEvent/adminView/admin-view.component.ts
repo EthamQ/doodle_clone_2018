@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import { EventService } from '../../services/event.service';
 import { AdminViewStateTracker } from '../../services/stateTracker/admin-view-stateTracker';
 import { AdminService } from '../../services/admin.service';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-admin-view',
@@ -10,10 +11,12 @@ import { AdminService } from '../../services/admin.service';
 
 export class AdminViewComponent implements OnInit {
 
-    public stateTracker = new AdminViewStateTracker();
+  stateTracker: AdminViewStateTracker;
 
-    constructor(private eventService: EventService, private adminService: AdminService) { }
-
+  constructor(@Inject(AdminViewStateTracker) stateTrack: AdminViewStateTracker,
+              private eventService: EventService, private adminService: AdminService ) {
+    this.stateTracker = stateTrack;
+  }
     ngOnInit() {
      }
 
@@ -31,7 +34,10 @@ export class AdminViewComponent implements OnInit {
                 this.adminService.updatedValues.location = this.stateTracker.getEventData().location;
             }
             else {
-                console.log("not a valid adminId -> error message");
+                this.stateTracker.showError(true);
+                console.log(this.stateTracker.wrongID);
+                console.log("not a valid adminId -> error message" + this.stateTracker.getError());
+
             }
         });
 
