@@ -7,6 +7,7 @@ import { URLService } from './url-service';
 export class ViewService {
   getURl = '/event/';
   UUID = '';
+  
   votes = [];
   serverData: ServerModel;
   dataLoaded = false;
